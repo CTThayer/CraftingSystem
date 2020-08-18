@@ -10,9 +10,17 @@ public class ComponentAssembler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Debug.Assert(PosTolerance > 0f && NormTolerance > 0f);
     }
 
+    /* Validate Segment Configuration
+     * 
+     * Verifies that the current segment configuration is valid and that
+     * the segments can be welded without issue.
+     * 
+     * @Param ComponentSegment[] segments - An array of ComponentSegments to weld. 
+     * Returns bool for whether the configuration is valid.
+     */
     public bool ValidateSegmentConfiguration(ComponentSegment[] segments, float componentMaxLength)
     {
         if (segments == null || segments.Length == 0)
@@ -37,8 +45,6 @@ public class ComponentAssembler : MonoBehaviour
             {
                 if (segments[i].GetConnectionID() != segments[i + 1].GetConnectionID())
                     return false;
-                //if (segments[i].GetTopEdgeVertices().Length != segments[i + 1].GetBottomEdgeVertices().Length)
-                //    return false;
                 totalLength += segments[i].GetSegmentLength();
             }
             totalLength += segments[segments.Length - 1].GetSegmentLength();
@@ -90,8 +96,6 @@ public class ComponentAssembler : MonoBehaviour
 
         Debug.Assert(FinalVerts.Count == FinalNormals.Count);
 
-        Debug.Log("FinalVerts.Count (Before Welding) = " + FinalVerts.Count);
-
         // Find any vertices that share the same position and normal 
         // and eliminate the unnecessary copies.
         for (int i = 0; i < FinalVerts.Count; i++)
@@ -116,14 +120,10 @@ public class ComponentAssembler : MonoBehaviour
             }
         }
 
-        // TODO: Fix/Recalculate UVs
-
         Mesh result = new Mesh();
         result.vertices = FinalVerts.ToArray();
         result.triangles = FinalTris.ToArray();
         result.normals = FinalNormals.ToArray();
-
-        // TODO: Assign correct UVs to mesh;
 
         return result;
     }
@@ -140,27 +140,10 @@ public class ComponentAssembler : MonoBehaviour
      */
     public Mesh WeldSegmentMeshes(ComponentSegment[] segments)
     {
-        Debug.Log("ComponentAssembler: WeldSegmentMeshes() - Start");
-
-        //// Initalize arrays to hold all vertices, normals, and triangles from all segments
-        //int totalVerts = 0;
-        //for (int i = 0; i < segments.Length; i++)
-        //{
-        //    totalVerts += segments[i].transform.GetComponent<MeshFilter>().mesh.vertices.Length;
-        //}
-        //Debug.Log("Total Original Verts: " + totalVerts);
-        //Vector3[] AllVertices = new Vector3[totalVerts];
-        //Vector3[] AllNormals = new Vector3[totalVerts];
-        //int[] AllTriangles = new int[totalVerts * 3];
-
         // Lists of resulting vertices and tris
         List<Vector3> AllVertices = new List<Vector3>();
         List<Vector3> AllNormals = new List<Vector3>();
         List<int> AllTriangles = new List<int>();
-
-        Debug.Log("Total Vertices from Segments: " + AllVertices.Count);
-        Debug.Log("Total Normals from Segments: " + AllNormals.Count);
-        Debug.Log("Total Triangles from Segments: " + AllTriangles.Count);
 
         //// Store all vertices, normals, and triangles from all segments in the arrays
         GetAllVertsNormsAndTris(segments, ref AllVertices, ref AllNormals, ref AllTriangles);
@@ -174,13 +157,8 @@ public class ComponentAssembler : MonoBehaviour
         // Call helper function to filter duplicates and create the map
         MapAndFilterDuplicates(AllVertices, AllNormals, ref newVertices, ref newNormals, ref vertexMap);
 
-        Debug.Log("Result Number of Verts: " + newVertices.Count);
-        Debug.Log("Result Number of Normals: " + newNormals.Count);
-
         // Fix triangles
         FixTriangles(ref AllTriangles, vertexMap);
-
-        Debug.Log("Result Number of Triangles: " + AllTriangles.Count);
 
         // Create new mesh and assign the finalized vertices, normals & triangles.
         Mesh result = new Mesh();
@@ -190,44 +168,6 @@ public class ComponentAssembler : MonoBehaviour
 
         return result;
     }
-
-    ///* Get All Verts Norms And Tris
-    // * Private helper method for combining all the vertices, normals, and 
-    // * triangles from each of the ComponentSegments in the segments array.
-    // * No return type; vertices[], normals[], and triangles[] passed as ref
-    // * so they can be modified in the function.
-    // * ASSUMES vertices[], normals[], and triangles[] are initialized to 
-    // * the correct size before being passed.
-    // */
-    //private void GetAllVertsNormsAndTris(ComponentSegment[] segments,
-    //                                     ref Vector3[] vertices,
-    //                                     ref Vector3[] normals,
-    //                                     ref int[] triangles)
-    //{
-    //    // Used to offset the triangle indices by the correct amount
-    //    int VertexCount = 0;
-
-    //    // Add all vertices, triangles, and normals from each segment
-    //    // to the final list (while offsetting their values correctly)
-    //    for(int s = 0; s < segments.Length; s++)
-    //    {
-    //        Vector3[] segmentVerts = segments[s].transform.GetComponent<MeshFilter>().mesh.vertices;
-    //        Vector3[] segmentNormals = segments[s].transform.GetComponent<MeshFilter>().mesh.normals;
-    //        int[] segmentTriangles = segments[s].transform.GetComponent<MeshFilter>().mesh.triangles;
-    //        int v = 0;
-    //        for (; v < segmentVerts.Length; v++)
-    //        {
-    //            vertices[v + VertexCount] = segments[s].transform.TransformPoint(segmentVerts[v]);
-    //            normals[v + VertexCount] = segmentNormals[v];
-    //            triangles[v + VertexCount] = segmentTriangles[v] + VertexCount;
-    //            triangles[v + 1 + VertexCount] = segmentTriangles[v] + 1 + VertexCount;
-    //            triangles[v + 2 + VertexCount] = segmentTriangles[v] + 2 + VertexCount;
-    //        }
-    //        VertexCount += segmentVerts.Length;
-    //    }
-
-    //    Debug.Log("ComponentAssembler: GetAllVertsNormsAndTris(): VertexCount = " + VertexCount);
-    //}
 
     /* Get All Verts Norms And Tris
      * Private helper method for combining all the vertices, normals, and 
@@ -274,11 +214,6 @@ public class ComponentAssembler : MonoBehaviour
      * modified by the function.
      * ASSUMES map was initialized to the correct size before being passed.
      */
-    //private void MapAndFilterDuplicates(Vector3[] originalVertices,
-    //                                    Vector3[] originalNormals,
-    //                                    ref List<Vector3> newVertices,
-    //                                    ref List<Vector3> newNormals,
-    //                                    ref int[] map)
     private void MapAndFilterDuplicates(List<Vector3> originalVertices,
                                         List<Vector3> originalNormals,
                                         ref List<Vector3> newVertices,
@@ -328,14 +263,76 @@ public class ComponentAssembler : MonoBehaviour
         }
     }
 
-    /* Get UV Bounds
+    /* Planar Map UVs
+     * 
+     * Calculates UVs for the supplied mesh based on simple
+     * planar project to the specified plane.
+     * @Param xy - Bool indicating whether to project ot the xy plane.
+     * @Param yz - Bool indicating whether to project ot the yz plane.
+     * Pass false for both xy and yz if you want to project to xz plane.
+     * @Param m - Mesh that needs UV projection.
+     */
+    private void PlanarMapUVs(bool xy, bool yz, ref Mesh m)
+    {
+        if (xy && yz)   // Can't use both xy and zy plane.
+        {
+            Debug.Log("ComponentAssembler: PlanarMapUVs: Can't use both xy and zy plane for mapping; you must select one (or neither for xz).");
+            return;
+        }
+        Vector3[] vertices = m.vertices;
+        Vector3[] normals = m.normals;
+        Vector2[] uvs = new Vector2[vertices.Length];
+        if (vertices == null || normals == null)
+        {
+            Debug.Log("ComponentAssembler: PlanarMapUVs: Mesh is missing necessary components.");
+            return;
+        }
+        Vector3 bounds = m.bounds.size;
+        if (xy)
+        {
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float dot = Vector3.Dot(normals[i], Vector3.forward);
+                if (dot > 0)
+                    uvs[i] = new Vector2(vertices[i].x / (bounds.x * 2), vertices[i].y / (bounds.x * 2));
+                else
+                    uvs[i] = new Vector2((vertices[i].x / (bounds.x * 2)) + 0.5f, vertices[i].y / (bounds.x * 2));
+            }
+        }
+        else if (yz)
+        {
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float dot = Vector3.Dot(normals[i], Vector3.right);
+                if (dot > 0)
+                    uvs[i] = new Vector2(vertices[i].z / (bounds.z * 2), vertices[i].y / (bounds.z * 2));
+                else
+                    uvs[i] = new Vector2((vertices[i].z / (bounds.z * 2)) + 0.5f, vertices[i].y / (bounds.z * 2));
+            }
+        }
+        else
+        {
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                float dot = Vector3.Dot(normals[i], Vector3.up);
+                if (dot > 0)
+                    uvs[i] = new Vector2(vertices[i].x / (bounds.x * 2), vertices[i].z / (bounds.x * 2));
+                else
+                    uvs[i] = new Vector2((vertices[i].x / (bounds.x * 2)) + 0.5f, vertices[i].z / (bounds.x * 2));
+            }
+        }
+        m.uv = uvs;
+    }
+
+
+    /* Get Existing UV Bounds
      * 
      * Calculates the bounding box values of the supplied UV set.
      * @Param Vector2[] uvs - An array of UV values (Vector2). 
      * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
      * Returns null if an empty set of UVs is passed in.
      */
-    private float[] GetUVBounds(Vector2[] uvs)
+    private float[] GetExistingUVBounds(Vector2[] uvs)
     {
         if (uvs != null && uvs.Length > 0)
         {
@@ -357,70 +354,5 @@ public class ComponentAssembler : MonoBehaviour
             return null;
         }
     }
-
-
-    //private Vector2[] CubeMapUVs(Mesh mesh)
-    //{
-    //    List<Vector2> newUVs = new List<Vector2>();
-
-    //    float[] bbsize = new float[3] { mesh.bounds.size.x, mesh.bounds.size.y, mesh.bounds.size.z };
-    //    float boundsMax = Mathf.Max(bbsize);
-
-    //    Vector3 objCenter = GetObjectCenter(mesh.vertices);
-
-    //    bool facesX = false, facesY = false, facesZ = false, negDir = false;
-    //    for(int i = 0; i < mesh.triangles.Length; i += 3)
-    //    {
-    //        Vector3 faceNormal = (mesh.normals[mesh.triangles[i]] + mesh.normals[mesh.triangles[i + 1]] + mesh.normals[mesh.triangles[i + 2]]) / 3.0f;
-
-    //        if (Mathf.Abs(faceNormal.x) >= Mathf.Abs(faceNormal.y) && Mathf.Abs(faceNormal.x) >= Mathf.Abs(faceNormal.z))
-    //        {
-    //            facesX = true;
-    //            negDir = faceNormal.x > 0.0f ? false : true;
-    //        }
-    //        else if (Mathf.Abs(faceNormal.y) >= Mathf.Abs(faceNormal.x) && Mathf.Abs(faceNormal.y) >= Mathf.Abs(faceNormal.z))
-    //        {
-    //            facesY = true;
-    //            negDir = faceNormal.y > 0.0f ? false : true;
-    //        }
-    //        else
-    //        {
-    //            facesZ = true;
-    //            negDir = faceNormal.z > 0.0f ? false : true;
-    //        }
-
-    //        if(facesX)
-    //        {
-
-    //        }
-    //        else if (facesY)
-    //        {
-
-    //        }
-    //        else
-    //        {
-
-    //        }
-    //    }
-    //}
-
-    private Vector3 GetObjectCenter(Vector3[] vertices)
-    {
-        Vector3 result = Vector3.zero;
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            result += vertices[i];
-        }
-        result.x /= (vertices.Length - 1);
-        result.y /= (vertices.Length - 1);
-        result.z /= (vertices.Length - 1);
-        return result;
-    }
-
-
-    //public Mesh ApplyUniformTaper(float percent, Vector3 start, Vector3 end, Mesh mesh)
-    //{
-
-    //}
 
 }

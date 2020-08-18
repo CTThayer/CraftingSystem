@@ -941,12 +941,14 @@ MonoBehaviour:
   MaxLength: 1.5
   FinishedComponentMat: {fileID: 2100000, guid: 9c3fc565e1d5c4f4095e952957052912,
     type: 2}
+  CompAssembler: {fileID: 1440817105}
+  CamControl: {fileID: 1455987532}
   OutputText: {fileID: 1222383964}
   SelectedSegmentText: {fileID: 800978809}
   GameObjectSelector: {fileID: 811754700}
-  CompAssembler: {fileID: 1440817105}
   canvas: {fileID: 181918008}
   UIPanel: {fileID: 480055528}
+  SegmentLengthSlider: {fileID: 0}
   ComponentToAdd: {fileID: 0}
 --- !u!1 &187897273
 GameObject:
@@ -1511,7 +1513,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 430737457}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 181918010}
+        m_MethodName: RemoveSegment
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &430737457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2214,7 +2227,7 @@ GameObject:
   - component: {fileID: 754657346}
   - component: {fileID: 754657345}
   m_Layer: 5
-  m_Name: FinalizeDesign_Button
+  m_Name: CombineSegments_Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3632,6 +3645,7 @@ GameObject:
   - component: {fileID: 1455987531}
   - component: {fileID: 1455987530}
   - component: {fileID: 1455987529}
+  - component: {fileID: 1455987532}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -3697,13 +3711,32 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1455987528}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: -10}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 3, z: 10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!114 &1455987532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1455987528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40094c9bed68dd54c8eea16902b6db37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Cam: {fileID: 1455987528}
+  LookAtPosition: {x: 0, y: 0, z: 0}
+  RotationSpeed: 8
+  ZoomSpeed: 1
+  ZoomDistance_MIN: 2
+  ZoomDistance_MAX: 25
+  PolarDeadzone: 20
 --- !u!1 &1461999909
 GameObject:
   m_ObjectHideFlags: 0
@@ -5313,7 +5346,7 @@ GameObject:
   - component: {fileID: 1924562666}
   - component: {fileID: 1924562665}
   m_Layer: 5
-  m_Name: FinalizeDesign_ButtonText
+  m_Name: CombineSegments_ButtonText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5370,7 +5403,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: FinalizeDesign
+  m_Text: Combine Segments
 --- !u!222 &1924562666
 CanvasRenderer:
   m_ObjectHideFlags: 0

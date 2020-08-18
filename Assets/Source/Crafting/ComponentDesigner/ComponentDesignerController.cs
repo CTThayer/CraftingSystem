@@ -11,13 +11,18 @@ public class ComponentDesignerController : MonoBehaviour
     [SerializeField] private float MaxLength;
     [SerializeField] private Material FinishedComponentMat;
 
+    // Manually Assigned Dependencies
+    [SerializeField] private ComponentAssembler CompAssembler;
+    [SerializeField] private CameraController CamControl;
+
     // UI Fields
     [SerializeField] private Text OutputText;
     [SerializeField] private Text SelectedSegmentText;
     [SerializeField] private DropdownGameObjectSelector GameObjectSelector;
-    [SerializeField] private ComponentAssembler CompAssembler;
     [SerializeField] private Canvas canvas;
     [SerializeField] private RectTransform UIPanel;
+
+    [SerializeField] private Slider SegmentLengthSlider;
 
     // Private Variables
     private List<ComponentSegment> Segments = new List<ComponentSegment>();
@@ -37,6 +42,7 @@ public class ComponentDesignerController : MonoBehaviour
         Debug.Assert(SelectedSegmentText != null);
         Debug.Assert(GameObjectSelector != null);
         Debug.Assert(FinishedComponentMat != null);
+        Debug.Assert(CamControl != null);
 
         // isFirstSegment should always start out as true
         isFirstSegment = true;
@@ -91,6 +97,35 @@ public class ComponentDesignerController : MonoBehaviour
     public void AddSegment()
     {
         OutputText.text = AddComponentSegment();
+    }
+
+    /* RemoveSegment()
+     * Public facing method for removing a segment (for use in UI).
+     * Removes the currently selected segment.
+     */
+    public void RemoveSegment()
+    {
+        if (CurrentSelection != null)
+        {
+            int index = Segments.IndexOf(CurrentSelection);
+            Segments.Remove(CurrentSelection);
+            Destroy(CurrentSelection.transform.gameObject);
+            if (index > 0)
+            {
+                CurrentSelection = Segments[index - 1];
+                CurrentSelection.OnSelect();
+            }
+
+            // TODO: Add code to clean up any segments that referenced
+            // the deleted segment & ensure connection points are updated.
+
+            // NOTE: We are NOT shifting segments down to ensure that
+            // everything connects because there is no guarantee that the
+            // next segment will be compatible and doing so makes 
+            // assumptions about the user's intent. It would also prohibit 
+            // simply swapping out a segment. This means that validating 
+            // the final segment configuration is CRITICAL!
+        }
     }
 
     /* AssembleComponent()
@@ -198,6 +233,19 @@ public class ComponentDesignerController : MonoBehaviour
      */
     private void HandleInput()
     {
+        if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+        {
+            if (Input.GetMouseButton(0))
+            {
+                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                CamControl.ProcessTumble(mouseDelta);
+            }
+            if (Input.mouseScrollDelta.y != 0)
+            {
+                CamControl.ProcessZoom(Input.mouseScrollDelta.y);
+            }
+            return;     // Return out to avoid accidentally changing selection
+        }
         if (Input.GetMouseButtonDown(0))
         {
             LMBSelect();
@@ -217,6 +265,7 @@ public class ComponentDesignerController : MonoBehaviour
 
             }
         }
+
     }
 
     /* LMBSelect()
@@ -245,6 +294,8 @@ public class ComponentDesignerController : MonoBehaviour
                 { 
                     NewSelection.OnSelect();
                     retVal = NewSelection.gameObject.name;
+                    // update camera target location to be the transform of the selected object
+                    CamControl.SetLookAtPosition(NewSelection.transform.position);
                 }
                 CurrentSelection = NewSelection;
             }
