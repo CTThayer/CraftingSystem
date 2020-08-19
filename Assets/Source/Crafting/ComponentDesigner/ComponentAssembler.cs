@@ -265,18 +265,24 @@ public class ComponentAssembler : MonoBehaviour
 
     /* Planar Map UVs
      * 
-     * Calculates UVs for the supplied mesh based on simple
-     * planar project to the specified plane.
+     * Calculates UVs for the supplied mesh based on simple planar
+     * projection to the specified plane. After all vertices are
+     * mapped, the UVs are assigned to the mesh that was passed in.
      * @Param xy - Bool indicating whether to project ot the xy plane.
      * @Param yz - Bool indicating whether to project ot the yz plane.
      * Pass false for both xy and yz if you want to project to xz plane.
      * @Param m - Mesh that needs UV projection.
      */
-    private void PlanarMapUVs(bool xy, bool yz, ref Mesh m)
+    public void PlanarMapUVs(bool xy, bool yz, ref Mesh m)
     {
         if (xy && yz)   // Can't use both xy and zy plane.
         {
-            Debug.Log("ComponentAssembler: PlanarMapUVs: Can't use both xy and zy plane for mapping; you must select one (or neither for xz).");
+            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Can't use both xy and zy plane for mapping; you must select one (or neither for xz).");
+            return;
+        }
+        if (m == null)
+        {
+            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Supplied mesh was null.");
             return;
         }
         Vector3[] vertices = m.vertices;
@@ -324,15 +330,109 @@ public class ComponentAssembler : MonoBehaviour
         m.uv = uvs;
     }
 
-
-    /* Get Existing UV Bounds
+    /* Cube Map UVs
      * 
-     * Calculates the bounding box values of the supplied UV set.
-     * @Param Vector2[] uvs - An array of UV values (Vector2). 
-     * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
-     * Returns null if an empty set of UVs is passed in.
+     * Calculates UVs for the supplied mesh based on very simplified
+     * cube projection.
+     * @Param m - Mesh that needs UV projection.
      */
-    private float[] GetExistingUVBounds(Vector2[] uvs)
+    public void CubeMapUVs(ref Mesh m)
+    {
+        if (m == null)
+        {
+            Debug.Log("ComponentAssembler: CubeMapUVs: ERROR - Supplied mesh was null.");
+            return;
+        }
+        Vector3[] vertices = m.vertices;
+        Vector3[] normals = m.normals;
+        Vector2[] uvs = new Vector2[vertices.Length];
+        
+        //Vector3 bounds = m.bounds.size;
+        float[] b = new float[3] { m.bounds.size.x, m.bounds.size.y, m.bounds.size.z };
+        float bigBound = Mathf.Max(b);
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            // Determine which plane to map uvs to:
+            char c = GetUVAxis(normals[i].x, normals[i].y, normals[i].z);
+            switch(c)
+            {
+                case 'X':
+                    {
+                        uvs[i] = new Vector2(vertices[i].z / (bigBound * 3), vertices[i].y / (bigBound * 3));
+                        break;
+                    }
+                case 'Y':
+                    {
+                        uvs[i] = new Vector2((vertices[i].x / (bigBound * 3)) + 0.33333f, vertices[i].z / (bigBound * 3));
+                        break;
+                    }
+                case 'Z':
+                    {
+                        uvs[i] = new Vector2((vertices[i].x / (bigBound * 3)) + 0.66667f, vertices[i].y / (bigBound * 3));
+                        break;
+                    }
+                case 'x':
+                    {
+                        uvs[i] = new Vector2(-vertices[i].z / (bigBound * 3), vertices[i].y / (bigBound * 3));
+                        break;
+                    }
+                case 'y':
+                    {
+                        uvs[i] = new Vector2((vertices[i].x / (bigBound * 3)) + 0.33333f, (-vertices[i].z / (bigBound * 3)) + 0.33333f);
+                        break;
+                    }
+                case 'z':
+                    {
+                        uvs[i] = new Vector2((-vertices[i].x / (bigBound * 3)) + 0.66667f, (vertices[i].y / (bigBound * 3)) + 0.66667f);
+                        break;
+                    }
+            }
+        }
+
+        m.uv = uvs;
+    }
+
+    private char GetUVAxis(float nX, float nY, float nZ)
+    {
+        float absX = Mathf.Abs(nX);
+        float absY = Mathf.Abs(nY);
+        float absZ = Mathf.Abs(nZ);
+        bool XgtY = (absX > absY);
+        bool XgtZ = (absX > absZ);
+        bool YgtZ = (absX > absZ);
+        if (XgtY && XgtZ)
+        {
+            if (nX > 0)
+                return 'X';     // 'X' for +X
+            else
+                return 'x';     // 'x' for -X
+        }
+        else if (!XgtZ && !YgtZ)
+        {
+            if (nZ > 0)
+                return 'Z';     // 'Z' for +Z
+            else
+                return 'z';     // 'z' for -Z
+        }
+        else if (!XgtY && XgtZ && YgtZ)
+        {
+            if (nZ > 0)
+                return 'Y';     // 'Y' for +Y
+            else
+                return 'y';     // 'y' for -Y
+        }
+        return '0';
+    }
+
+    /* Get UV Bounds
+        * 
+        * Calculates the bounding box values of the supplied UV set.
+        * @Param Vector2[] uvs - An array of UV values (Vector2). 
+        * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
+        * Returns null if an empty set of UVs is passed in.
+        */
+    private float[] GetUVBounds(Vector2[] uvs)
     {
         if (uvs != null && uvs.Length > 0)
         {
@@ -350,7 +450,7 @@ public class ComponentAssembler : MonoBehaviour
         }
         else
         {
-            Debug.Log("GetUVBounds: Supplied UV array did not contain UVs");
+            Debug.Log("GetUVBounds: Supplied UV array was empty.");
             return null;
         }
     }
