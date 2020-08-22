@@ -55,6 +55,7 @@ public class ComponentAssembler : MonoBehaviour
         }
     }
 
+    // ORIGINAL VERSION - TODO: Archive & Remove
     /* Combine Segment Geometry
      * 
      * Combines the meshes of a set of ComponentSegments. This function removes 
@@ -332,8 +333,7 @@ public class ComponentAssembler : MonoBehaviour
 
     /* Cube Map UVs
      * 
-     * Calculates UVs for the supplied mesh based on very simplified
-     * cube projection.
+     * Calculates UVs for the supplied mesh using simplified cube projection.
      * @Param m - Mesh that needs UV projection.
      */
     public void CubeMapUVs(ref Mesh m)
@@ -426,12 +426,12 @@ public class ComponentAssembler : MonoBehaviour
     }
 
     /* Get UV Bounds
-        * 
-        * Calculates the bounding box values of the supplied UV set.
-        * @Param Vector2[] uvs - An array of UV values (Vector2). 
-        * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
-        * Returns null if an empty set of UVs is passed in.
-        */
+    * 
+    * Calculates the bounding box values of the supplied UV set.
+    * @Param Vector2[] uvs - An array of UV values (Vector2). 
+    * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
+    * Returns null if an empty set of UVs is passed in.
+    */
     private float[] GetUVBounds(Vector2[] uvs)
     {
         if (uvs != null && uvs.Length > 0)

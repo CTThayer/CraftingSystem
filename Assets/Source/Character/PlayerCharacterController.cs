@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    /* Data Members */
     [SerializeField] private Camera Cam;
 
     GameObject CurrentHit;
@@ -30,21 +29,21 @@ public class PlayerCharacterController : MonoBehaviour
         {
             if (Hit.transform.gameObject != CurrentHit)
             {
-                // Update previous object that was hit to switch off any active functionality
-                if (CurrentHit != null && CurrentHit.GetComponent<IInteractable>() != null)
-                {
-                    CurrentHit.GetComponent<IInteractable>().OnHoverEnd();
-                }
+                //// Update previous object that was hit to switch off any active functionality
+                //if (CurrentHit != null && CurrentHit.GetComponent<IInteractable>() != null)
+                //{
+                //    CurrentHit.GetComponent<IInteractable>().OnHoverEnd();
+                //}
 
-                // Update CurrentHit to refer to current hit
-                CurrentHit = Hit.transform.gameObject;
+                //// Update CurrentHit to refer to current hit
+                //CurrentHit = Hit.transform.gameObject;
 
-                // If the latest hit is an interactable, call OnHover() and update UI
-                if (CurrentHit != null && CurrentHit.GetComponent<IInteractable>() != null)
-                {
-                    string[] ActionNames = CurrentHit.GetComponent<IInteractable>().OnHover();
-                    // TODO: Update UI elements
-                }
+                //// If the latest hit is an interactable, call OnHover() and update UI
+                //if (CurrentHit != null && CurrentHit.GetComponent<IInteractable>() != null)
+                //{
+                //    string[] ActionNames = CurrentHit.GetComponent<IInteractable>().OnHover();
+                //    // TODO: Update UI elements
+                //}
             }
         }
     }

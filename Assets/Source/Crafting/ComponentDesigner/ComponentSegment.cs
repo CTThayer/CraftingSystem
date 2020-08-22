@@ -9,6 +9,7 @@ public class ComponentSegment : MonoBehaviour
     [SerializeField] private float SegmentLength;
     [SerializeField] private float MaxLength;
     [SerializeField] private float MinLength;
+    [SerializeField] private float DifficultyModifier;
 
     [SerializeField] private int ConnectionID;              // Unnecessary?
 
@@ -95,6 +96,7 @@ public class ComponentSegment : MonoBehaviour
     public Transform GetInConnectionPoint() { return InConnectionPoint; }
     public Transform GetOutConnectionPoint() { return OutConnectionPoint; }
     public float GetSegmentLength() { return SegmentLength; }
+    public float GetDifficultyModifier() { return DifficultyModifier; }
     
     // Get ALL connection info
     public GameObject[] GetConnectionPoints() { return ConnectionPoints; }
