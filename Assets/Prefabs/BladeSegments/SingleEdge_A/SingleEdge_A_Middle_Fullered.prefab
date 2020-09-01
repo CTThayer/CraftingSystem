@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2159566183704858085}
   - component: {fileID: 4187403488558086447}
   - component: {fileID: 8320449735186303763}
-  - component: {fileID: 7508924347361565996}
+  - component: {fileID: 1492885443565167053}
   m_Layer: 0
   m_Name: SingleEdge_A_Middle_Fullered
   m_TagString: Untagged
@@ -96,7 +96,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.040225513, y: 0.02, z: 0.0066}
   m_Center: {x: 0.00015496835, y: 0.01, z: 0}
---- !u!114 &7508924347361565996
+--- !u!114 &1492885443565167053
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,12 +110,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsBaseSegment: 0
   IsEndSegment: 0
-  SegmentLength: 0.02
-  ConnectionID: 1
-  InConnectionPoint: {fileID: 4298634465051288583}
-  OutConnectionPoint: {fileID: 6595444373124970701}
-  ConnectionPoints: []
-  ConnectionIDs: []
+  SegmentLength: 0
+  MaxLength: 0
+  MinLength: 0
+  DifficultyModifier: 1
+  DurabilityModifier: 1
+  ConnectionPoints:
+  - {fileID: 5159858152387416395}
+  - {fileID: 7097323472972906670}
+  ConnectionIDs:
+  - BS_SE_A_fullered
+  - BS_SE_A_fullered
+  ConnectionPointStatus: 0000
+  ConnectedSegments:
+  - {fileID: 0}
+  - {fileID: 0}
+  lengthIsX: 0
+  lengthIsY: 1
 --- !u!1 &5159858152387416395
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4298634465051288583}
   m_Layer: 0
-  m_Name: InConnectionPoint
+  m_Name: ConnectionPoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156,7 +167,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6595444373124970701}
   m_Layer: 0
-  m_Name: OutConnectionPoint
+  m_Name: ConnectionPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

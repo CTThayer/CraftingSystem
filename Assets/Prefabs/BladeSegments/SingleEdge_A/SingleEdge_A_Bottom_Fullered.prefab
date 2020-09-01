@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2271639122123893499}
   m_Layer: 0
-  m_Name: OutConnectionPoint
+  m_Name: ConnectionPoint_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -40,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1571004803686570119}
   m_Layer: 0
-  m_Name: InConnectionPoint
+  m_Name: ConnectionPoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -170,9 +170,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   IsBaseSegment: 0
   IsEndSegment: 0
-  SegmentLength: 0.02
-  ConnectionID: 1
-  InConnectionPoint: {fileID: 1571004803686570119}
-  OutConnectionPoint: {fileID: 2271639122123893499}
-  ConnectionPoints: []
-  ConnectionIDs: []
+  SegmentLength: 0
+  MaxLength: 0
+  MinLength: 0
+  DifficultyModifier: 1
+  DurabilityModifier: 1
+  ConnectionPoints:
+  - {fileID: 5786919574660761740}
+  - {fileID: 167868491080167400}
+  ConnectionIDs:
+  - BS_SE_A_basic
+  - BS_SE_A_fullered
+  ConnectionPointStatus: 0000
+  ConnectedSegments:
+  - {fileID: 0}
+  - {fileID: 0}
+  lengthIsX: 0
+  lengthIsY: 1

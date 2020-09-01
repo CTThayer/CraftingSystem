@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8113541244373804834}
   m_Layer: 0
-  m_Name: ConnectionPoint_SingleEdge_A_Tip_Rounded
+  m_Name: ConnectionPoint_0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 4869195255659057023}
   - component: {fileID: 7239021832131820469}
   - component: {fileID: 5251314043176172152}
-  - component: {fileID: 9109818882968702864}
+  - component: {fileID: 5702006822680082126}
   m_Layer: 0
   m_Name: SingleEdge_A_Tip_Rounded
   m_TagString: Untagged
@@ -125,7 +125,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.04022579, y: 0.0437343, z: 0.006600001}
   m_Center: {x: 0.00000013876706, y: 0.02186715, z: -3.4924597e-10}
---- !u!114 &9109818882968702864
+--- !u!114 &5702006822680082126
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -138,10 +138,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsBaseSegment: 0
-  IsEndSegment: 1
-  SegmentLength: 0.043734
-  ConnectionID: 1
-  InConnectionPoint: {fileID: 8113541244373804834}
-  OutConnectionPoint: {fileID: 0}
-  ConnectionPoints: []
-  ConnectionIDs: []
+  IsEndSegment: 0
+  SegmentLength: 0
+  MaxLength: 0
+  MinLength: 0
+  DifficultyModifier: 1
+  DurabilityModifier: 1
+  ConnectionPoints:
+  - {fileID: 8424986957785174255}
+  ConnectionIDs:
+  - BS_SE_A_basic
+  ConnectionPointStatus: 00
+  ConnectedSegments:
+  - {fileID: 0}
+  lengthIsX: 0
+  lengthIsY: 1

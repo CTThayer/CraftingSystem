@@ -10,20 +10,21 @@ public class ComponentSegment : MonoBehaviour
     [SerializeField] private float MaxLength;
     [SerializeField] private float MinLength;
     [SerializeField] private float DifficultyModifier;
+    [SerializeField] private float DurabilityModifier;  // TODO: Do we need this? Seems Useful.
 
-    [SerializeField] private int ConnectionID;              // Unnecessary?
+    //[SerializeField] private int ConnectionID;              // Unnecessary?
 
-    /* These transforms are used to ensure the correct orientation 
-     * of the segment In connection point may not be necessary if 
-     * assumptions are made about the default orientation of the 
-     * segment (i.e. the mesh base is always at y = 0 and obj transform
-     * is always the origin with mesh oriented towards +y.)
-     * These transforms also need to be PARENTED to the GameObject 
-     * that the script is attached to so that the transforms are 
-     * positioned correctly regardless of GameObject positioning.
-     */
-    [SerializeField] private Transform InConnectionPoint;   // Unnecessary?
-    [SerializeField] private Transform OutConnectionPoint;  // Unnecessary?
+    ///* These transforms are used to ensure the correct orientation 
+    // * of the segment In connection point may not be necessary if 
+    // * assumptions are made about the default orientation of the 
+    // * segment (i.e. the mesh base is always at y = 0 and obj transform
+    // * is always the origin with mesh oriented towards +y.)
+    // * These transforms also need to be PARENTED to the GameObject 
+    // * that the script is attached to so that the transforms are 
+    // * positioned correctly regardless of GameObject positioning.
+    // */
+    //[SerializeField] private Transform InConnectionPoint;   // Unnecessary?
+    //[SerializeField] private Transform OutConnectionPoint;  // Unnecessary?
 
     /* Array of GameObjects representing the location and orientation
      * of the connection point(s) between this segment and any others
@@ -33,14 +34,6 @@ public class ComponentSegment : MonoBehaviour
      */
     [SerializeField] private GameObject[] ConnectionPoints;
 
-    /* Array of ComponentSegments that are attached to this segment.
-     * Max # of connected segments == number of connection points.
-     * 0-index item should always be ComponentSegment that comes
-     * before this segment in the series.
-     */
-    [SerializeField] private ComponentSegment[] ConnectedSegments;
-
-
     /* Array of strings representing the connection ID of each of the 
      * connection point(s) this segment has. Indices must match the
      * index of the corresponding object in the ConnectionPoint array.
@@ -48,6 +41,24 @@ public class ComponentSegment : MonoBehaviour
      */
     [SerializeField] private string[] ConnectionIDs;
 
+    /* Array of booleans representing whether the connection point(s) has a
+     * component segment attached to it currently. Length MUST equal the number
+     * of connection points that this segment has.
+     * Used to validate that the segments can connect properly.
+     */
+    [SerializeField] private bool[] ConnectionPointStatus;
+
+    /* Array of ComponentSegments that are attached to this segment.
+     * Max # of connected segments == number of connection points.
+     * 0-index item should always be ComponentSegment that comes
+     * before this segment in the series.
+     * TODO: Remove this if we don't use it. Boolean array works fine for most 
+     * cases. This is only useful for potential optimizations of the welding
+     * algorithm.
+     */
+    [SerializeField] private ComponentSegment[] ConnectedSegments;
+
+    /* Used for tracking the dimension to scale in when length is changed. */
     [SerializeField] bool lengthIsX;
     [SerializeField] bool lengthIsY;
 
@@ -68,15 +79,23 @@ public class ComponentSegment : MonoBehaviour
         // Segment must have a positive value length.
         Debug.Assert(SegmentLength > 0.0f);
 
-        // ConnectionID must be a value >= zero.
-        Debug.Assert(ConnectionID >= 0);
+        /**************************** OLD CODE ********************************/
+        /*            TODO: Remove when Multi-Connect is complete             */
+        
+        //// ConnectionID must be a value >= zero.
+        //Debug.Assert(ConnectionID >= 0);
+        //// Inbound ConnectionPoint must not be null.
+        //Debug.Assert(InConnectionPoint != null);
+        //// Outbound ConnectionPoint can only be null if it is an end segment.
+        //if (!IsEndSegment)
+        //    Debug.Assert(OutConnectionPoint != null);
 
-        // Inbound ConnectionPoint must not be null.
-        Debug.Assert(InConnectionPoint != null);
+        /**************************** OLD CODE ********************************/
 
-        // Outbound ConnectionPoint can only be null if it is an end segment.
-        if (!IsEndSegment)
-            Debug.Assert(OutConnectionPoint != null);
+        Debug.Assert(ConnectionPoints != null && ConnectionPoints.Length > 0);
+        Debug.Assert(ConnectionIDs != null && ConnectionPointStatus != null);
+        Debug.Assert(   ConnectionPoints.Length == ConnectionPointStatus.Length
+                     && ConnectionPoints.Length == ConnectionIDs.Length);
 
         // ComponentSegment must have a mesh on the GameObject it is assigned to.
         Debug.Assert(this.gameObject.GetComponent<MeshFilter>().mesh != null);
@@ -92,21 +111,81 @@ public class ComponentSegment : MonoBehaviour
     // Getters
     public bool SegmentIsEndSegment() { return IsEndSegment; }
     public bool SegmentIsBaseSegment() { return IsBaseSegment; }
-    public int GetConnectionID() { return ConnectionID; }
-    public Transform GetInConnectionPoint() { return InConnectionPoint; }
-    public Transform GetOutConnectionPoint() { return OutConnectionPoint; }
     public float GetSegmentLength() { return SegmentLength; }
     public float GetDifficultyModifier() { return DifficultyModifier; }
     
     // Get ALL connection info
+    public int GetNumberOfConnections() { return ConnectionPoints.Length - 1; }
     public GameObject[] GetConnectionPoints() { return ConnectionPoints; }
     public string[] GetConnectionIDs() { return ConnectionIDs; }
+    public bool[] GetAllConnectionStatuses() { return ConnectionPointStatus; }
     public ComponentSegment[] GetConnectedSegments() { return ConnectedSegments; }
 
     // Get single connection info
     public GameObject GetConnectionPoint(int index) { return ConnectionPoints[index]; }
     public string GetConnectionID(int index) { return ConnectionIDs[index]; }
+    public bool HasConnectionAt(int index) { return ConnectionPointStatus[index]; }
     public ComponentSegment GetConnectedSegment(int index) { return ConnectedSegments[index]; }
+
+    public void SetConnectionStatusAt(int index, bool status)
+    {
+        ConnectionPointStatus[index] = status;
+    }
+
+    public void AddConnectedSegmentAt(int index, ComponentSegment SegToAdd)
+    {
+        if (index >= 0 && index < ConnectedSegments.Length)
+        {
+            ConnectedSegments[index] = SegToAdd;
+        }
+        else
+        {
+            Debug.LogError("ComponentSegment: AddConnectedSegmentAt(): Index Out of Bounds");
+        }
+    }
+
+    public void RemoveConnectedSegmentAt(int index)
+    {
+        if (index >= 0 && index < ConnectedSegments.Length)
+        {
+            ConnectedSegments[index] = null;
+        }
+        else
+        {
+            Debug.LogError("ComponentSegment: RemoveConnectedSegmentAt(): Index Out of Bounds");
+        }
+    }
+
+    public bool RemoveConnectedSegment(ComponentSegment segToRemove)
+    {
+        for (int i = 0; i < ConnectedSegments.Length; i++)
+        {
+            if (ConnectedSegments[i] == segToRemove)
+            {
+                ConnectedSegments[i] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void RemoveConnections()
+    {
+        ConnectedSegments[0].RemoveConnectedSegment(this);
+        for (int i = 0; i < ConnectedSegments.Length; i++)
+        {
+            ConnectedSegments[i].RemoveConnectedSegmentAt(0);
+        }
+    }
+
+    /****************************** OLD CODE **********************************/
+    /*             TODO: Remove when Multi-Connect is complete                */
+
+    //public int GetConnectionID() { return ConnectionID; }
+    //public Transform GetInConnectionPoint() { return InConnectionPoint; }
+    //public Transform GetOutConnectionPoint() { return OutConnectionPoint; }
+
+    /****************************** OLD CODE **********************************/
 
     /* OnSelect()
      * Changes the color of the GameObject to indicate it is currently selected. 

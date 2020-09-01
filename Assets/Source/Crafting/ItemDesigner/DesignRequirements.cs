@@ -22,9 +22,9 @@ public class DesignRequirements : MonoBehaviour
     // MinMax "bounds" that each component can inhabit
     [SerializeField] private XYZRange[] MinMaxCompDimensions;
 
-    // Max rotation on each axis (abs) from the default orientation of socket 
-    // at a given component (0-1: 0 being no rotation, 1 being full rotation)
-    [SerializeField] private Vector3[] MaxComponentRotation; 
+    // Min/Max rotation on each axis (abs) from the default orientation of
+    // socket at a given component. Should be at most -360 to 360.
+    [SerializeField] private XYZRange[] MaxComponentRotation; 
 
     // The point(s) where an object is grabbed/picked-up/manipulated
     // NOTE: if item is to be held by a manipulator, all components should be

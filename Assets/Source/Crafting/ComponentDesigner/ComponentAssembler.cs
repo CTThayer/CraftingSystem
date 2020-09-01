@@ -43,8 +43,10 @@ public class ComponentAssembler : MonoBehaviour
             float totalLength = 0.0f;
             for (int i = 0; i < segments.Length - 2; i++)
             {
-                if (segments[i].GetConnectionID() != segments[i + 1].GetConnectionID())
-                    return false;
+                //// TODO: Replace this with Multi-Connect Versions IF this 
+                //// function (ValidateSegmentConfiguration) is actually used.
+                //if (segments[i].GetConnectionID() != segments[i + 1].GetConnectionID())
+                //    return false;
                 totalLength += segments[i].GetSegmentLength();
             }
             totalLength += segments[segments.Length - 1].GetSegmentLength();

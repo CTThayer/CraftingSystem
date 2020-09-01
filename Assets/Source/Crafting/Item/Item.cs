@@ -19,7 +19,7 @@ public class Item : MonoBehaviour
         set => _baseValue = (value >= 0f) ? value : _baseValue;
     }
 
-    // Possibly unnecessary?
+    // Possibly unnecessary? Use GameObject.name instead? 
     private string _itemName;
     public string itemName
     {
@@ -27,10 +27,23 @@ public class Item : MonoBehaviour
         set => _itemName = (value != null) ? value : _itemName;
     }
 
+    private string _itemDescription;
+    public string itemDescription
+    {
+        get => _itemDescription;
+        set => _itemDescription = (value != null) ? value : _itemDescription;
+    }
+
     // UniqueItemID (UIID)
     // For registering & querying item in the database. 
     // TODO: implement validation/assigment
-    private string UniqueItemID;
+    private string _uniqueItemID;
+    public string uniqueItemID
+    {
+        get => _uniqueItemID;
+    }
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +52,11 @@ public class Item : MonoBehaviour
         Debug.Assert(this.transform.GetComponent<MeshFilter>() != null);
         Debug.Assert(this.transform.GetComponent<MeshFilter>().mesh != null);
         Debug.Assert(this.transform.GetComponent<Collider>() != null);
+    }
+
+    public void AppendToDescription(string stringToAdd)
+    {
+        _itemDescription += stringToAdd;
     }
 
 }
