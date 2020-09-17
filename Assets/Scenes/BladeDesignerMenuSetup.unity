@@ -936,9 +936,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DefaultAddLocation: {fileID: 25211938}
-  AddLocIndicatorPrefab: {fileID: 8772465695967301808, guid: e9b71216d2aaf0447af0fd60ac23c5d9,
-    type: 3}
-  MaxLength: 1.5
+  MaxLength: 150
   FinishedComponentMat: {fileID: 2100000, guid: 9c3fc565e1d5c4f4095e952957052912,
     type: 2}
   CompAssembler: {fileID: 1440817105}
@@ -948,7 +946,7 @@ MonoBehaviour:
   GameObjectSelector: {fileID: 811754700}
   canvas: {fileID: 181918008}
   UIPanel: {fileID: 480055528}
-  SegmentLengthSlider: {fileID: 0}
+  SegmentLengthSlider: {fileID: 1270603030}
   ComponentToAdd: {fileID: 0}
 --- !u!1 &187897273
 GameObject:
@@ -1301,13 +1299,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 368590074}
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.8365163, y: 0.12940954, z: -0.22414392, w: 0.48296285}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 120, y: 30, z: 0}
 --- !u!1 &369044052
 GameObject:
   m_ObjectHideFlags: 0

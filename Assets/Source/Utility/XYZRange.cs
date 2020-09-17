@@ -9,42 +9,42 @@ public struct XYZRange
     //     Range-Mins <= (x,y,z) <= Range-Maxes 
     // would be considered to be within the range.
 
-    private float _xMin;
+    [SerializeField] private float _xMin;
     public float xMin
     {
         get => _xMin;
         set { _xMin = (value <= _xMax) ? value : _xMin; }
     }
 
-    private float _xMax;
+    [SerializeField] private float _xMax;
     public float xMax
     {
         get => xMax;
         set { xMax = (value >= _xMin) ? value : _xMax; }
     }
 
-    private float _yMin;
+    [SerializeField] private float _yMin;
     public float yMin
     {
         get => _yMin;
         set { _yMin = (value <= _yMax) ? value : _yMin; }
     }
 
-    private float _yMax;
+    [SerializeField] private float _yMax;
     public float yMax
     {
         get => yMax;
         set { yMax = (value >= _yMin) ? value : _yMax; }
     }
 
-    private float _zMin;
+    [SerializeField] private float _zMin;
     public float zMin
     {
         get => _zMin;
         set { _zMin = (value <= _zMax) ? value : _zMin; }
     }
 
-    private float _zMax;
+    [SerializeField] private float _zMax;
     public float zMax
     {
         get => zMax;

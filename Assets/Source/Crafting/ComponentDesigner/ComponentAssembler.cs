@@ -18,117 +18,67 @@ public class ComponentAssembler : MonoBehaviour
      * Verifies that the current segment configuration is valid and that
      * the segments can be welded without issue.
      * 
-     * @Param ComponentSegment[] segments - An array of ComponentSegments to weld. 
+     * @Param ComponentSegment[] segments - Array of ComponentSegments to weld. 
      * Returns bool for whether the configuration is valid.
      */
-    public bool ValidateSegmentConfiguration(ComponentSegment[] segments, float componentMaxLength)
+    public bool ValidateSegmentConfiguration(ComponentSegment[] segments, 
+                                             float componentMaxLength)
     {
         if (segments == null || segments.Length == 0)
         {
-            Debug.Log("ComponentAssembler: INVALID CONFIG - Supplied BladeSegment array contains no segments.");
+            Debug.Log("ComponentAssembler: INVALID CONFIG " +
+                      "- Supplied segment array contains no segments.");
             return false;
         }
         else if (!segments[segments.Length - 1].SegmentIsEndSegment())
         {
-            Debug.Log("ComponentAssembler: INVALID CONFIG - Last blade segment is not an end segment.");
+            Debug.Log("ComponentAssembler: INVALID CONFIG " +
+                      "- Last segment is not an end segment.");
             return false;
         }
         else if (segments.Length == 1 && segments[0].SegmentIsEndSegment())
         {
-            Debug.Log("ComponentAssembler: VALID CONFIG - Supplied BladeSegment array contains only 1 blade segment which is a valid end segment.");
+            Debug.Log("ComponentAssembler: VALID CONFIG - Supplied Segment " +
+                      "array contains only 1 blade segment which is a valid " +
+                      "end segment.");
             return true;
         }
         else
         {
             float totalLength = 0.0f;
-            for (int i = 0; i < segments.Length - 2; i++)
+
+            // TODO: handle first segment here b/c it may not have a base ([0])
+            // connection and that might be ok
+
+            for (int i = 1; i < segments.Length; i++)
             {
-                //// TODO: Replace this with Multi-Connect Versions IF this 
-                //// function (ValidateSegmentConfiguration) is actually used.
-                //if (segments[i].GetConnectionID() != segments[i + 1].GetConnectionID())
-                //    return false;
+                ComponentSegment[] connections = segments[i].GetConnectedSegments();
+                string[] connectionIDs = segments[i].GetConnectionIDs();
+                for (int j = 1; j < connections.Length; j++)
+                {
+                    if (connections[j] == null)
+                    {
+                        Debug.Log("ComponentAssembler: INVALID CONFIG - Not" +
+                                  "all segment connection points have " +
+                                  "segments attached to them.");
+                        return false;
+                    }
+                    if (connections[j].GetConnectionID(0) != connectionIDs[j])
+                    {
+                        Debug.Log("ComponentAssembler: INVALID CONFIG - " +
+                                  "connectionID mismatch on segments: " +
+                                   connections[j].gameObject.name + " and " +
+                                   segments[i].gameObject.name + ".");
+                        return false;
+                    }
+                }
                 totalLength += segments[i].GetSegmentLength();
             }
-            totalLength += segments[segments.Length - 1].GetSegmentLength();
             if (totalLength <= componentMaxLength)
                 return true;
             else
                 return false;
         }
-    }
-
-    // ORIGINAL VERSION - TODO: Archive & Remove
-    /* Combine Segment Geometry
-     * 
-     * Combines the meshes of a set of ComponentSegments. This function removes 
-     * any resulting duplicate vertices where the segment edges meet. This merge
-     * process also fixes any affected triangles and normals.
-     * Assumes segment configuration has been validated previously. 
-     * DOES NOT VALIDATE INPUTS.
-     * 
-     * @Param ComponentSegment[] segments - An array of ComponentSegments to merge. 
-     * Returns a Mesh made of the combined vertices, triangles, and normals.
-     */
-    public Mesh CombineSegmentGeometry(ComponentSegment[] segments)
-    {
-        // Lists of resulting vertices and tris
-        List<Vector3> FinalVerts = new List<Vector3>();
-        List<int> FinalTris = new List<int>();
-        List<Vector3> FinalNormals = new List<Vector3>();
-
-        // Used to offset the triangle indices by the correct amount
-        int VertexCount = 0;
-
-        // Add all vertices, triangles, and normals from each segment
-        // to the final list (while offsetting their values correctly)
-        foreach (ComponentSegment segment in segments)
-        {
-            Vector3[] segVerts = segment.transform.GetComponent<MeshFilter>().mesh.vertices;
-            foreach (Vector3 vert in segVerts)
-            {
-                FinalVerts.Add(segment.transform.TransformPoint(vert));
-            }
-            int[] segTris = segment.transform.GetComponent<MeshFilter>().mesh.triangles;
-            foreach (int index in segTris)
-            {
-                FinalTris.Add(index + VertexCount);
-            }
-            FinalNormals.AddRange(segment.transform.GetComponent<MeshFilter>().mesh.normals);
-            VertexCount = FinalVerts.Count;
-        }
-
-        Debug.Assert(FinalVerts.Count == FinalNormals.Count);
-
-        // Find any vertices that share the same position and normal 
-        // and eliminate the unnecessary copies.
-        for (int i = 0; i < FinalVerts.Count; i++)
-        {
-            for (int j = i; j < FinalVerts.Count; j++)          // TODO: Optimize here if possible
-            {
-                if (FinalVerts[i] == FinalVerts[j] && FinalNormals[i] == FinalNormals[j])
-                {
-                    // Adjust triangles to use same vertex when vertices are equal and
-                    // subtract 1 from any tri indexes greater than the one being removed.
-                    for (int k = 0; k < FinalTris.Count; k++)   // TODO: Optimize here if possible
-                    {
-                        if (FinalTris[k] == j)
-                            FinalTris[k] = i;
-                        if (FinalTris[k] > j)
-                            FinalTris[k]--;
-                    }
-                    // Remove extra vertex and normal
-                    FinalVerts.Remove(FinalVerts[j]);
-                    FinalNormals.Remove(FinalNormals[j]);
-                }
-            }
-        }
-
-        Mesh result = new Mesh();
-        result.vertices = FinalVerts.ToArray();
-        result.triangles = FinalTris.ToArray();
-        result.normals = FinalNormals.ToArray();
-
-        return result;
     }
 
     /* Weld Segment Meshes
@@ -172,13 +122,11 @@ public class ComponentAssembler : MonoBehaviour
         return result;
     }
 
-    /* Get All Verts Norms And Tris
+    /* Get All Verts, Norms, And Tris
      * Private helper method for combining all the vertices, normals, and 
      * triangles from each of the ComponentSegments in the segments array.
-     * No return type; vertices[], normals[], and triangles[] passed as ref
-     * so they can be modified in the function.
-     * ASSUMES vertices[], normals[], and triangles[] are initialized to 
-     * the correct size before being passed.
+     * No return type; lists for vertices, normals, and triangles passed as ref
+     * so they can be modified (added to) by this function.
      */
     private void GetAllVertsNormsAndTris(ComponentSegment[] segments,
                                          ref List<Vector3> vertices,
@@ -229,7 +177,6 @@ public class ComponentAssembler : MonoBehaviour
             isDuplicate = false;
             for (int j = 0; j < newVertices.Count; j++)
             {
-                //if (originalVertices[i] == newVertices[j] && originalNormals[i] == newNormals[j])
                 if((originalVertices[i] - newVertices[j]).sqrMagnitude < PosTolerance
                     && Vector3.Angle(originalNormals[i], newNormals[j]) < NormTolerance)
                 {
@@ -280,12 +227,15 @@ public class ComponentAssembler : MonoBehaviour
     {
         if (xy && yz)   // Can't use both xy and zy plane.
         {
-            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Can't use both xy and zy plane for mapping; you must select one (or neither for xz).");
+            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Can't use " +
+                      "both xy and zy plane for mapping; you must select one " +
+                      "(or neither for xz).");
             return;
         }
         if (m == null)
         {
-            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Supplied mesh was null.");
+            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - " +
+                      "Supplied mesh was null.");
             return;
         }
         Vector3[] vertices = m.vertices;
@@ -293,7 +243,8 @@ public class ComponentAssembler : MonoBehaviour
         Vector2[] uvs = new Vector2[vertices.Length];
         if (vertices == null || normals == null)
         {
-            Debug.Log("ComponentAssembler: PlanarMapUVs: Mesh is missing necessary components.");
+            Debug.Log("ComponentAssembler: PlanarMapUVs: ERROR - Mesh is " +
+                      "missing necessary components.");
             return;
         }
         Vector3 bounds = m.bounds.size;
@@ -342,7 +293,8 @@ public class ComponentAssembler : MonoBehaviour
     {
         if (m == null)
         {
-            Debug.Log("ComponentAssembler: CubeMapUVs: ERROR - Supplied mesh was null.");
+            Debug.Log("ComponentAssembler: CubeMapUVs: ERROR - " +
+                      "Supplied mesh was null.");
             return;
         }
         Vector3[] vertices = m.vertices;
@@ -350,7 +302,9 @@ public class ComponentAssembler : MonoBehaviour
         Vector2[] uvs = new Vector2[vertices.Length];
         
         //Vector3 bounds = m.bounds.size;
-        float[] b = new float[3] { m.bounds.size.x, m.bounds.size.y, m.bounds.size.z };
+        float[] b = new float[3] { m.bounds.size.x,
+                                   m.bounds.size.y,
+                                   m.bounds.size.z };
         float bigBound = Mathf.Max(b);
 
         for (int i = 0; i < vertices.Length; i++)

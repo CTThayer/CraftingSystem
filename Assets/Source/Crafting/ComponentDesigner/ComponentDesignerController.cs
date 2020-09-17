@@ -7,7 +7,6 @@ public class ComponentDesignerController : MonoBehaviour
 {
     // Manually Configured Fields
     [SerializeField] private Transform DefaultAddLocation;
-    [SerializeField] private GameObject AddLocIndicatorPrefab;
     [SerializeField] private float MaxLength;
     [SerializeField] private Material FinishedComponentMat;
 
@@ -27,26 +26,18 @@ public class ComponentDesignerController : MonoBehaviour
     public GameObject ComponentToAdd;
 
     // Private Variables
+    private bool isFirstSegment;
     private List<ComponentSegment> Segments = new List<ComponentSegment>();
     private ComponentSegment CurrentSelection;
-
-    // Replacing Old Add Segment Code with Multi-Connect Code
-    // TODO: Replace/Remove AddLocation
-    // TODO: Update all methods to use Multi-Connect
-    // MULTI CONNECTION Variables
-    private int AddLocIndex;
-    private int AddLocIndex_MAX;
-    //private Transform AddLocation;
-
-    private GameObject AddLocationIndicator;
-    private bool isFirstSegment;
+    private SegmentConnectionPoint SelectedConnectionPoint;
+    
     
     // Start is called before the first frame update
     void Start()
     {
         // Ensure manually assigned fields are not null
         Debug.Assert(DefaultAddLocation != null);
-        Debug.Assert(AddLocIndicatorPrefab != null);
+        //Debug.Assert(AddLocIndicatorPrefab != null);
         Debug.Assert(OutputText != null);
         Debug.Assert(SelectedSegmentText != null);
         Debug.Assert(GameObjectSelector != null);
@@ -63,7 +54,7 @@ public class ComponentDesignerController : MonoBehaviour
         ComponentToAdd = GameObjectSelector.GetObjectFromDropdown(0);
 
         // Set SelectedConnection to 1 b/c it will usually start w/first index
-        AddLocIndex = 1;
+        //SelectedAddLocIndex = 1;
     }
 
     // Update is called once per frame
@@ -90,13 +81,15 @@ public class ComponentDesignerController : MonoBehaviour
             }
             else
             {
-                Debug.Log("ComponentDesignerController: SetComponentToAdd() - Supplied GameObject is not a ComponentSegment.");
+                Debug.Log("ComponentDesignerController: SetComponentToAdd() " +
+                          "- Supplied GameObject is not a ComponentSegment.");
                 return;
             }
         }
         else
         {
-            Debug.Log("ComponentDesignerController: SetComponentToAdd() - Supplied GameObject is null.");
+            Debug.Log("ComponentDesignerController: SetComponentToAdd() " +
+                      "- Supplied GameObject is null.");
             return;
         }
     }
@@ -111,20 +104,145 @@ public class ComponentDesignerController : MonoBehaviour
         OutputText.text = AddComponentSegment();
     }
 
+    /* AddComponentSegment()
+     * Adds the chosen ComponentSegment to the workspace (and Segments list) at
+     * the currently selected segment/add location. This also validates a number
+     * of conditions and returns a string detailing success or any errors.
+     */
+    private int count = 0;
+    private string AddComponentSegment()
+    {
+        if (isFirstSegment)
+        {
+            // NOTE: If base-segments are used then the first segment needs to
+            // be ensured to be a base segment at this point.
+
+            GameObject firstSeg = Instantiate(ComponentToAdd.gameObject,
+                                              DefaultAddLocation.position,
+                                              DefaultAddLocation.rotation);
+            firstSeg.name = "Segment0";
+            isFirstSegment = false;
+            Segments.Add(firstSeg.GetComponent<ComponentSegment>());
+            count++;
+        }
+        else
+        {
+            if (CurrentSelection == null)
+            {
+                return "An existing ComponentSegment is not selected. " +
+                       "ComponentSegment cannot be added.";
+            }
+            if (ComponentToAdd == null)
+            {
+                return "No new ComponentSegment to add was selected. " +
+                       "ComponentSegment cannot be added.";
+            }
+
+            // Get a reference to the ComponentSegment script of the new segment
+            ComponentSegment segToAdd = ComponentToAdd.GetComponent<ComponentSegment>();
+
+            // Get indices to connect segment at
+            int AddIndexInSelected;
+            if (SelectedConnectionPoint != null)
+                AddIndexInSelected = SelectedConnectionPoint.indexInConnections;
+            else                                                                // TODO: Should we error out here instead?
+            {
+                // if no connection point is selected and selected segment has 
+                // more than 1 connection point, select the first non-parent
+                // facing connection point (index 1), else select index 0
+                int numConnections = CurrentSelection.GetConnectedSegments().Length;
+                AddIndexInSelected = numConnections > 1 ? 1 : 0;
+            }
+            int AddIndexInNewSeg = AddIndexInSelected > 0 ? 0 : 1;
+
+            // Verify that the new segment can actually connect at this point
+            if (!CurrentSelection.HasConnectionAt(AddIndexInSelected))
+            {
+                if (CurrentSelection.GetConnectionID(AddIndexInSelected)
+                    == segToAdd.GetConnectionID(AddIndexInNewSeg))
+                {
+                    // Setup AddLocation transform
+                    Vector3 AddPos = CurrentSelection.GetConnectionPoint(AddIndexInSelected).transform.position;
+                    Quaternion AddRot = CurrentSelection.GetConnectionPoint(AddIndexInSelected).transform.rotation;
+                    if (AddIndexInSelected == 0)
+                    {
+                        Vector3 newSegConnPos = segToAdd.GetConnectionPoint(AddIndexInNewSeg).transform.position;
+                        AddPos = AddPos - newSegConnPos;
+                    }
+
+                    // Instantiate & name new segment
+                    GameObject segObj = Instantiate(ComponentToAdd, AddPos, AddRot);
+                    segObj.name = "Segment" + count;
+
+                    // Store new segment's reference in the segments list
+                    ComponentSegment newSegment = segObj.GetComponent<ComponentSegment>();
+                    Segments.Add(newSegment);
+
+                    // Update segment connections
+                    CurrentSelection.AddConnectedSegmentAt(AddIndexInSelected, newSegment);
+                    newSegment.AddConnectedSegmentAt(AddIndexInNewSeg, CurrentSelection);
+
+                    // Update connection status booleans
+                    CurrentSelection.SetConnectionStatusAt(AddIndexInSelected, true);   // Probably won't be necessary
+                    newSegment.SetConnectionStatusAt(AddIndexInNewSeg, true);           // Probably won't be necessary
+
+                    // Reset highlighting if the current segment was previously 
+                    // a disconnected segment
+                    if (CurrentSelection.isDisconnected)
+                        CurrentSelection.OnReconnection();
+
+                    // Check for contact with other segments and update any
+                    // connections if applicable.
+                    newSegment.CheckForContact();
+
+                    // Update count used for naming segments
+                    count++;
+                }
+                else
+                {
+                    return "Connection ID Mismatch";
+                }
+            }
+            else
+            {
+                return "Segment already exists at selected connection point.";
+            }
+        }
+
+        // Update selection to be newly added object
+        if (CurrentSelection != null)
+        {
+            CurrentSelection.OnDeselect();
+        }
+        CurrentSelection = Segments[Segments.Count - 1].GetComponent<ComponentSegment>();
+        CurrentSelection.OnSelect();
+
+        // Update ConnectionPoint selection to be next open connection
+        AutoUpdateConnectionPointSelection();
+
+        return "ComponentSegment was added.";
+    }
+
     /* RemoveSegment()
      * Public facing method for removing a segment (for use in UI).
      * Removes the currently selected segment.
+     * NOTE: We are NOT shifting segments down to ensure that everything 
+     * connects because there is no guarantee that the next segment will be 
+     * compatible and doing so makes assumptions about the user's intent. It 
+     * would also prohibit simply swapping out a segment. This means that 
+     * validating the final segment configuration is CRITICAL!
+     * NOTE: This does NOT include any functionality for tracking downstream 
+     * references to objects that were previously connected to this one. Segment
+     * connections are validated differently in several other places.
      */
     public void RemoveSegment()
     {
         if (CurrentSelection != null)
         {
+            ComponentSegment parentSeg = CurrentSelection.GetConnectedSegment(0);
+            
             // Clean-up segment connections.
-            CurrentSelection.RemoveConnections();
-
-            // NOTE: Does NOT currently have any functionality for tracking
-            // downstream references to objects that were previously connected
-            // to this one. This could cause problems with adding segments.
+            CurrentSelection.ClearConnections();
 
             // Remove from Segments list and destroy the selected GameObject.
             int index = Segments.IndexOf(CurrentSelection);
@@ -134,16 +252,11 @@ public class ComponentDesignerController : MonoBehaviour
             // Select the object that precedes this one (if it exists).
             if (index > 0)
             {
-                CurrentSelection = Segments[index - 1];
-                CurrentSelection.OnSelect();
+                CurrentSelection = parentSeg;
+                if (CurrentSelection != null)
+                    CurrentSelection.OnSelect();
+                AutoUpdateConnectionPointSelection();
             }
-
-            // NOTE: We are NOT shifting segments down to ensure that
-            // everything connects because there is no guarantee that the
-            // next segment will be compatible and doing so makes 
-            // assumptions about the user's intent. It would also prohibit 
-            // simply swapping out a segment. This means that validating 
-            // the final segment configuration is CRITICAL!
         }
     }
 
@@ -158,7 +271,7 @@ public class ComponentDesignerController : MonoBehaviour
      * asset database and/or pushed to the server once these features are
      * fully implemented.
      */
-    public void AssembleComponent()
+    public GameObject AssembleComponent()
     {
         ComponentSegment[] segArray = Segments.ToArray();
         bool validConfig = CompAssembler.ValidateSegmentConfiguration(segArray, MaxLength);
@@ -166,7 +279,6 @@ public class ComponentDesignerController : MonoBehaviour
         {
             // For test purposes, setup a new GameObject with the new mesh 
             // and move it off the side so that it can be viewed.
-            //Mesh m = CompAssembler.CombineSegmentGeometry(segArray);
             Mesh m = CompAssembler.WeldSegmentMeshes(segArray);
             GameObject finishedComponent = new GameObject();
             finishedComponent.AddComponent<MeshFilter>();
@@ -174,119 +286,23 @@ public class ComponentDesignerController : MonoBehaviour
             MR.material = FinishedComponentMat;
             finishedComponent.GetComponent<MeshFilter>().mesh = m;
             Vector3 componentDisplayPos = DefaultAddLocation.position;
-            componentDisplayPos.x += 0.1f;
-            finishedComponent.transform.position = componentDisplayPos;
-
-            // TODO: Mesh should be stored into a component database once this is configured.
+            componentDisplayPos.x += 1.5f;
+            finishedComponent.transform.position = componentDisplayPos;         // TODO: remove this once debugging is complete
+            return finishedComponent;
         }
         else
         {
-            OutputText.text = "Invalid segment configuration. Component can't be constructed.";
+            OutputText.text = "Invalid segment configuration. Component " +
+                              "can't be constructed.";
             Debug.Log("ComponentDesigner: Segment configuration was not valid.");
+            return null;
         }
-    }
-
-    /**************************** Private Methods ******************************/
-
-    /* AddComponentSegment()
-     * Adds the chosen ComponentSegment to the workspace (and Segments list) at
-     * the currently selected segment/add location. This also validates a number
-     * of conditions and returns a string detailing success or any errors.
-     */
-    private string AddComponentSegment()
-    {
-        if (isFirstSegment)
-        {
-            // NOTE: If we decide to use base-segments then we need to ensure
-            // that the segment we are adding is a base segment here.
-            GameObject firstSeg = Instantiate(ComponentToAdd.gameObject, 
-                                              DefaultAddLocation.position, 
-                                              DefaultAddLocation.rotation);
-            firstSeg.name = "Segment1";
-            isFirstSegment = false;
-            Segments.Add(firstSeg.GetComponent<ComponentSegment>());
-        }
-        else
-        {
-            if (CurrentSelection == null)
-            {
-                return "An existing ComponentSegment is not selected. ComponentSegment cannot be added.";
-            }
-            if (ComponentToAdd == null)
-            {
-                return "No new ComponentSegment to add was selected. ComponentSegment cannot be added.";
-            }
-
-            /*************************** OLD CODE *****************************/
-            /*          TODO: Remove when Multi-Connect is complete           */
-
-            //if (CurrentSelection.GetConnectionID() != ComponentToAdd.GetComponent<ComponentSegment>().GetConnectionID())
-            //{
-            //    return "Incompatible ComponentSegments selected! (ConnectionID Mismatch) ComponentSegment cannot be added.";
-            //}
-            //if (CurrentSelection.GetComponent<ComponentSegment>().SegmentIsEndSegment())
-            //{
-            //    return "Selected ConnectionSegment being added to is an end segment. Therefore, ComponentSegment cannot be added.";
-            //}
-            //if (AddLocation == null)
-            //{
-            //    if (CurrentSelection != null)   // Technically unnecessary??
-            //        AddLocation = CurrentSelection.GetOutConnectionPoint();
-            //    else
-            //        return "No connection location was selected. Therefore, ComponentSegment cannot be added.";
-            //}
-            //
-            //GameObject seg = Instantiate(ComponentToAdd, AddLocation.position, AddLocation.rotation);
-            //Segments.Add(seg.GetComponent<ComponentSegment>());
-            //seg.name = "Segment" + Segments.Count;
-
-            /************************ END OLD CODE ****************************/
-
-            // TODO: Implement checks to verify that we are not adding a base-
-            // segment or end-segment inbetween two normal segments.
-
-            if (!CurrentSelection.HasConnectionAt(AddLocIndex))
-            {
-                if (CurrentSelection.GetConnectionID(AddLocIndex) == ComponentToAdd.GetComponent<ComponentSegment>().GetConnectionID(0))
-                {
-                    CurrentSelection.SetConnectionStatusAt(AddLocIndex, true);
-                    Transform AddLocation = CurrentSelection.GetConnectionPoint(AddLocIndex).transform;
-                    GameObject segObj = Instantiate(ComponentToAdd, AddLocation.position, AddLocation.rotation);
-                    ComponentSegment segment = segObj.GetComponent<ComponentSegment>();
-                    Segments.Add(segment);
-                    segObj.name = "Segment" + Segments.Count;
-                    CurrentSelection.AddConnectedSegmentAt(AddLocIndex, segment);
-                    segment.AddConnectedSegmentAt(0, CurrentSelection);
-                }
-                else
-                {
-                    return "Connection ID Mismatch";
-                }
-            }
-            else
-            {
-                return "Segment already exists at selected connection point.";
-            }
-        }
-        // Update selection to be newly added object
-        if (CurrentSelection != null)
-        {
-            CurrentSelection.OnDeselect();
-        }
-        CurrentSelection = Segments[Segments.Count - 1].GetComponent<ComponentSegment>();
-        CurrentSelection.OnSelect();
-        AddLocIndex_MAX = CurrentSelection.GetNumberOfConnections();
-        AddLocIndex = (AddLocIndex_MAX > 0) ? 1 : 0;
-
-        return "ComponentSegment was added.";
     }
 
     /* HandleInput()
      * Helper method for reading/responding to user input. Called
      * from Update() each frame. Deals with mouse click selection,
      * and arrow key input for selecting the AddLocation.
-     * 
-     * TODO: Consider alternative selection methods for AddLocation.
      */
     private void HandleInput()
     {
@@ -295,7 +311,8 @@ public class ComponentDesignerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y"));
+                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), 
+                                                 Input.GetAxis("Mouse Y"));
                 CamControl.ProcessTumble(mouseDelta);
             }
             if (Input.mouseScrollDelta.y != 0)
@@ -309,35 +326,6 @@ public class ComponentDesignerController : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             LMBSelect();
-            if (CurrentSelection != null)
-            {
-                AddLocIndex_MAX = CurrentSelection.GetNumberOfConnections();
-                AddLocIndex = (AddLocIndex_MAX > 0) ? 1 : 0;
-            }
-            else
-            {
-                AddLocIndex_MAX = -1;
-                AddLocIndex = -1;
-            }
-        }
-
-        // Update AddLocIndex based on user input
-        if (CurrentSelection != null)
-        {
-            if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                if (AddLocIndex + 1 < AddLocIndex_MAX)
-                    AddLocIndex++;
-                else
-                    AddLocIndex = 0;
-            }
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                if (AddLocIndex - 1 > 0)
-                    AddLocIndex--;
-                else
-                    AddLocIndex = AddLocIndex_MAX;
-            }
         }
     }
 
@@ -356,7 +344,34 @@ public class ComponentDesignerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
-            ComponentSegment NewSelection = hit.transform.GetComponent<ComponentSegment>();
+            GameObject hitObj = hit.transform.gameObject;
+
+            Debug.Log("Selected: " + hitObj.name);
+
+            // If a SegmentConnectionPoint was hit, update selection
+            SegmentConnectionPoint SCP = hitObj.GetComponent<SegmentConnectionPoint>();
+            if (SCP != null)
+            {
+                if (SCP != SelectedConnectionPoint)
+                {
+                    if (SelectedConnectionPoint != null)
+                        SelectedConnectionPoint.OnDeselection();
+                    SelectedConnectionPoint = SCP;
+                    SelectedConnectionPoint.OnSelection();
+                    return SCP.gameObject.name; // early out
+                }
+            }
+            else
+            {
+                if (SelectedConnectionPoint != null)
+                {
+                    SelectedConnectionPoint.OnDeselection();
+                    SelectedConnectionPoint = SCP;
+                }
+            }
+
+            // If a ComponentSegment was hit, update selection
+            ComponentSegment NewSelection = hitObj.GetComponent<ComponentSegment>();
             if (NewSelection != CurrentSelection)
             {
                 if (CurrentSelection != null)
@@ -367,40 +382,50 @@ public class ComponentDesignerController : MonoBehaviour
                 { 
                     NewSelection.OnSelect();
                     retVal = NewSelection.gameObject.name;
-                    // update camera target location to be the transform of the selected object
-                    CamControl.SetLookAtPosition(NewSelection.transform.position);
+
+                    // update camera target location to be the transform of the 
+                    // selected object
+                    CamControl.SetLookAtPosition(NewSelection.transform.position); // TODO: NOT WORKING? Fix ASAP
                 }
                 CurrentSelection = NewSelection;
+
+                // Auto-update connection point selection
+                AutoUpdateConnectionPointSelection();
+            }
+        }
+        // Else, nothing was hit so, clear selections
+        else
+        {
+            if (SelectedConnectionPoint != null)
+            {
+                SelectedConnectionPoint.OnDeselection();
+                SelectedConnectionPoint = null;
+            }
+            if (CurrentSelection != null)
+            {
+                CurrentSelection.OnDeselect();
+                CurrentSelection = null;
             }
         }
         return retVal;
     }
 
-
-    /******************************* OLD CODE *********************************/
-    /*              TODO: Remove when Multi-Connect is complete               */
-
-    /* SetAddLocation()
-     * Updates the AddLocation and AddLocationIndicator used to
-     * display the place where the new segment will be added.
+    /* Auto-Update Connection Point Selection
+     * Automatically updates the selected connection point based on the current
+     * ComponentSegment selection (CurrentSelection). It will select the first
+     * open connection point of the ComponentSegment (if there is one).
      */
-    //private void SetAddLocation(Transform t)
-    //{
-    //    if (t != null)
-    //    {
-    //        AddLocation = t;
-    //        if (AddLocationIndicator == null)
-    //            AddLocationIndicator = Instantiate(AddLocIndicatorPrefab);
-    //        AddLocationIndicator.transform.position = t.position;
-    //        AddLocationIndicator.transform.rotation = t.rotation;
-    //    }
-    //    else
-    //    {
-    //        Destroy(AddLocationIndicator);
-    //    }
-    //}
-
-    /**************************** END OLD CODE ********************************/
+    private void AutoUpdateConnectionPointSelection()
+    {
+        if (SelectedConnectionPoint != null)
+            SelectedConnectionPoint.OnDeselection();
+        if (CurrentSelection != null)
+        {
+            SelectedConnectionPoint = CurrentSelection.GetNextOpenConnectionPoint();
+            if (SelectedConnectionPoint != null)
+                SelectedConnectionPoint.OnSelection();
+        }
+    }
 
     /* OutputDebugComparisonInfo()
      * Helper method for outputing and comparing the vertex, triangle, 
