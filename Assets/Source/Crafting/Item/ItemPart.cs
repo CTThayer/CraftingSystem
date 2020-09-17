@@ -42,6 +42,7 @@ public class ItemPart : MonoBehaviour
 
     private Color originalColor; // For selection/deselection purposes
 
+    // For parts that require the use of connection points/connected parts
     [SerializeField] private GameObject[] _connectionPoints;
     public GameObject[] connectionPoints { get; }
     public GameObject GetConnectionPoint(int index) { return _connectionPoints[index]; }

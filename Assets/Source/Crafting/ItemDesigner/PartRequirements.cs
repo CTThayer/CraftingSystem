@@ -57,11 +57,11 @@ public class PartRequirements : MonoBehaviour
 
     public bool PartMeetsBaseRequirements(ItemPart part)
     {
-        return (   IsAllowedItemType(part)
+        return  IsAllowedItemType(part)
                 && HasAllowedMaterialType(part)
                 && HasCorrectCollider(part)
                 && FitsInDimensions(part)
-               );
+                && PartHasScripts(part);
     }
 
     public bool PartMeetsRequirements(ItemPart part, ItemPart otherPart)
@@ -69,7 +69,8 @@ public class PartRequirements : MonoBehaviour
         bool meetsReqs = IsAllowedItemType(part) 
                          && HasAllowedMaterialType(part)
                          && HasCorrectCollider(part) 
-                         && FitsInDimensions(part);
+                         && FitsInDimensions(part)
+                         && PartHasScripts(part);
 
         if (_useConnectionPoints)
         {
@@ -149,6 +150,22 @@ public class PartRequirements : MonoBehaviour
         Bounds partBounds = part.GetComponent<Renderer>().bounds;
         return partDimensionsRange.ContainsPoint(partBounds.size);
     }
+
+    /* Parts Has Scripts
+     * Checks whether the part has the required scripts attached to it.
+     */
+    private bool PartHasScripts(ItemPart part)
+    {
+        for (int i = 0; i < _requiredScripts.Length; i++)
+        {
+            System.Type componentType = System.Type.GetType(_requiredScripts[i]);
+            if (componentType != null)
+                if (part.GetComponent(componentType) == null)
+                    return false;
+        }
+        return true;
+    }
+
 
     /* Parts Are Connected
      * Checks if two parts are connected via connection points in each part.
