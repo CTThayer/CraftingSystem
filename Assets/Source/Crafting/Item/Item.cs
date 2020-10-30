@@ -75,10 +75,10 @@ public class Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Ensure that the Item has a mesh and a collider
-        Debug.Assert(this.transform.GetComponent<MeshFilter>() != null);
-        Debug.Assert(this.transform.GetComponent<MeshFilter>().mesh != null);
-        Debug.Assert(this.transform.GetComponent<Collider>() != null);
+        //// Ensure that the Item has a mesh and a collider
+        //Debug.Assert(this.transform.GetComponent<MeshFilter>() != null);
+        //Debug.Assert(this.transform.GetComponent<MeshFilter>().mesh != null);
+        //Debug.Assert(this.transform.GetComponent<Collider>() != null);
 
         // Validate properties (in case they were set in engine or incorrectly)
         Debug.Assert(_uniqueItemID != null && _uniqueItemID.Length > 0);
@@ -87,7 +87,7 @@ public class Item : MonoBehaviour
         Debug.Assert(_mass > 0f);
         Debug.Assert(_volume > 0f);
         Debug.Assert(_baseValue > 0f);
-        Debug.Assert(itemParts != null && itemParts.Length > 0);
+        //Debug.Assert(itemParts != null && itemParts.Length > 0);
     }
 
     /* Initialize

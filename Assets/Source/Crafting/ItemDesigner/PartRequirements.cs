@@ -9,16 +9,18 @@ public enum TypeOfCollider
     Capsule,
     Mesh,
     Sphere,
-    Terrain,
-    Wheel
+    Terrain,                // TODO: Is this actually necessary?
+    Wheel,                  // TODO: Is this actually necessary?
+    Compound,
+    //CompoundBox,
+    //CompoundMesh,
+    //CompoundMixed
+    NONE
 }
 
 [System.Serializable]
 public class PartRequirements : MonoBehaviour
 {
-    [SerializeField] private XYZRange _partDimensionsRange;
-    public XYZRange partDimensionsRange { get; }
-
     [SerializeField] private string[] _allowedPartTypes;
     public string[] allowedPartTypes { get; }
 
@@ -28,16 +30,51 @@ public class PartRequirements : MonoBehaviour
     [SerializeField] private TypeOfCollider _requiredCollider;
     public TypeOfCollider requiredCollider { get; }
 
-    [SerializeField] private string[] _requiredScripts;
-    public string[] requiredScripts { get; }
+    [SerializeField] private string[] _requiredScripts;                         // NOTE: Scripts to attach to this PART, not the end item (e.g. DamageDealer script is attached to blade, not the whole item)
+    public string[] requiredScripts { get; }                                    // NOTE: Strings MUST match the exact name of a script in order to be added.
 
-    [SerializeField] private bool _useConnectionPoints;
-    public bool useConnectionPoints { get; }
+    [SerializeField] private bool _useConnectionPoints;                         // NOTE: refers to connection points at the design level
+    public bool useConnectionPoints { get; }                                    // Not to be confused with connection points in PartSegments
 
-    [SerializeField] private bool _useSurfaceContact;
-    public bool useSurfaceContact { get; }
+    [SerializeField] private bool _lockToConnectionPoint;                       // NOTE: Refers to locking the whole part to a specified connection point at the design level
+    public bool lockToConnectionPoint { get; }
 
-    public PartRequirements(XYZRange dimRange,
+    [SerializeField] private XYZRange _partDimensionsRange;
+    public XYZRange partDimensionsRange { get; }
+
+    [SerializeField] private XYZRange _partTranslationRange;
+    public XYZRange partTranslationRange { get; }
+
+    [SerializeField] private XYZRange _partRotationRange;
+    public XYZRange partRotationRange { get; }
+
+    [SerializeField] private GameObject[] _requiredManipulators;                // TODO: Is this the correct way to handle this?
+    public GameObject[] requiredManipulators { get; }
+
+    //[SerializeField] private XYZRange _partScaleRange;                        // NOTE: Remove this soon. Parts are never scaled.
+    //public XYZRange partScaleRange { get; }                                   // They can be constructed to any size within their 
+                                                                                // dimension range using segments, but the whole object is never scaled.
+
+    //[SerializeField] private bool _useSurfaceContact;
+    //public bool useSurfaceContact { get; }
+
+    [SerializeField] private int _numConnections;                               // TODO: Is this actually necessary?
+    public int numConnections { get; }
+
+    void Start()
+    {
+        // lockToConnectionPoints cannot be true while useConnectionPoints is false.
+        Debug.Assert(!(!_useConnectionPoints && _lockToConnectionPoint));
+
+        Debug.Assert(_allowedPartTypes != null && _allowedPartTypes.Length > 0);
+        Debug.Assert(_allowedMaterials != null && _allowedMaterials.Length > 0);
+    }
+
+
+    public PartRequirements(XYZRange dimRange,                                  // TODO: Should we remove this constructor or change it to an Initialize() function?
+                            XYZRange posRange,
+                            XYZRange rotRange,
+                            //XYZRange scaRange,
                             string[] allowedTypes,
                             string[] allowedMats,
                             TypeOfCollider colliderType,
@@ -45,12 +82,20 @@ public class PartRequirements : MonoBehaviour
                             bool useSC 
                             )
     {
+        // Set part area/transform constraints
         _partDimensionsRange = dimRange;
+        _partTranslationRange = posRange;
+        _partRotationRange = rotRange;
+        //_partScaleRange = scaRange;
+
+        // Set allowed part types, materials, and collider type
         _allowedPartTypes = allowedTypes;
         _allowedMaterials = allowedMats;
         _requiredCollider = colliderType;
+
+        // Set connection type
         _useConnectionPoints = useCPs;
-        _useSurfaceContact = useSC;
+        //_useSurfaceContact = useSC;
     }
 
     /*********************** Public Validation Methods ************************/
@@ -64,24 +109,24 @@ public class PartRequirements : MonoBehaviour
                 && PartHasScripts(part);
     }
 
-    public bool PartMeetsRequirements(ItemPart part, ItemPart otherPart)
-    {
-        bool meetsReqs = IsAllowedItemType(part) 
-                         && HasAllowedMaterialType(part)
-                         && HasCorrectCollider(part) 
-                         && FitsInDimensions(part)
-                         && PartHasScripts(part);
+    //public bool PartMeetsRequirements(ItemPart part, ItemPart otherPart)
+    //{
+    //    bool meetsReqs = IsAllowedItemType(part) 
+    //                     && HasAllowedMaterialType(part)
+    //                     && HasCorrectCollider(part) 
+    //                     && FitsInDimensions(part)
+    //                     && PartHasScripts(part);
 
-        if (_useConnectionPoints)
-        {
-            meetsReqs = meetsReqs && PartsAreConnected(part, otherPart);
-        }
-        if (_useSurfaceContact)
-        {
-            meetsReqs = meetsReqs && PartSurfacesTouch(part, otherPart);
-        }
-        return meetsReqs;
-    }
+    //    if (_useConnectionPoints)
+    //    {
+    //        meetsReqs = meetsReqs && PartsAreConnected(part, otherPart);
+    //    }
+    //    if (_useSurfaceContact)
+    //    {
+    //        meetsReqs = meetsReqs && PartSurfacesTouch(part, otherPart);
+    //    }
+    //    return meetsReqs;
+    //}
 
     /********************* END Public Validation Methods **********************/
 
@@ -89,6 +134,10 @@ public class PartRequirements : MonoBehaviour
 
     /******************* Private Validation Helper Methods ********************/
 
+    /* Is Allowed Item Type
+     * Checks if the part type for the specified part matches one of the allowed 
+     * part types listed in the part requirements.
+     */
     private bool IsAllowedItemType(ItemPart part)
     {
         for (int i = 0; i < allowedPartTypes.Length; i++)
@@ -99,6 +148,24 @@ public class PartRequirements : MonoBehaviour
         return false;
     }
 
+    /* Is Allowed Item Type (overload)
+     * Checks if the specified part type matches one of the allowed part types 
+     * in the allowedPartTypes array.
+     */
+    private bool IsAllowedItemType(string partType)
+    {
+        for (int i = 0; i < allowedPartTypes.Length; i++)
+        {
+            if (allowedPartTypes[i] == partType)
+                return true;
+        }
+        return false;
+    }
+
+    /* Has Allowed Material Type
+     * Checks if the crafting material applied to the part is one of the 
+     * material types in the allowed materials array of the part requirements.
+     */
     private bool HasAllowedMaterialType(ItemPart part)
     {
         for (int i = 0; i < allowedMaterials.Length; i++)
@@ -109,42 +176,76 @@ public class PartRequirements : MonoBehaviour
         return false;
     }
 
-    private bool HasCorrectCollider(ItemPart part)
+    /* Has Correct Collider
+     * Checks if the collider attached to the part matches the type specified in
+     * the part requirements.
+     */
+    private bool HasCorrectCollider(ItemPart part)                              // TODO: TEST THIS!
     {
         bool isCorrectCollider = false;
         Collider c = part.GetComponent<Collider>();
+        Collider[] colliders = part.gameObject.GetComponents<Collider>();       // TODO: Clean up this code. It is very clunky and inefficient right now.
+
         if (c == null)
-            return isCorrectCollider;
-        switch (requiredCollider)
         {
-            case TypeOfCollider.Box:
-                if (c is BoxCollider)
-                    isCorrectCollider = true;
-                break;
-            case TypeOfCollider.Capsule:
-                if (c is CapsuleCollider)
-                    isCorrectCollider = true;
-                break;
-            case TypeOfCollider.Mesh:
-                if (c is MeshCollider)
-                    isCorrectCollider = true;
-                break;
-            case TypeOfCollider.Sphere:
-                if (c is SphereCollider)
-                    isCorrectCollider = true;
-                break;
-            case TypeOfCollider.Terrain:
-                if (c is TerrainCollider)
-                    isCorrectCollider = true;
-                break;
-            case TypeOfCollider.Wheel:
-                if (c is WheelCollider)
-                    isCorrectCollider = true;
-                break;
+            if (requiredCollider == TypeOfCollider.NONE)
+                return true;
+            else
+                return isCorrectCollider;
         }
-        return isCorrectCollider;
+
+        if (requiredCollider != TypeOfCollider.Compound && colliders.Length > 1)
+            return false;
+        else if (requiredCollider == TypeOfCollider.Compound && colliders.Length <= 1)
+            return false;
+        else if (requiredCollider == TypeOfCollider.Compound && colliders.Length > 1)
+        {
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if (colliders[i] is TerrainCollider || colliders[i] is WheelCollider)
+                    return false;
+            }
+            return true;
+        }
+        else
+        {
+            switch (requiredCollider)
+            {
+                case TypeOfCollider.Box:
+                    if (c is BoxCollider)
+                        isCorrectCollider = true;
+                    break;
+                case TypeOfCollider.Capsule:
+                    if (c is CapsuleCollider)
+                        isCorrectCollider = true;
+                    break;
+                case TypeOfCollider.Mesh:
+                    if (c is MeshCollider)
+                        isCorrectCollider = true;
+                    break;
+                case TypeOfCollider.Sphere:
+                    if (c is SphereCollider)
+                        isCorrectCollider = true;
+                    break;
+                case TypeOfCollider.Terrain:
+                    if (c is TerrainCollider)
+                        isCorrectCollider = true;
+                    break;
+                case TypeOfCollider.Wheel:
+                    if (c is WheelCollider)
+                        isCorrectCollider = true;
+                    break;
+
+                // TODO: Add code to handle the Compound options
+            }
+            return isCorrectCollider;
+        }
     }
 
+    /* Fits In Dimensions
+     * Checks if the bounds of the part fit within the specified min/max range
+     * of the part requirements.
+     */
     private bool FitsInDimensions(ItemPart part)
     {
         Bounds partBounds = part.GetComponent<Renderer>().bounds;
@@ -160,17 +261,70 @@ public class PartRequirements : MonoBehaviour
         {
             System.Type componentType = System.Type.GetType(_requiredScripts[i]);
             if (componentType != null)
+            {
                 if (part.GetComponent(componentType) == null)
                     return false;
+            }
         }
         return true;
     }
 
+    /* Validate Part Connections
+     * Checks if the specified part has the expected number of connections and
+     * where these connections are filled.
+     */
+    public bool ValidatePartConnections(ItemPart part, out string s)
+    {
+        if (part.connectedParts.Length == numConnections)
+        {
+            for (int i = 0; i < part.connectedParts.Length; i++)
+            {
+                if (part.connectedParts[i] == null)
+                {
+                   s = "Part " + part.name + " is missing a connected part " +
+                        "at connection point " + i + ".";
+                    return false;
+                }
+
+                ItemPart p = part.connectedParts[i].GetComponent<ItemPart>();
+                if (p == null)
+                {
+                    s = "Part " + part.name + " does not have a valid Item " +
+                        "Part at connection point " + i + ".";
+                    return false;
+                }
+                else if (p.GetIndexOfConnection(part) < 0)
+                {
+                    s = "Part " + part.name + " is connected to " + p.name +
+                        " but part " + p.name + " is not connected " +
+                        "to " + part.name;
+                    return false;
+                }
+
+            }
+            s = "";
+            return true;
+        }
+        else
+        {
+            s = "Part " + part.name + "does not have the correct number " +
+                "of connections for this design. Please use a different part.";
+            return false;
+        }
+    }
+
+    /* Part Has Enough Connections
+     * Checks if the specified part has the expected number of connection points
+     */
+    public bool PartHasEnoughConnections(ItemPart part)
+    {
+        return part.connectedParts.Length == numConnections;
+    }
 
     /* Parts Are Connected
      * Checks if two parts are connected via connection points in each part.
      */
-    private bool PartsAreConnected(ItemPart part, ItemPart otherPart)
+    private bool PartsAreConnected(ItemPart part, ItemPart otherPart)           // TODO: Is this unnecessary now?
     {
         if (part.GetIndexOfConnection(otherPart) >= 0
             && otherPart.GetIndexOfConnection(otherPart) >= 0)
@@ -182,7 +336,7 @@ public class PartRequirements : MonoBehaviour
     /* Part Surfaces Touch
      * Checks if the colliders of the two parts touch or overlap.
      */
-    private bool PartSurfacesTouch(ItemPart part, ItemPart otherPart)
+    private bool PartSurfacesTouch(ItemPart part, ItemPart otherPart)           // TODO: Is this unnecessary now?
     {
         Collider c = part.GetComponent<Collider>();
         if (c is BoxCollider)

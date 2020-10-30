@@ -37,11 +37,13 @@ public class ItemFactory : MonoBehaviour
         if (reqs.ValidatePartConfig(parts, out validationResult))
         {
             // Make all parts children of the primary manipulator so they can be
-            // controlled and moved using it. Also, sum all necessary part data.
+            // controlled and moved using it.
+            GameObject itemParent = reqs.manipulators[0];
+
+            //Sum all necessary part data.
             float totalVolume = 0;
             float totalMass = 0;
             float totalValue = 0;
-            GameObject itemParent = reqs.manipulators[0];
             for (int p = 0; p < parts.Length; p++)
             {
                 parts[p].transform.parent = itemParent.transform;

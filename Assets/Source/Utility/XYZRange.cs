@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct XYZRange
+[System.Serializable]
+public class XYZRange
 {
     // NOTE: XYZRange is INCLUSIVE! 
     // In other words, any point (x,y,z) where: 
