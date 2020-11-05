@@ -88,8 +88,6 @@ public class ItemSlot : MonoBehaviour,
         }
     }
 
-    Vector2 predragPosition;
-
     public void OnDrag(PointerEventData eventData)
     {
         if (OnDragEvent != null)

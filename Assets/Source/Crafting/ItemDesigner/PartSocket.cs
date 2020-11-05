@@ -12,7 +12,7 @@ public class PartSocket : MonoBehaviour
     private Vector3 originalXformUp;
     
     private GameObject partInSocket;
-    private bool hasPartInSocket;                                               // TODO: Is this unnecessary?
+    //private bool hasPartInSocket;                                               // TODO: Is this unnecessary?
 
     [SerializeField] private GameObject parentSocket;
     [SerializeField] private GameObject[] childSockets;
@@ -23,7 +23,6 @@ public class PartSocket : MonoBehaviour
     void Awake()
     {
         originalColor = this.gameObject.GetComponent<MeshRenderer>().material.color;
-        hasPartInSocket = false;
 
         if (isEditorConfigured)
         {
@@ -32,8 +31,6 @@ public class PartSocket : MonoBehaviour
                 originalScale = this.transform.localScale;
                 originalXformUp = this.transform.up;
                 originalPosition = this.transform.position;
-
-
             }
         }
     }
@@ -60,8 +57,7 @@ public class PartSocket : MonoBehaviour
         // of dependents that this part socket has.
         if (part != null && part.GetNumberOfConnectionPoints() != childSockets.Length)
         { 
-            // Set hasPartInSocket & partInSocket
-            hasPartInSocket = true;
+            // Set partInSocket
             partInSocket = part.gameObject;
 
             // Update position and size to match bounds of added part
@@ -77,14 +73,15 @@ public class PartSocket : MonoBehaviour
                 MoveChildrenToConnectionPoints(part.connectionPoints);
             }
         }
+
+        // TODO: Handle case of null ItemPart
     }
 
     public void RemovePartFromSocket()
     {
         if (partInSocket != null)
         {
-            // Set hasPartInSocket & partInSocket
-            hasPartInSocket = false;
+            // Set partInSocket
             partInSocket = null;
 
             //// Reset position and size to original
@@ -122,9 +119,8 @@ public class PartSocket : MonoBehaviour
     private void OnParentPositionChanged(Vector3 parentPositionDelta)
     {
         transform.position += parentPositionDelta;
-        if (hasPartInSocket)
+        if (partInSocket != null)
             partInSocket.transform.position += parentPositionDelta;
-
     }
 
     private void OnParentScaleChanged(Vector3 parentScaleDelta)                  // TODO: is this correct?
@@ -135,16 +131,15 @@ public class PartSocket : MonoBehaviour
         delta.z *= parentScaleDelta.z;
         transform.position += delta;
 
-        if (hasPartInSocket)
+        if (partInSocket != null)
             partInSocket.transform.position += delta;
-
     }
 
     private void OnParentRotationChanged(Quaternion parentRotationDelta)
     {
         this.transform.rotation = this.transform.rotation * parentRotationDelta;    // TODO: Is this correct?
 
-        if (hasPartInSocket)
+        if (partInSocket != null)
             partInSocket.transform.rotation = partInSocket.transform.rotation * parentRotationDelta;
     }
 

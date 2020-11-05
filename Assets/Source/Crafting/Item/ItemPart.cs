@@ -102,14 +102,6 @@ public class ItemPart : MonoBehaviour
             craftingMaterial = mat;
     }
 
-
-
-    //// Update is called once per frame
-    //void Update()
-    //{
-
-    //}
-
     /* OnSelect()
      * Changes the color of the GameObject to indicate it is currently selected. 
      */
