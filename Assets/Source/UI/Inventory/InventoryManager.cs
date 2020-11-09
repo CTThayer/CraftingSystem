@@ -13,7 +13,7 @@ public class InventoryManager : MonoBehaviour
         //equipmentPanel.OnItemRightClickEvent += UnequipFromEquipmentPanel;
     }
 
-    // Intermediary method to perform the necessary cast from a storable to an
+    // Intermediary methods to perform the necessary cast from a storable to an
     // equipable so that the Action<T> delegate can convert between storable and
     // equipable when shifting between inventory and equipment panel in order to
     // call the Equip(Equipable item) method here from other code. 

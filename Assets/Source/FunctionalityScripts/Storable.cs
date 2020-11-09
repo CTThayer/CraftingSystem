@@ -8,18 +8,24 @@ public class Storable : MonoBehaviour, IActionable
     public Sprite icon;
 
     // Reference to the item that this storable instance is attached to
-    [SerializeField] private Item _item;                                        // TODO: Change to GameObject or remove entirely
-    public Item item { get; private set; }
+    [SerializeField] private GameObject _item;
+    public GameObject item { get; private set; }
+
+    // Boolean tracking whether this item is currently stored.
+    [SerializeField] private bool _isStored;
+    public bool isStored { get; private set; }
 
     // Start is called before the first frame update
     void Start()
     {
-        item = gameObject.GetComponent<Item>();
-        Debug.Assert(item != null);
+        Debug.Assert(_item != null);
     }
 
     public void AddToStorage(Inventory storage)                                 // TODO: Rename Inventory class to Storage & generalize it.
     {
+        if (isStored) // If item is already in storage, don't try to deactivate.
+            return;
+        
         // Reenable colliders
         Collider[] colliders = gameObject.GetComponents<Collider>();
         Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
@@ -40,10 +46,15 @@ public class Storable : MonoBehaviour, IActionable
 
         // Reenable the MeshRenderer
         gameObject.GetComponent<MeshRenderer>().enabled = false;
+
+        isStored = true;
     }
 
-    public void ReactivateInWorld(Transform transform, bool activatePhysics)
+    public void ReactivateInWorld(Transform transform, bool isKinematicRigidbody)
     {
+        if (!isStored)  // If item isn't in storage, don't try to reactivate
+            return;
+        
         // Update object
         gameObject.transform.position = transform.position;
         gameObject.transform.rotation = transform.rotation;
@@ -62,14 +73,15 @@ public class Storable : MonoBehaviour, IActionable
             childColliders[i].enabled = true;
         }
 
-        // Set rigidbody to Kinematic or non-kinematic based on withPhysics
+        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            r.isKinematic = !activatePhysics;
+            r.isKinematic = isKinematicRigidbody;
 
         // Reenable the MeshRenderer
         gameObject.GetComponent<MeshRenderer>().enabled = true;
 
+        isStored = false;
     }
 
     /********************* IActionable Interface Members **********************/

@@ -40,8 +40,6 @@ public class ItemPart : MonoBehaviour
     [SerializeField] private CraftingMaterial _craftingMaterial;                // TODO: DO WE NEED THIS REFERENCE?
     public CraftingMaterial craftingMaterial { get; private set; }              // TODO: Does the need to be settable also?
 
-    private Color originalColor; // For selection/deselection purposes
-
     // For parts that require the use of connection points/connected parts
     [SerializeField] private GameObject[] _connectionPoints;
     public GameObject[] connectionPoints { get; }
@@ -65,6 +63,7 @@ public class ItemPart : MonoBehaviour
         return -1;
     }
 
+    private Color originalColor; // For selection/deselection purposes
 
     void Awake()
     {
@@ -82,7 +81,7 @@ public class ItemPart : MonoBehaviour
 
         // Validate data fields
         Debug.Assert(_partType != null && _partType.Length > 0);
-        Debug.Assert(_maxDurability >= 0 && _maxDurability > _currentDurability);
+        Debug.Assert(_maxDurability >= 0 && _maxDurability >= _currentDurability);
         Debug.Assert(_partQuality > 0);
 
         //_partVolume = CalculatePartVolume();
@@ -101,6 +100,26 @@ public class ItemPart : MonoBehaviour
         if (mat != null)
             craftingMaterial = mat;
     }
+
+
+    public void DeactivateScript(string scriptName)
+    {
+        Component script = GetComponent(scriptName);
+        Behaviour behaviorScript  = script as Behaviour;
+        if (behaviorScript != null)
+            behaviorScript.enabled = false;
+    }
+
+    public void ActivateScript(string scriptName)
+    {
+        Component script = GetComponent(scriptName);
+        Behaviour behaviorScript = script as Behaviour;
+        if (behaviorScript != null)
+            behaviorScript.enabled = true;
+    }
+
+
+                    // TODO: Are these next methods (OnSelect/OnDeselect) actually necessary??
 
     /* OnSelect()
      * Changes the color of the GameObject to indicate it is currently selected. 

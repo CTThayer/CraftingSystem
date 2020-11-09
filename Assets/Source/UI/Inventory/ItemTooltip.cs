@@ -13,17 +13,27 @@ public class ItemTooltip : MonoBehaviour
 
     public void ShowTooltip(Storable storableItem)
     {
-        itemNameText.text = storableItem.item.itemName;
-        //itemStatsText.text += "Base Value: " + storableItem.item.baseValue + "\n";
-        //itemStatsText.text += "Mass: " + storableItem.item.mass + "\n";
-        //itemStatsText.text += "Volume: " + storableItem.item.volume + "\n";
-
-        //sb.Clear();
-        sb.Length = 0;
-        AddStatToText("Base Value", storableItem.item.baseValue);
-        AddStatToText("Mass", storableItem.item.mass);
-        AddStatToText("Volume", storableItem.item.volume);
-
+        Item storedItem = storableItem.item.GetComponent<Item>();
+        if (storedItem != null)
+        {
+            itemNameText.text = storedItem.itemName;
+            sb.Length = 0;
+            AddStatToText("Base Value", storedItem.baseValue);
+            AddStatToText("Mass", storedItem.mass);
+            AddStatToText("Volume", storedItem.volume);
+        }
+        else
+        {
+            ItemPart storedItemPart = storableItem.item.GetComponent<ItemPart>();
+            if (storedItemPart != null)
+            {
+                itemNameText.text = storedItemPart.partType;
+                sb.Length = 0;
+                AddStatToText("Part Quality", storedItemPart.partQuality);
+                AddStatToText("Max Durability", storedItemPart.maxDurability);
+                AddStatToText("Current Durability", storedItemPart.currentDurability);
+            }
+        }
         itemStatsText.text = sb.ToString();
 
         this.gameObject.SetActive(true);

@@ -40,6 +40,9 @@ public class DesignRequirements : MonoBehaviour
     [SerializeField] private XYZRange[] _manipulatorPosRanges;
     public XYZRange[] manipulatorPosRanges { get; }
 
+    [SerializeField] private GameObject _designLayoutUIElements;
+    public GameObject designLayoutUIElements { get; }
+
     // Do all parts of the item have to touch another part of the item?         // TODO: Is this necessary with connection points/surface contact??
     [SerializeField] private bool _allSectionsMustTouch;
     public bool allSectionsMustTouch { get;}
