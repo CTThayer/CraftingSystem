@@ -7,18 +7,25 @@ public class Storable : MonoBehaviour, IActionable
 {
     public Sprite icon;
 
-    // Reference to the item that this storable instance is attached to
-    [SerializeField] private GameObject _item;
-    public GameObject item { get; private set; }
-
     // Boolean tracking whether this item is currently stored.
     [SerializeField] private bool _isStored;
     public bool isStored { get; private set; }
 
+    private PhysicalStats _objectPhysicalStats;
+    public PhysicalStats objectPhysicalStats { get; private set; }
+
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(_item != null);
+        //Debug.Assert(_storedObject != null);
+        Debug.Assert(SetStoredObjStats());
+    }
+
+    public void Initialize(bool createdInStorage)
+    {
+        //storedObject = obj;
+        isStored = createdInStorage;
+        Debug.Assert(SetStoredObjStats());
     }
 
     public void AddToStorage(Inventory storage)                                 // TODO: Rename Inventory class to Storage & generalize it.
@@ -103,5 +110,25 @@ public class Storable : MonoBehaviour, IActionable
         string[] actionNames = new string[1];
         actionNames[0] = "Add to Inventory";
         return actionNames;
+    }
+
+    private bool SetStoredObjStats()
+    {
+        Item item = gameObject.GetComponent<Item>();
+        if (item != null)
+        {
+            objectPhysicalStats = item.physicalStats;
+            return true;
+        }
+        else
+        {
+            ItemPart itemPart = gameObject.GetComponent<ItemPart>();
+            if (itemPart != null)
+            {
+                objectPhysicalStats = itemPart.physicalStats;
+                return true;
+            }
+        }
+        return false;
     }
 }

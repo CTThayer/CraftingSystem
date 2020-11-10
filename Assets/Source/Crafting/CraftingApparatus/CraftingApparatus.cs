@@ -71,7 +71,9 @@ public class CraftingApparatus : MonoBehaviour
 
     // TODO: Fill in these stub methods
     public void Use() { }                       // For Interactable to connect to
+
     public void Craft() { }                     // Method to call when finalizing an item/part.
+
     public void LoadRequirements() { }          // Loads the selected part/design reqs and updates scene/UI accordingly
 
         // TODO: Should these be in the UI Manager?

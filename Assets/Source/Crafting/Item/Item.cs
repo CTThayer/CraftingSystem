@@ -2,6 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public struct PhysicalStats
+{
+    [SerializeField] private float _mass;
+    public float mass
+    {
+        get => _mass;
+        set => _mass = value > 0 ? value : _mass;
+    }
+    [SerializeField] private float _volume;
+    public float volume
+    {
+        get => _volume;
+        set => _volume = value > 0 ? value : _volume;
+    }
+}
+
 public class Item : MonoBehaviour
 {
     /********************* Properties Common To All Items *********************/
@@ -30,19 +46,24 @@ public class Item : MonoBehaviour
         set => _itemDescription = (value != null) ? value : _itemDescription;
     }
 
-    [SerializeField] private float _mass;
-    public float mass
-    {
-        get => _mass;
-        private set => _mass = (value > 0f) ? value : _mass;
-    }
+    //[SerializeField] private float _mass;
+    //public float mass
+    //{
+    //    get => _mass;
+    //    private set => _mass = (value > 0f) ? value : _mass;
+    //}
 
-    [SerializeField] private float _volume;
-    public float volume
-    {
-        get => _volume;
-        private set => _volume = (value > 0f) ? value : _volume;
-    }
+    //[SerializeField] private float _volume;
+    //public float volume
+    //{
+    //    get => _volume;
+    //    private set => _volume = (value > 0f) ? value : _volume;
+    //}
+
+    //[SerializeField] private PhysicalStats _physicalStats;
+    //public PhysicalStats physicalStats { get; private set; }
+
+    public PhysicalStats physicalStats;
 
     [SerializeField] private float _baseValue;
     public float baseValue
@@ -66,9 +87,6 @@ public class Item : MonoBehaviour
     [SerializeField] private ItemPart[] _itemParts;                             // TODO: Do we need this?
     public ItemPart[] itemParts { get; private set; }                           // TODO: Should this still be a property?
 
-    // Should collision be based on parts or unified.
-    [SerializeField] private bool usePerPartSimulation;                         // TODO: Do we need this? Or is it automatic?
-
 
     /************************** END Common Properties *************************/
 
@@ -84,8 +102,8 @@ public class Item : MonoBehaviour
         Debug.Assert(_uniqueItemID != null && _uniqueItemID.Length > 0);
         Debug.Assert(_itemName != null && _itemName.Length > 0);
         Debug.Assert(_itemDescription != null && _itemDescription.Length > 0);
-        Debug.Assert(_mass > 0f);
-        Debug.Assert(_volume > 0f);
+        Debug.Assert(physicalStats.mass > 0f);
+        Debug.Assert(physicalStats.mass > 0f);
         Debug.Assert(_baseValue > 0f);
         //Debug.Assert(itemParts != null && itemParts.Length > 0);
     }
@@ -108,8 +126,8 @@ public class Item : MonoBehaviour
         uniqueItemID = itemID;
         itemName = name;
         itemDescription = itemDesc;
-        mass = totalMass;
-        volume = totalVolume;
+        physicalStats.mass = totalMass;
+        physicalStats.volume = totalVolume;
         baseValue = value;
         manipulators = manipulatorObjs;
         itemParts = parts;

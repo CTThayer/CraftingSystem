@@ -13,22 +13,24 @@ public class ItemTooltip : MonoBehaviour
 
     public void ShowTooltip(Storable storableItem)
     {
-        Item storedItem = storableItem.item.GetComponent<Item>();
+        Item storedItem = storableItem.gameObject.GetComponent<Item>();
         if (storedItem != null)
         {
             itemNameText.text = storedItem.itemName;
             sb.Length = 0;
+            AddStatToText("Mass", storedItem.physicalStats.mass);
+            AddStatToText("Volume", storedItem.physicalStats.volume);
             AddStatToText("Base Value", storedItem.baseValue);
-            AddStatToText("Mass", storedItem.mass);
-            AddStatToText("Volume", storedItem.volume);
         }
         else
         {
-            ItemPart storedItemPart = storableItem.item.GetComponent<ItemPart>();
+            ItemPart storedItemPart = storableItem.gameObject.GetComponent<ItemPart>();
             if (storedItemPart != null)
             {
                 itemNameText.text = storedItemPart.partType;
                 sb.Length = 0;
+                AddStatToText("Mass", storedItemPart.physicalStats.mass);
+                AddStatToText("Volume", storedItemPart.physicalStats.volume);
                 AddStatToText("Part Quality", storedItemPart.partQuality);
                 AddStatToText("Max Durability", storedItemPart.maxDurability);
                 AddStatToText("Current Durability", storedItemPart.currentDurability);

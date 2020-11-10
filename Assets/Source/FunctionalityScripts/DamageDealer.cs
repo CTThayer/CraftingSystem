@@ -13,16 +13,36 @@ public enum DamageType
 public class DamageDealer : MonoBehaviour
 {
     [SerializeField] private DamageType _damageType;
-    public DamageType damageType { get; private set; }
+    public DamageType damageType
+    {
+        get => _damageType;
+        private set => _damageType = value;
+    }
 
     [SerializeField] private float _baseDamage;
-    public float baseDamage { get; private set; }
+    public float baseDamage
+    {
+        get => _baseDamage;
+        private set => _baseDamage = value;
+    }
 
     [SerializeField] private float _damageModifier;
-    public float damageModifier { get; private set; }
+    public float damageModifier
+    {
+        get => _damageModifier;
+        set => _damageModifier = value;
+    }
 
     [SerializeField] private Collider[] _damageDealerColliders;
-    public Collider[] damageDealerColliders { get; private set; }
+    public Collider[] damageDealerColliders
+    {
+        get => _damageDealerColliders;
+        set
+        {
+            if (value != null && value.Length > 0)
+                _damageDealerColliders = value;
+        }
+    }
 
     // TODO: Add Animator reference to allow this script to affect the animation
     // state when hits occur. For example, it could trigger a rebound animation
@@ -48,7 +68,7 @@ public class DamageDealer : MonoBehaviour
 
             damageDealerColliders = colliders.ToArray();
         }
-        Debug.Assert(damageDealerColliders == null && damageDealerColliders.Length > 0);
+        Debug.Assert(damageDealerColliders != null && damageDealerColliders.Length > 0);
         Debug.Assert(baseDamage > 0);
     }
 

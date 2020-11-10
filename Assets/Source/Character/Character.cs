@@ -103,6 +103,7 @@ public class Character : MonoBehaviour
     {
         if (draggedSlot == null)
             return;
+
         bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
         bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
 
