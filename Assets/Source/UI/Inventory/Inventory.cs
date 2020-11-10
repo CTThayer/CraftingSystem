@@ -5,8 +5,6 @@ using System;
 
 public class Inventory : MonoBehaviour
 {
-    //[SerializeField] private List<Storable> items;
-
     [SerializeField] private List<Storable> startingItems;
     [SerializeField] private Transform itemParent;
     [SerializeField] private ItemSlot[] itemSlots;
@@ -20,7 +18,6 @@ public class Inventory : MonoBehaviour
     public event Action<ItemSlot> OnDragEvent;
     public event Action<ItemSlot> OnDropEvent;
 
-    //private void Awake()
     private void Start()
     {
         for (int i = 0; i < itemSlots.Length; i++)
@@ -99,34 +96,5 @@ public class Inventory : MonoBehaviour
         }
         return true;
     }
-
-    //// Original, very simple add item function
-    //public bool AddItem(Storable item)
-    //{
-    //    if (IsFull())
-    //        return false;
-
-    //    items.Add(item);
-    //    RefreshUI();
-    //    return true;
-    //}
-
-    //// Original, very simple remove item function
-    //public bool RemoveItem(Storable item)
-    //{
-    //    if (items.Remove(item))
-    //    {
-    //        RefreshUI();
-    //        return true;
-    //    }
-    //    return false;
-    //}
-
-    //// TODO: make this a more robust check against inventory constraints,  
-    //// item mass, and dimensions.
-    //public bool IsFull()
-    //{
-    //    return items.Count > itemSlots.Length;
-    //}
 
 }

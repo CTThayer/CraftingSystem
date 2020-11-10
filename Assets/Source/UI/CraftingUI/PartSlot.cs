@@ -51,17 +51,18 @@ public class PartSlot : ItemSlot
         partSocket.AddPartToSocket(part);
     }
 
-    public void OnRemoveFromSlot(Storable storableObject, Inventory storage)
-    {
-        if (!storage.IsFull())
-        {
-            storage.AddItem(storableObject);
-            storableObject.AddToStorage(storage);
-        }
-        else
-        {
-            storableObject.transform.position = Vector3.zero;                   // TODO: Change this to use a Drop Location variable from either the Character, CraftingApparatus, or Inventory class.
-        }
-    }
+    //// Commented out for compilation so that I can push. Fix is WIP.
+    //public void OnRemoveFromSlot(Storable storableObject, Inventory storage)
+    //{
+    //    if (!storage.IsFull())
+    //    {
+    //        storage.AddItem(storableObject);
+    //        storableObject.DeactivateInWorld(storage);
+    //    }
+    //    else
+    //    {
+    //        storableObject.transform.position = Vector3.zero;                   // TODO: Change this to use a Drop Location variable from either the Character, CraftingApparatus, or Inventory class.
+    //    }
+    //}
 
 }

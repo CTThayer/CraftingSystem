@@ -37,9 +37,7 @@ public class EquipmentPanel : MonoBehaviour
         equipmentSlots = EquipmentSlotsParent.GetComponentsInChildren<EquipmentSlot>();
     }
 
-
-    // TODO: Are these methods necessary?
-    public bool AddItem(Equipable item, out Storable previousItem)             // Might need to change this to return a generic gameObject 
+    public bool AddItem(Equipable item, out Storable previousItem)             // Might need to change the out to a generic gameObject 
     {
         for (int i = 0; i < equipmentSlots.Length; i++)
         {

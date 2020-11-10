@@ -8,7 +8,7 @@ public class Character : MonoBehaviour
     [SerializeField] private Inventory inventory;
     [SerializeField] private EquipmentPanel equipmentPanel;
     [SerializeField] private ItemTooltip itemTooltip;
-    [SerializeField] private Image draggableItem;
+    [SerializeField] private Image draggableSlot;
 
     private ItemSlot draggedSlot;
 
@@ -79,24 +79,24 @@ public class Character : MonoBehaviour
         if (itemSlot != null)
         {
             draggedSlot = itemSlot;
-            draggableItem.sprite = draggedSlot.storedItem.icon;
-            draggableItem.transform.position = Input.mousePosition;
-            draggableItem.gameObject.SetActive(true);
-            draggableItem.enabled = true;
+            draggableSlot.sprite = draggedSlot.storedItem.icon;
+            draggableSlot.transform.position = Input.mousePosition;
+            draggableSlot.gameObject.SetActive(true);
+            draggableSlot.enabled = true;
         }
     }
 
     private void EndDrag(ItemSlot itemSlot)
     {
         draggedSlot = null;
-        draggableItem.gameObject.SetActive(false);
-        draggableItem.enabled = false;
+        draggableSlot.gameObject.SetActive(false);
+        draggableSlot.enabled = false;
     }
 
     private void Drag(ItemSlot itemSlot)
     {
-        if (draggableItem.enabled)
-            draggableItem.transform.position = Input.mousePosition;
+        if (draggableSlot.enabled)
+            draggableSlot.transform.position = Input.mousePosition;
     }
 
     private void Drop(ItemSlot dropSlot)
@@ -107,8 +107,9 @@ public class Character : MonoBehaviour
         bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
         bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
 
-        if (dropSlot.CanReceiveItem(draggedSlot.storedItem)
-            && draggedSlot.CanReceiveItem(dropSlot.storedItem))
+        //if (dropSlot.CanReceiveItem(draggedSlot.storedItem)
+        //    && draggedSlot.CanReceiveItem(dropSlot.storedItem))
+        if (canDrop && canSwap)
         {
             Equipable dragItemEQ = draggedSlot.storedItem as Equipable;
             Equipable dropItemEQ = dropSlot.storedItem as Equipable;

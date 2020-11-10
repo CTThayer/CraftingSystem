@@ -17,18 +17,16 @@ public class Storable : MonoBehaviour, IActionable
     // Start is called before the first frame update
     void Start()
     {
-        //Debug.Assert(_storedObject != null);
         Debug.Assert(SetStoredObjStats());
     }
 
     public void Initialize(bool createdInStorage)
     {
-        //storedObject = obj;
         isStored = createdInStorage;
         Debug.Assert(SetStoredObjStats());
     }
 
-    public void AddToStorage(Inventory storage)                                 // TODO: Rename Inventory class to Storage & generalize it.
+    public void DeactivateInWorld(Storage storage)
     {
         if (isStored) // If item is already in storage, don't try to deactivate.
             return;
@@ -91,6 +89,26 @@ public class Storable : MonoBehaviour, IActionable
         isStored = false;
     }
 
+    private bool SetStoredObjStats()
+    {
+        Item item = gameObject.GetComponent<Item>();
+        if (item != null)
+        {
+            objectPhysicalStats = item.physicalStats;
+            return true;
+        }
+        else
+        {
+            ItemPart itemPart = gameObject.GetComponent<ItemPart>();
+            if (itemPart != null)
+            {
+                objectPhysicalStats = itemPart.physicalStats;
+                return true;
+            }
+        }
+        return false;
+    }
+
     /********************* IActionable Interface Members **********************/
     /* IActionable is used by Interactable to get all actions that can be taken
      * on any given object. These methods MUST be implemented for interaction 
@@ -112,23 +130,4 @@ public class Storable : MonoBehaviour, IActionable
         return actionNames;
     }
 
-    private bool SetStoredObjStats()
-    {
-        Item item = gameObject.GetComponent<Item>();
-        if (item != null)
-        {
-            objectPhysicalStats = item.physicalStats;
-            return true;
-        }
-        else
-        {
-            ItemPart itemPart = gameObject.GetComponent<ItemPart>();
-            if (itemPart != null)
-            {
-                objectPhysicalStats = itemPart.physicalStats;
-                return true;
-            }
-        }
-        return false;
-    }
 }

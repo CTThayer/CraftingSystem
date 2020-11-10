@@ -7,7 +7,7 @@ public class Storage : MonoBehaviour
 {
     [SerializeField] private GameObject storageParent;
 
-    [SerializeField] private List<Storable> startingItems;
+    [SerializeField] private List<Storable> startingItems;                      // TODO: Remove this & all refs
     [SerializeField] private ItemSlot[] storageSlots;
     [SerializeField] private Vector2 slotLayout;
 
@@ -94,6 +94,7 @@ public class Storage : MonoBehaviour
                     storageSlots[i].storedItem = storableObject;
                     massCurrentlyUsed += m;
                     volumeCurrentlyUsed += v;
+                    storableObject.DeactivateInWorld(this);
                     return true;
                 }
             }
@@ -110,6 +111,9 @@ public class Storage : MonoBehaviour
                 storageSlots[i].storedItem = null;
                 massCurrentlyUsed -= storableObject.objectPhysicalStats.mass;
                 volumeCurrentlyUsed -= storableObject.objectPhysicalStats.volume;
+
+                // TODO: Where should we reactivate the object in the world?
+
                 return true;
             }
         }
