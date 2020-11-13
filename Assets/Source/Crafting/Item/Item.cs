@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct PhysicalStats
+[System.Serializable]
+public class PhysicalStats
 {
     [SerializeField] private float _mass;
     public float mass
@@ -103,7 +104,7 @@ public class Item : MonoBehaviour
         Debug.Assert(_itemName != null && _itemName.Length > 0);
         Debug.Assert(_itemDescription != null && _itemDescription.Length > 0);
         Debug.Assert(physicalStats.mass > 0f);
-        Debug.Assert(physicalStats.mass > 0f);
+        Debug.Assert(physicalStats.volume > 0f);
         Debug.Assert(_baseValue > 0f);
         //Debug.Assert(itemParts != null && itemParts.Length > 0);
     }

@@ -20,12 +20,6 @@ public class PartSlot : ItemSlot
         }
     }
 
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-        //gameObject.name = _allowedPartTypes[i] + "Slot";
-    }
-
     public override bool CanReceiveItem(Storable storableObject)
     {
         if (storableObject == null)
@@ -44,25 +38,35 @@ public class PartSlot : ItemSlot
         return false;
     }
 
-    public void OnAddToSlot(Storable storableObject)
+    public override void AddToSlot(Storable storableObject)
     {
-        storableObject.ReactivateInWorld(partSocket.transform, false);
-        ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
-        partSocket.AddPartToSocket(part);
+        if (storableObject != null)
+        {
+            storableObject.ReactivateInWorld(partSocket.transform, false);
+            ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
+            partSocket.AddPartToSocket(part);
+            //Debug.Log("Added " + storableObject.name + " to PartSlot");
+        }
+        storedItem = storableObject;
     }
 
-    //// Commented out for compilation so that I can push. Fix is WIP.
-    //public void OnRemoveFromSlot(Storable storableObject, Inventory storage)
-    //{
-    //    if (!storage.IsFull())
-    //    {
-    //        storage.AddItem(storableObject);
-    //        storableObject.DeactivateInWorld(storage);
-    //    }
-    //    else
-    //    {
-    //        storableObject.transform.position = Vector3.zero;                   // TODO: Change this to use a Drop Location variable from either the Character, CraftingApparatus, or Inventory class.
-    //    }
-    //}
+    public override Storable RemoveFromSlot()
+    {
+        partSocket.RemovePartFromSocket();
+        Storable prevStoredItem = storedItem;
+        if (prevStoredItem != null)
+        {
+            prevStoredItem.DeactivateInWorld();
+            storedItem = null;
+        }
+        return prevStoredItem;
+    }
+
+    /**************************** EDITOR FUNCTIONS ****************************/
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+    }
+    /************************** END EDITOR FUNCTIONS **************************/
 
 }

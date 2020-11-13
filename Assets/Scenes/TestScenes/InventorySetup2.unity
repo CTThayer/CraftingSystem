@@ -270,9 +270,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Storable_000
   _itemName: Blue Gem
   _itemDescription: Test Storable Blue Gem
-  physicalStats:
-    _mass: 0.05
-    _volume: 0.001
   _baseValue: 100
   _manipulators: []
   _itemParts: []
@@ -338,9 +335,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_005
   _itemName: Axe
   _itemDescription: Test Equipable Axe
-  physicalStats:
-    _mass: 2.25
-    _volume: 12
   _baseValue: 13
   _manipulators: []
   _itemParts: []
@@ -484,9 +478,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_003
   _itemName: Blue Potion
   _itemDescription: Test Equipable Blue Potion
-  physicalStats:
-    _mass: 0.1
-    _volume: 1
   _baseValue: 2
   _manipulators: []
   _itemParts: []
@@ -1079,9 +1070,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_006
   _itemName: Hammer
   _itemDescription: Test Equipable Hammer
-  physicalStats:
-    _mass: 3.5
-    _volume: 16
   _baseValue: 10
   _manipulators: []
   _itemParts: []
@@ -1733,9 +1721,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_009
   _itemName: Red Potion
   _itemDescription: Test Equipable Red Potion
-  physicalStats:
-    _mass: 0.05
-    _volume: 1
   _baseValue: 0.75
   _manipulators: []
   _itemParts: []
@@ -2317,9 +2302,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_002
   _itemName: Armor (test)
   _itemDescription: Test Equipable Armor
-  physicalStats:
-    _mass: 5.5
-    _volume: 25
   _baseValue: 50
   _manipulators: []
   _itemParts: []
@@ -2916,9 +2898,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_007
   _itemName: Red Potion
   _itemDescription: Test Equipable Red Potion
-  physicalStats:
-    _mass: 0.05
-    _volume: 1
   _baseValue: 1.6
   _manipulators: []
   _itemParts: []
@@ -3153,13 +3132,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: b4d4472bb6b2fc04a808a8bedbf281f7, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3365,10 +3344,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1472012403}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b60a482715bf7064d8ac2905f7a601ff, type: 3}
+  m_Script: {fileID: 11500000, guid: 8eddbceee9252824ebeceb06fe8ac9a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiParent: {fileID: 1472012403}
   startingItems:
   - {fileID: 24595492}
   - {fileID: 1474105267}
@@ -3379,8 +3357,8 @@ MonoBehaviour:
   - {fileID: 549426143}
   - {fileID: 1254496151}
   - {fileID: 1723475111}
-  - {fileID: 834974403}
-  storageSlots:
+  itemParent: {fileID: 1098716086}
+  itemSlots:
   - {fileID: 828459306}
   - {fileID: 1808306930}
   - {fileID: 897037226}
@@ -3399,12 +3377,6 @@ MonoBehaviour:
   - {fileID: 1739701322}
   - {fileID: 674004321}
   - {fileID: 744014516}
-  slotLayout: {x: 6, y: 3}
-  storageDimensions: {x: 0, y: 0, z: 0}
-  volumeCapacity: 500
-  volumeCurrentlyUsed: 0
-  massCapacity: 250
-  massCurrentlyUsed: 0
 --- !u!1 &1474105266
 GameObject:
   m_ObjectHideFlags: 0
@@ -3467,9 +3439,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_001
   _itemName: Helmet (test)
   _itemDescription: Test Equipable Helmet
-  physicalStats:
-    _mass: 1.2
-    _volume: 10
   _baseValue: 50
   _manipulators: []
   _itemParts: []
@@ -3962,9 +3931,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_008
   _itemName: Green Potion
   _itemDescription: Test Equipable Green Potion
-  physicalStats:
-    _mass: 0.05
-    _volume: 1
   _baseValue: 0.8
   _manipulators: []
   _itemParts: []
@@ -4015,11 +3981,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1724567101}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4ba1fb52614ed341a8607f3165991c3, type: 3}
+  m_Script: {fileID: 11500000, guid: eff9cd7bc2fbe13469bdc297eda7662e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  panelA: {fileID: 1472012403}
-  panelB: {fileID: 979917099}
+  inventory: {fileID: 1472012407}
+  equipmentPanel: {fileID: 979917101}
   itemTooltip: {fileID: 1083955227}
   draggableSlot: {fileID: 1719022717}
 --- !u!1 &1739701318
@@ -4515,9 +4481,6 @@ MonoBehaviour:
   _uniqueItemID: Test_Equipable_004
   _itemName: Backpack
   _itemDescription: Test Equipable Backpack
-  physicalStats:
-    _mass: 1
-    _volume: 10
   _baseValue: 5
   _manipulators: []
   _itemParts: []

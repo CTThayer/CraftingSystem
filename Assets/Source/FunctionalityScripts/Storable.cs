@@ -9,29 +9,48 @@ public class Storable : MonoBehaviour, IActionable
 
     // Boolean tracking whether this item is currently stored.
     [SerializeField] private bool _isStored;
-    public bool isStored { get; private set; }
+    public bool isStored
+    {
+        get => _isStored;
+        private set => _isStored = value;
+    }
 
     private PhysicalStats _objectPhysicalStats;
-    public PhysicalStats objectPhysicalStats { get; private set; }
+    public PhysicalStats objectPhysicalStats
+    {
+        get => _objectPhysicalStats;
+        private set
+        {
+            if (value != null)
+                _objectPhysicalStats = value;
+        }
+    }
+
+    void OnValidate()
+    {
+        SetStoredObjStats();
+    }
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(SetStoredObjStats());
+        Debug.Assert(_objectPhysicalStats != null);
+        Debug.Assert(_objectPhysicalStats.mass > 0);
+        Debug.Assert(_objectPhysicalStats.volume > 0);
     }
 
     public void Initialize(bool createdInStorage)
     {
-        isStored = createdInStorage;
+        //isStored = createdInStorage;
         Debug.Assert(SetStoredObjStats());
     }
 
-    public void DeactivateInWorld(Storage storage)
+    public void DeactivateInWorld()
     {
         if (isStored) // If item is already in storage, don't try to deactivate.
             return;
         
-        // Reenable colliders
+        // Disable colliders
         Collider[] colliders = gameObject.GetComponents<Collider>();
         Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
         int i = 0;
@@ -49,7 +68,7 @@ public class Storable : MonoBehaviour, IActionable
         if (r != null)
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
-        // Reenable the MeshRenderer
+        // Disable the MeshRenderer
         gameObject.GetComponent<MeshRenderer>().enabled = false;
 
         isStored = true;

@@ -19,7 +19,7 @@ public enum TypeOfCollider
 }
 
 [System.Serializable]
-public class PartRequirements : MonoBehaviour
+public class PartRequirements : Requirements
 {
     [SerializeField] private string[] _allowedPartTypes;
     public string[] allowedPartTypes { get; }
@@ -51,13 +51,6 @@ public class PartRequirements : MonoBehaviour
     [SerializeField] private GameObject[] _requiredManipulators;                // TODO: Is this the correct way to handle this?
     public GameObject[] requiredManipulators { get; }
 
-    //[SerializeField] private XYZRange _partScaleRange;                        // NOTE: Remove this soon. Parts are never scaled.
-    //public XYZRange partScaleRange { get; }                                   // They can be constructed to any size within their 
-                                                                                // dimension range using segments, but the whole object is never scaled.
-
-    //[SerializeField] private bool _useSurfaceContact;
-    //public bool useSurfaceContact { get; }
-
     [SerializeField] private int _numConnections;                               // TODO: Is this actually necessary?
     public int numConnections { get; }
 
@@ -86,7 +79,6 @@ public class PartRequirements : MonoBehaviour
         _partDimensionsRange = dimRange;
         _partTranslationRange = posRange;
         _partRotationRange = rotRange;
-        //_partScaleRange = scaRange;
 
         // Set allowed part types, materials, and collider type
         _allowedPartTypes = allowedTypes;
@@ -95,10 +87,15 @@ public class PartRequirements : MonoBehaviour
 
         // Set connection type
         _useConnectionPoints = useCPs;
-        //_useSurfaceContact = useSC;
     }
 
     /*********************** Public Validation Methods ************************/
+
+    public override bool ValidateConfiguration(out string output)                            // TODO: Finish this stub method
+    {
+        output = "finished";
+        return true;
+    }
 
     public bool PartMeetsBaseRequirements(ItemPart part)
     {
@@ -120,10 +117,6 @@ public class PartRequirements : MonoBehaviour
     //    if (_useConnectionPoints)
     //    {
     //        meetsReqs = meetsReqs && PartsAreConnected(part, otherPart);
-    //    }
-    //    if (_useSurfaceContact)
-    //    {
-    //        meetsReqs = meetsReqs && PartSurfacesTouch(part, otherPart);
     //    }
     //    return meetsReqs;
     //}

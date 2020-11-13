@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MeshUtility
 {
+    // TODO: Consider making MeshUtility static
+
     /* Calculate Mesh Volume
      * Calculates the exact volume of the specified mesh using signed volume of 
      * tetrahedra. Code based on the formula found here:
@@ -32,34 +34,6 @@ public class MeshUtility
         return Mathf.Abs(volume); // Abs to ensure positive volume
     }
 
-
-    //public bool MeshContact(Mesh A, Mesh B)
-    //{
-
-    //}
-
-    //public Vector3[] MeshIntersection(Mesh A, Mesh B)
-    //{
-
-    //}
-
-
-    //public Vector3 GetSurfacePosNearestToPoint(Mesh surface, Vector3 point)
-    //{
-    //    // NOTE: Only works with an active mesh collider and nothing between the
-    //    // point and the surface.
-    //    //int i = GetVertexNearestToPoint(surface, point);
-    //    //Vector3[] verts = surface.vertices;
-    //    //int[] tris = surface.triangles;
-    //    //Vector3 direction = (verts[i] - point).normalized;
-    //    //RaycastHit hit;
-    //    //if (Physics.Raycast(point, direction, out hit, 1.0f))
-    //    //{
-    //    //    tris[hit.triangleIndex];
-    //    //}
-
-    //}
-
     // Naive Implementation - acceleration structures like an Octree would speed
     // this up dramatically.
     public int GetVertexNearestToPoint(Mesh m, Vector3 point)
@@ -81,4 +55,31 @@ public class MeshUtility
         }
         return indexOfNearest;
     }
+
+
+    //public bool MeshContact(Mesh A, Mesh B)
+    //{
+
+    //}
+
+    //public Vector3[] MeshIntersection(Mesh A, Mesh B)
+    //{
+
+    //}
+
+    //public Vector3 GetSurfacePosNearestToPoint(Mesh surface, Vector3 point)
+    //{
+    //    // NOTE: Only works with an active mesh collider and nothing between the
+    //    // point and the surface.
+    //    //int i = GetVertexNearestToPoint(surface, point);
+    //    //Vector3[] verts = surface.vertices;
+    //    //int[] tris = surface.triangles;
+    //    //Vector3 direction = (verts[i] - point).normalized;
+    //    //RaycastHit hit;
+    //    //if (Physics.Raycast(point, direction, out hit, 1.0f))
+    //    //{
+    //    //    tris[hit.triangleIndex];
+    //    //}
+
+    //}
 }

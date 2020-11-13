@@ -139,7 +139,15 @@ public class ItemPart : MonoBehaviour
     
     // For parts that require the use of connection points/connected parts
     [SerializeField] private GameObject[] _connectionPoints;
-    public GameObject[] connectionPoints { get; }
+    public GameObject[] connectionPoints
+    {
+        get => _connectionPoints;
+        set
+        {
+            if (value != null && value.Length > 0)                              // TODO: Do we need more extensive checks here?
+                _connectionPoints = value;
+        }
+    }
     public GameObject GetConnectionPoint(int index) { return _connectionPoints[index]; }
     public int GetNumberOfConnectionPoints() { return _connectionPoints.Length - 1; }
 

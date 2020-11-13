@@ -2,9 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemFactory : MonoBehaviour
+public class ItemFactory //: MonoBehaviour
 {
-    MeshUtility meshUtil = new MeshUtility();
+    //MeshUtility meshUtil = new MeshUtility();
+    MeshUtility meshUtil;
+
+    public ItemFactory()
+    {
+        meshUtil = new MeshUtility();                                           // TODO: Consider making MeshUtility static
+    }
 
     /* Create Item From Parts
      * This method assembles an Item GameObject from an array of ItemParts. The 
@@ -29,8 +35,7 @@ public class ItemFactory : MonoBehaviour
                                     string name,
                                     string description,
                                     out GameObject resultItem,
-                                    out string outputString
-                                    )
+                                    out string outputString)
     {
         // Validate parts against design requirements
         string validationResult;

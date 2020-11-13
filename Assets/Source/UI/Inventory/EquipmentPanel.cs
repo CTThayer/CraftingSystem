@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-public class EquipmentPanel : MonoBehaviour
+public class EquipmentPanel : MonoBehaviour, ISlotPanelIO
 {
     [SerializeField] private Transform EquipmentSlotsParent;
     [SerializeField] private EquipmentSlot[] equipmentSlots;
 
-    //public event Action<Storable> OnItemRightClickedEvent;
     public event Action<ItemSlot> OnPointerEnterEvent;
     public event Action<ItemSlot> OnPointerExitEvent;
     public event Action<ItemSlot> OnRightClickEvent;
@@ -17,7 +16,6 @@ public class EquipmentPanel : MonoBehaviour
     public event Action<ItemSlot> OnDragEvent;
     public event Action<ItemSlot> OnDropEvent;
 
-    //private void Awake()
     private void Start()
     {
         for (int i = 0; i < equipmentSlots.Length; i++)
@@ -29,6 +27,8 @@ public class EquipmentPanel : MonoBehaviour
             equipmentSlots[i].OnEndDragEvent += OnEndDragEvent;
             equipmentSlots[i].OnDragEvent += OnDragEvent;
             equipmentSlots[i].OnDropEvent += OnDropEvent;
+
+            // TODO: Set bone associated with each slot (if not set manually)
         }
     }
 
@@ -63,5 +63,38 @@ public class EquipmentPanel : MonoBehaviour
             }
         }
         return false;
+    }
+
+    public bool SetDelegateActions(Action<ItemSlot>[] delegates)
+    {
+        if (delegates != null && delegates.Length == 7)
+        {
+            OnPointerEnterEvent += delegates[0];
+            OnPointerExitEvent += delegates[1];
+            OnRightClickEvent += delegates[2];
+            OnBeginDragEvent += delegates[3];
+            OnEndDragEvent += delegates[4];
+            OnDragEvent += delegates[5];
+            OnDropEvent += delegates[6];
+            return true;
+        }
+        return false;
+    }
+
+    public ItemSlot CanAdd(ItemSlot input)
+    {
+        Equipable E = input.storedItem as Equipable;
+        if (E != null)
+        {
+            for (int i = 0; i < equipmentSlots.Length; i++)
+            {
+                if (equipmentSlots[i].equipmentType == E.equipmentType)
+                {
+                    return equipmentSlots[i];
+                }
+            }
+            return null;
+        }
+        return null;
     }
 }

@@ -12,7 +12,6 @@ public class PartSocket : MonoBehaviour
     private Vector3 originalXformUp;
     
     private GameObject partInSocket;
-    //private bool hasPartInSocket;                                               // TODO: Is this unnecessary?
 
     [SerializeField] private GameObject parentSocket;
     [SerializeField] private GameObject[] childSockets;
@@ -40,11 +39,29 @@ public class PartSocket : MonoBehaviour
 
     //}
 
+    /* Get Part In Socket
+     * Simply returns a reference to the ItemPart attached to the GameObject 
+     * that is currently in the socket (or null if it is empty). This method 
+     * does NOT remove the part from the socket.
+     */
+    public ItemPart GetPartInSocket()
+    {
+        return partInSocket.GetComponent<ItemPart>();
+    }
+
+    /* Set Dependent Objects
+     * Sets all the other GameObjects that will be affected when this socket's
+     * contents are changed.
+     */
     public void SetDependentObjects(GameObject[] dependents)
     {
         childSockets = dependents;
     }
-    
+
+    /* Add Part To Socket
+     * Adds the supplied part to the socket. If there is already a part in the
+     * socket, the part is removed from it.
+     */
     public void AddPartToSocket(ItemPart part)
     {
         // If there is already a part in this socket, remove it first.
@@ -52,7 +69,8 @@ public class PartSocket : MonoBehaviour
         {
             RemovePartFromSocket();
         }
-                                                                                // TODO: Run PartRequirements validation here?
+        // TODO: Run PartRequirements validation here?
+
         // Part needs to have the same number of connection points as the number
         // of dependents that this part socket has.
         if (part != null && part.GetNumberOfConnectionPoints() != childSockets.Length)

@@ -15,7 +15,6 @@ public class ItemSlot : MonoBehaviour,
                         IDropHandler
 {
     [SerializeField] private Image image;
-    //[SerializeField] private ItemTooltip tooltip;
 
     public event Action<ItemSlot> OnPointerEnterEvent;
     public event Action<ItemSlot> OnPointerExitEvent;
@@ -28,7 +27,7 @@ public class ItemSlot : MonoBehaviour,
     private Color normalColor = Color.white;
     private Color disabledColor = new Color(1, 1, 1, 0);
 
-    private Storable _storedItem;
+    [SerializeField] private Storable _storedItem;
     public Storable storedItem
     {
         get { return _storedItem; }
@@ -37,42 +36,24 @@ public class ItemSlot : MonoBehaviour,
             _storedItem = value;
             if (_storedItem == null)
             {
-                //image.enabled = false;
                 image.color = disabledColor;
             }
             else
             {
                 image.sprite = _storedItem.icon;
-                //image.enabled = true;
                 image.color = normalColor;
             }
         }
     }
 
-    // Only runs in Editor
-    protected virtual void OnValidate()
-    {
-        if (image == null)
-            image = GetComponent<Image>();
-        //if (tooltip == null)
-        //    tooltip = FindObjectOfType<ItemTooltip>();                          // Might change this at a later time, but OK for now because only runs in Editor
-    }
-
-    public virtual bool CanReceiveItem(Storable item)
-    {
-        return true;
-    }
-
     public void OnPointerEnter(PointerEventData eventData)
     {
-        //tooltip.ShowTooltip(storedItem);
         if (OnPointerEnterEvent != null)
             OnPointerEnterEvent(this);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        //tooltip.HideTooltip();
         if (OnPointerExitEvent != null)
             OnPointerExitEvent(this);
     }
@@ -81,8 +62,6 @@ public class ItemSlot : MonoBehaviour,
     {
         if (eventData != null && eventData.button == PointerEventData.InputButton.Right)
         {
-            //if (storedItem != null && OnRightClickEvent != null)
-            //    OnRightClickEvent(storedItem);
             if (OnRightClickEvent != null)
                 OnRightClickEvent(this);
         }
@@ -111,4 +90,32 @@ public class ItemSlot : MonoBehaviour,
         if (OnDropEvent != null)
             OnDropEvent(this);
     }
+
+    public virtual bool CanReceiveItem(Storable item)
+    {
+        return true;
+    }
+
+    public virtual void AddToSlot(Storable storableObject)
+    {
+        if (storableObject != null)
+            storableObject.DeactivateInWorld();
+        storedItem = storableObject;
+    }
+
+    public virtual Storable RemoveFromSlot()
+    {
+        Storable prevItem = storedItem;
+        storedItem = null;
+        return prevItem;
+    }
+
+    /**************************** EDITOR FUNCTIONS ****************************/
+    // Make sure the image is set up correctly when validated
+    protected virtual void OnValidate()
+    {
+        if (image == null)
+            image = GetComponent<Image>();
+    }
+    /************************** END EDITOR FUNCTIONS **************************/
 }
