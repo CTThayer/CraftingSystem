@@ -26,6 +26,13 @@ public class CraftingApparatusUIManager : MonoBehaviour
         set { if (value != null) _descInputField = value; }
     }
 
+    [SerializeField] private TwoPanelController _panelController;
+    public TwoPanelController panelController
+    {
+        get => _panelController;
+        set { if (value != null) _panelController = value; }
+    }
+
     [SerializeField] private PartPanel _partsPanel;
     public PartPanel partsPanel
     {
@@ -33,11 +40,10 @@ public class CraftingApparatusUIManager : MonoBehaviour
         set { if (value != null) _partsPanel = value; }
     }
 
-    [SerializeField] private TwoPanelController _panelController;
-    public TwoPanelController panelController
+    [SerializeField] private Text _outputText;
+    public Text outputText
     {
-        get => _panelController;
-        set { if (value != null) _panelController = value; }
+        get => _outputText;
     }
 
     void Awake()
@@ -62,6 +68,11 @@ public class CraftingApparatusUIManager : MonoBehaviour
         {
             panelController.MoveItemBetweenPanels(partsPanelSlots[i], partPanelIsA);
         }
+    }
+
+    public void DisplayOutputMessage(string output)
+    {
+        _outputText.text = output;
     }
 
 }

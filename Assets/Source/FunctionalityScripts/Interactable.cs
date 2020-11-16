@@ -5,9 +5,9 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
 
-    [SerializeField] string ObjectName;
-    [SerializeField] int ActionIndex;
-    [SerializeField] int DefaultIndex;
+    [SerializeField] private string ObjectName;
+    [SerializeField] private int ActionIndex;
+    [SerializeField] private int DefaultIndex;
     ActionDelegate[] Actions;
     string[] ActionNames;
 

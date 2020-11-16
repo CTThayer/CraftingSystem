@@ -137,7 +137,7 @@ public class Storable : MonoBehaviour, IActionable
     public ActionDelegate[] GetActions()
     {
         ActionDelegate[] actions = new ActionDelegate[1];
-//        actions[0] = StoreItemInInventory;
+        actions[0] = AddToInventory;
         return actions;
     }
 
@@ -149,4 +149,11 @@ public class Storable : MonoBehaviour, IActionable
         return actionNames;
     }
 
+    /*********************** IActionable Event Members ************************/
+    public virtual string AddToInventory(GameObject caller)
+    {
+        string result = "";
+
+        return result;
+    }
 }

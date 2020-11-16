@@ -39,12 +39,20 @@ public class CraftingViewInputController : MonoBehaviour
                 Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"),
                                                  Input.GetAxis("Mouse Y"));
                 craftingApparatus.camController.ProcessTumble(mouseDelta);
+                return;     // Return to avoid multiple actions
             }
             if (Input.mouseScrollDelta.y != 0)
             {
                 craftingApparatus.camController.ProcessZoom(Input.mouseScrollDelta.y);
+                return;     // Return to avoid multiple actions
             }
-            return;     // Return to avoid accidentally changing selection
+            if (Input.GetMouseButton(1))
+            {
+                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"),
+                                                 Input.GetAxis("Mouse Y"));
+                craftingApparatus.camController.ProcessPan(mouseDelta);
+                return;     // Return to avoid multiple actions
+            }
         }
 
         // Handle Hotkey Presses
@@ -52,7 +60,6 @@ public class CraftingViewInputController : MonoBehaviour
         {
             craftingApparatus.Exit();
         }
-
     }
 
 }

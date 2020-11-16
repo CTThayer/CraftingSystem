@@ -41,7 +41,7 @@ public class ItemCraftingApparatus : CraftingApparatus
 
     /*********************** END User Configured Fields ***********************/
 
-    // For use by the Crafting Apparatus Manager
+    // For use by the Crafting Apparatus UI Manager
     [HideInInspector]
     public string itemName;         // Variable containing the name of the item
     [HideInInspector]
@@ -57,6 +57,9 @@ public class ItemCraftingApparatus : CraftingApparatus
         // TODO: Validate field values
         // TODO: Check references
         // TODO: Verify components (e.g. has an Interactable component, etc.)
+
+        itemName = "";
+        itemDescription = "";
     }
 
     // TODO: Fill in stub methods
@@ -73,9 +76,9 @@ public class ItemCraftingApparatus : CraftingApparatus
         }
         else
         {
-            Debug.LogError("ERROR: ItemCraftingApparatus: Supplied " +
-                           "requirements are not DesignRequirements and " +
-                           "cannot be loaded.");
+            Debug.LogError("ERROR: ItemCraftingApparatus: Supplied GameObject" +
+                           " does NOT have DesignRequirements and " +
+                           "therefore nothing could be loaded.");
             return;
         }
     }
@@ -83,14 +86,29 @@ public class ItemCraftingApparatus : CraftingApparatus
     // Crafts the current object
     public override void Craft()
     {
-
-        itemIsComplete = true;
+        string output;
+        ItemPart[] parts = selectedDesignReqs.GetPartsFromSockets();
+        bool success = factory.CreateItemFromParts(selectedDesignReqs,
+                                                   parts, 
+                                                   itemName, 
+                                                   itemDescription, 
+                                                   out resultObject, 
+                                                   out output);
+        itemIsComplete = success;
+        uiManager.DisplayOutputMessage(output);
     }
 
     // For use by Interactable
     public override void Use()
     {
+        // TODO: Disable player camera
+        // TODO: Disable player input controller
 
+        // TODO: Enable crafting camera
+        camController.enabled = true;
+        inputController.enabled = true;
+
+        uiManager.ActivateUI();
     }
 
     // Exits the apparatus

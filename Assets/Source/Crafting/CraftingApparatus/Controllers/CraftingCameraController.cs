@@ -7,9 +7,14 @@ public class CraftingCameraController : MonoBehaviour
     [SerializeField] private Camera craftingCam;
     [SerializeField] private Vector3 LookAtPosition;
     [SerializeField] private float RotationSpeed;
+
     [SerializeField] private float ZoomSpeed;
     [SerializeField] private float ZoomDistance_MIN;
     [SerializeField] private float ZoomDistance_MAX;
+
+    [SerializeField] private Vector3 originalLookAt;
+    [SerializeField] private float PanSpeed;
+    [SerializeField] private float PanDistance_MAX;
 
     // Degrees in any direction from the y-axis poles that can't be entered
     [SerializeField] private float PolarDeadzone;
@@ -34,17 +39,34 @@ public class CraftingCameraController : MonoBehaviour
         transform.LookAt(LookAtPosition);
     }
 
-    void Update()
+    /* Process Pan
+     * Moves the camera AND lookAt point based on mouse movement delta and
+     * current camera positioning. Also ensures it stays within the maximum
+     * panning distance from it's original location.
+     * TODO: Test this method
+     * TODO: Consider using sqrMagnitude instead of magnitude to speed up calcs
+     */
+    public void ProcessPan(Vector2 mouseDelta)
     {
-        
-    }
+        if ((originalLookAt - LookAtPosition).magnitude.Equals(PanDistance_MAX))
+            return;
 
-    public void ProcessZoom(float delta)
-    {
-        Vector3 v = LookAtPosition - transform.localPosition;
-        float dist = v.magnitude + (delta * ZoomSpeed * -1.0f);
-        if (dist < ZoomDistance_MAX && dist > ZoomDistance_MIN)
-            transform.localPosition = LookAtPosition - dist * v.normalized;
+        Vector3 horizontal = transform.right * mouseDelta.x;
+        Vector3 vertical = transform.up * mouseDelta.y;
+        Vector3 panDirection = horizontal + vertical;
+        panDirection = panDirection.normalized;
+        Vector3 move = panDirection * PanSpeed * Time.deltaTime;
+        if ((originalLookAt - (LookAtPosition + move)).magnitude < PanDistance_MAX)
+        {
+            LookAtPosition += move;
+            transform.localPosition += move;
+        }
+        else
+        {
+            move = panDirection * (PanDistance_MAX - (originalLookAt - LookAtPosition).magnitude);
+            LookAtPosition += move;
+            transform.localPosition += move;
+        }
     }
 
     //public void ProcessTumble(Vector3 delta)
@@ -75,6 +97,14 @@ public class CraftingCameraController : MonoBehaviour
 
         // 3.a. Update camera orientation (rotation) to aim directly at the target using LookAt()
         transform.LookAt(LookAtPosition);
+    }
+
+    public void ProcessZoom(float delta)
+    {
+        Vector3 v = LookAtPosition - transform.localPosition;
+        float dist = v.magnitude + (delta * ZoomSpeed * -1.0f);
+        if (dist < ZoomDistance_MAX && dist > ZoomDistance_MIN)
+            transform.localPosition = LookAtPosition - dist * v.normalized;
     }
 
     private bool IsInPolarDeadzone()

@@ -91,7 +91,10 @@ public abstract class CraftingApparatus : MonoBehaviour
     private CraftingCameraController _camController;
     public CraftingCameraController camController { get => _camController; }
 
-    private GameObject resultObject;                                            // TODO: Is this necessary? Or will factory scripts take care of this?
+    private CraftingViewInputController _inputController;
+    public CraftingViewInputController inputController { get => _inputController; }
+
+    protected GameObject resultObject;                                            // TODO: Is this necessary? Or will factory scripts take care of this?
 
 
     /**************************** Public Functions ****************************/

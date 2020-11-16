@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class DesignRequirements : Requirements
 {
@@ -18,7 +17,6 @@ public class DesignRequirements : Requirements
     public XYZRange itemDimensionsRange { get => _itemDimensionsRange; }
 
     // Sockets (G.O. references) for all required parts for this item design
-    [FormerlySerializedAs("_partSockets")]
     [SerializeField] private GameObject[] _partSocketObjects;
     public GameObject[] partSocketObjects { get => _partSocketObjects; }
 
