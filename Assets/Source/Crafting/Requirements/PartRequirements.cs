@@ -34,7 +34,7 @@ public class PartRequirements : Requirements
     public string[] requiredScripts { get => _requiredScripts; }                                    // NOTE: Strings MUST match the exact name of a script in order to be added.
 
     [SerializeField] private bool _useConnectionPoints;                         // NOTE: refers to connection points at the design level
-    public bool useConnectionPoints { get => _useConnectionPoints; }                                    // Not to be confused with connection points in PartSegments
+    public bool useConnectionPoints { get => _useConnectionPoints; }            // Not to be confused with connection points in PartSegments
 
     [SerializeField] private bool _lockToConnectionPoint;                       // NOTE: Refers to locking the whole part to a specified connection point at the design level
     public bool lockToConnectionPoint { get => _lockToConnectionPoint; }

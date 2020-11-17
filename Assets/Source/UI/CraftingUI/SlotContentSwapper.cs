@@ -38,10 +38,6 @@ public class SlotContentSwapper
             Storable sB = B.RemoveFromSlot();
             A.AddToSlot(sB);
             B.AddToSlot(sA);
-
-            //Storable temp = A.storedItem;
-            //A.storedItem = B.storedItem;
-            //B.storedItem = temp;
         }
     }
 
@@ -56,11 +52,6 @@ public class SlotContentSwapper
                 Storable sE = E.RemoveFromSlot();
                 A.AddToSlot(sE);
                 E.AddToSlot(sA);
-
-                //Storable temp = E.UnequipFromBone();
-                //Equipable equipableItem = A.storedItem as Equipable;
-                //E.storedItem = A.storedItem;
-                //A.storedItem = temp;
             }
         }
     }
@@ -76,10 +67,6 @@ public class SlotContentSwapper
                 Storable sP = P.RemoveFromSlot();
                 A.AddToSlot(sP);
                 P.AddToSlot(sA);
-
-                //Storable temp = P.storedItem;
-                //A.storedItem = P.storedItem;
-                //A.storedItem = temp;
             }
         }
     }
@@ -96,13 +83,6 @@ public class SlotContentSwapper
                 Storable sB = EB.RemoveFromSlot();
                 EA.AddToSlot(sB);
                 EB.AddToSlot(sA);
-
-                //Equipable equipableItemA = EA.storedItem as Equipable;
-                //Equipable equipableItemB = EB.storedItem as Equipable;
-                //EA.UnequipFromBone();
-                //EB.UnequipFromBone();
-                //EA.EquipToBone(equipableItemB);
-                //EB.EquipToBone(equipableItemA);
             }
         }
     }

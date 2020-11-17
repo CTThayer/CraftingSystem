@@ -42,10 +42,9 @@ public class PartSlot : ItemSlot
     {
         if (storableObject != null)
         {
-            storableObject.ReactivateInWorld(partSocket.transform, false);
             ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
             partSocket.AddPartToSocket(part);
-            //Debug.Log("Added " + storableObject.name + " to PartSlot");
+            storableObject.ReactivateInWorld(partSocket.transform, true);
         }
         storedItem = storableObject;
     }

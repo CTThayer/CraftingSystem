@@ -60,18 +60,21 @@ public class PartSocket : MonoBehaviour
     public void AddPartToSocket(ItemPart part)
     {
         // If there is already a part in this socket, remove it first.
-        if (partInSocket != null)
+        if (partInSocket != null || part == null)
         {
-            RemovePartFromSocket();
+            //RemovePartFromSocket();                                             // TODO: Is this a problem?? Shouild it just return? Seems like a part could get lost this way.
+            return;
         }
-        // TODO: Run PartRequirements validation here?
+                                                                                // TODO: Run PartRequirements validation here?
 
-        // Part needs to have the same number of connection points as the number
-        // of dependents that this part socket has.
-        if (part != null && part.GetNumberOfConnectionPoints() != childSockets.Length)
+        //// Part needs to have the same number of connection points as the number
+        //// of dependents that this part socket has.
+        //if (part != null) // && part.GetNumberOfConnectionPoints() != childSockets.Length)
+        if (partReqs.useConnectionPoints)
         { 
             // Set partInSocket
-            partInSocket = part.gameObject;
+            partInSocket = part.gameObject;                                     // TODO: Is this necessary?
+            part.gameObject.transform.parent = this.gameObject.transform;       // TODO: Does this work for handling "downstream part movements?"
 
             // Update position and size to match bounds of added part
             Vector3 partSize = partInSocket.GetComponent<Renderer>().bounds.size;
@@ -86,8 +89,6 @@ public class PartSocket : MonoBehaviour
                 MoveChildrenToConnectionPoints(part.connectionPoints);
             }
         }
-
-        // TODO: Handle case of null ItemPart
     }
 
     public void RemovePartFromSocket()

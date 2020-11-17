@@ -19,23 +19,6 @@ public class ItemPart : MonoBehaviour
 
     public PhysicalStats physicalStats;
 
-    //[SerializeField] private PhysicalStats _physicalStats;
-    //public PhysicalStats physicalStats { get; private set; }
-
-    //[SerializeField] private float _partMass;
-    //public float partMass
-    //{
-    //    get => partMass;
-    //    set => _partMass = value > 0 ? value : 0;
-    //}
-
-    //[SerializeField] private float _partVolume;
-    //public float partVolume
-    //{
-    //    get => partVolume;
-    //    set => _partVolume = value > 0 ? value : 0;
-    //}
-
     [SerializeField] private float _maxDurability;
     public float maxDurability { get; private set; }
 
@@ -135,7 +118,6 @@ public class ItemPart : MonoBehaviour
     {
         this.gameObject.GetComponent<Renderer>().material.color = originalColor;
     }
-
     
     // For parts that require the use of connection points/connected parts
     [SerializeField] private GameObject[] _connectionPoints;
