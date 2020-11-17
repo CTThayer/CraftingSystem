@@ -12,7 +12,22 @@ public class CraftingCameraController : MonoBehaviour
     [SerializeField] private float ZoomDistance_MIN;
     [SerializeField] private float ZoomDistance_MAX;
 
-    [SerializeField] private Vector3 originalLookAt;
+    [SerializeField] private GameObject _originalLookAtObj;
+    public GameObject originalLookAtObj
+    {
+        get => _originalLookAtObj;
+        set
+        {
+            if (value != null)
+            {
+                _originalLookAtObj = value;
+                originalLookAtPosition = _originalLookAtObj.transform.position;
+                originalRotation = _originalLookAtObj.transform.rotation;
+            }
+        }
+    }
+    private Vector3 originalLookAtPosition;
+    private Quaternion originalRotation;
     [SerializeField] private float PanSpeed;
     [SerializeField] private float PanDistance_MAX;
 
@@ -29,6 +44,14 @@ public class CraftingCameraController : MonoBehaviour
                 Debug.LogError("ERROR: CraftingCam: No camera was set for the" +
                                " CraftingCam and the parent object does not " +
                                "contain a Camera object!");
+        }
+
+        Debug.Assert(_originalLookAtObj != null);
+        if (_originalLookAtObj != null)
+        {
+            originalLookAtPosition = _originalLookAtObj.transform.position;
+            originalRotation = _originalLookAtObj.transform.rotation;
+            LookAtPosition = originalLookAtPosition;
         }
 
         Debug.Assert(LookAtPosition != null);
@@ -48,7 +71,7 @@ public class CraftingCameraController : MonoBehaviour
      */
     public void ProcessPan(Vector2 mouseDelta)
     {
-        if ((originalLookAt - LookAtPosition).magnitude.Equals(PanDistance_MAX))
+        if ((originalLookAtPosition - LookAtPosition).magnitude.Equals(PanDistance_MAX))
             return;
 
         Vector3 horizontal = transform.right * mouseDelta.x;
@@ -56,14 +79,14 @@ public class CraftingCameraController : MonoBehaviour
         Vector3 panDirection = horizontal + vertical;
         panDirection = panDirection.normalized;
         Vector3 move = panDirection * PanSpeed * Time.deltaTime;
-        if ((originalLookAt - (LookAtPosition + move)).magnitude < PanDistance_MAX)
+        if ((originalLookAtPosition - (LookAtPosition + move)).magnitude < PanDistance_MAX)
         {
             LookAtPosition += move;
             transform.localPosition += move;
         }
         else
         {
-            move = panDirection * (PanDistance_MAX - (originalLookAt - LookAtPosition).magnitude);
+            move = panDirection * (PanDistance_MAX - (originalLookAtPosition - LookAtPosition).magnitude);
             LookAtPosition += move;
             transform.localPosition += move;
         }

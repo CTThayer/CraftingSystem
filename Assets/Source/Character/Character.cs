@@ -5,8 +5,12 @@ using UnityEngine.UI;
 
 public class Character : MonoBehaviour
 {
-    [SerializeField] private Inventory inventory;
-    [SerializeField] private EquipmentPanel equipmentPanel;
+    [SerializeField] private Inventory _inventory;
+    public Inventory inventory { get => _inventory; }
+
+    [SerializeField] private EquipmentPanel _equipmentPanel;
+    public EquipmentPanel equipmentPanel { get => _equipmentPanel; }
+
     [SerializeField] private ItemTooltip itemTooltip;
     [SerializeField] private Image draggableSlot;
 
@@ -23,22 +27,22 @@ public class Character : MonoBehaviour
     {
         // Setup Events
         // Right Click to Equip/Unequip
-        inventory.OnRightClickEvent += Equip;
-        equipmentPanel.OnRightClickEvent += Unequip;
+        _inventory.OnRightClickEvent += Equip;
+        _equipmentPanel.OnRightClickEvent += Unequip;
         // Pointer Hover Tooltip
-        inventory.OnPointerEnterEvent += ShowTooltip;
-        inventory.OnPointerExitEvent += HideTooltip;
-        equipmentPanel.OnPointerEnterEvent += ShowTooltip;
-        equipmentPanel.OnPointerEnterEvent += HideTooltip;
+        _inventory.OnPointerEnterEvent += ShowTooltip;
+        _inventory.OnPointerExitEvent += HideTooltip;
+        _equipmentPanel.OnPointerEnterEvent += ShowTooltip;
+        _equipmentPanel.OnPointerEnterEvent += HideTooltip;
         // Drag Event Handlers
-        inventory.OnBeginDragEvent += BeginDrag;
-        inventory.OnEndDragEvent += EndDrag;
-        inventory.OnDragEvent += Drag;
-        inventory.OnDropEvent += Drop;
-        equipmentPanel.OnBeginDragEvent += BeginDrag;
-        equipmentPanel.OnEndDragEvent += EndDrag;
-        equipmentPanel.OnDragEvent += Drag;
-        equipmentPanel.OnDropEvent += Drop;
+        _inventory.OnBeginDragEvent += BeginDrag;
+        _inventory.OnEndDragEvent += EndDrag;
+        _inventory.OnDragEvent += Drag;
+        _inventory.OnDropEvent += Drop;
+        _equipmentPanel.OnBeginDragEvent += BeginDrag;
+        _equipmentPanel.OnEndDragEvent += EndDrag;
+        _equipmentPanel.OnDragEvent += Drag;
+        _equipmentPanel.OnDropEvent += Drop;
 
     }
     
@@ -135,17 +139,17 @@ public class Character : MonoBehaviour
 
     private void Equip(Equipable equipableItem)
     {
-        if (inventory.RemoveItem(equipableItem))
+        if (_inventory.RemoveItem(equipableItem))
         {
             Storable previousItem;
-            if (equipmentPanel.AddItem(equipableItem, out previousItem))
+            if (_equipmentPanel.AddItem(equipableItem, out previousItem))
             {
                 if (previousItem != null)
-                    inventory.AddItem(previousItem);
+                    _inventory.AddItem(previousItem);
             }
             else
             {
-                inventory.AddItem(equipableItem);
+                _inventory.AddItem(equipableItem);
             }
         }
     }
@@ -153,9 +157,9 @@ public class Character : MonoBehaviour
     private void Unequip(Equipable equipableItem)
     {
         Storable storableItem = equipableItem.gameObject.GetComponent<Storable>();       // TODO: this might not be necessary if Storable handles all UI 
-        if (!inventory.IsFull() && equipmentPanel.RemoveItem(equipableItem))             // and Equipable is only used to physically add the object or if all refs are GOs
+        if (!_inventory.IsFull() && _equipmentPanel.RemoveItem(equipableItem))             // and Equipable is only used to physically add the object or if all refs are GOs
         {
-            inventory.AddItem(storableItem);
+            _inventory.AddItem(storableItem);
         }
     }
 

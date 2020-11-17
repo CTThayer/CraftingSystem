@@ -19,9 +19,9 @@ public class PartSocket : MonoBehaviour
     [SerializeField] private bool moveChildrenOnAdd;
     [SerializeField] private bool isEditorConfigured;                           // TODO: Is this unnecessary?
 
-    void Awake()
+    void Start()
     {
-        originalColor = this.gameObject.GetComponent<MeshRenderer>().material.color;
+        originalColor = this.gameObject.GetComponent<MeshRenderer>().sharedMaterial.color;
 
         if (isEditorConfigured)
         {
@@ -33,11 +33,6 @@ public class PartSocket : MonoBehaviour
             }
         }
     }
-
-    //void Start()
-    //{
-
-    //}
 
     /* Get Part In Socket
      * Simply returns a reference to the ItemPart attached to the GameObject 

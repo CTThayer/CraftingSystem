@@ -22,37 +22,37 @@ public enum TypeOfCollider
 public class PartRequirements : Requirements
 {
     [SerializeField] private string[] _allowedPartTypes;
-    public string[] allowedPartTypes { get; }
+    public string[] allowedPartTypes { get => _allowedPartTypes; }
 
     [SerializeField] private string[] _allowedMaterials;
-    public string[] allowedMaterials { get; }
+    public string[] allowedMaterials { get => _allowedMaterials; }
 
     [SerializeField] private TypeOfCollider _requiredCollider;
-    public TypeOfCollider requiredCollider { get; }
+    public TypeOfCollider requiredCollider { get => _requiredCollider; }
 
     [SerializeField] private string[] _requiredScripts;                         // NOTE: Scripts to attach to this PART, not the end item (e.g. DamageDealer script is attached to blade, not the whole item)
-    public string[] requiredScripts { get; }                                    // NOTE: Strings MUST match the exact name of a script in order to be added.
+    public string[] requiredScripts { get => _requiredScripts; }                                    // NOTE: Strings MUST match the exact name of a script in order to be added.
 
     [SerializeField] private bool _useConnectionPoints;                         // NOTE: refers to connection points at the design level
-    public bool useConnectionPoints { get; }                                    // Not to be confused with connection points in PartSegments
+    public bool useConnectionPoints { get => _useConnectionPoints; }                                    // Not to be confused with connection points in PartSegments
 
     [SerializeField] private bool _lockToConnectionPoint;                       // NOTE: Refers to locking the whole part to a specified connection point at the design level
-    public bool lockToConnectionPoint { get; }
+    public bool lockToConnectionPoint { get => _lockToConnectionPoint; }
 
     [SerializeField] private XYZRange _partDimensionsRange;
-    public XYZRange partDimensionsRange { get; }
+    public XYZRange partDimensionsRange { get => _partDimensionsRange; }
 
     [SerializeField] private XYZRange _partTranslationRange;
-    public XYZRange partTranslationRange { get; }
+    public XYZRange partTranslationRange { get => _partTranslationRange; }
 
     [SerializeField] private XYZRange _partRotationRange;
-    public XYZRange partRotationRange { get; }
+    public XYZRange partRotationRange { get => _partRotationRange; }
 
     [SerializeField] private GameObject[] _requiredManipulators;                // TODO: Is this the correct way to handle this?
-    public GameObject[] requiredManipulators { get; }
+    public GameObject[] requiredManipulators { get => _requiredManipulators; }
 
     [SerializeField] private int _numConnections;                               // TODO: Is this actually necessary?
-    public int numConnections { get; }
+    public int numConnections { get => _numConnections; }
 
     void Start()
     {
@@ -67,7 +67,6 @@ public class PartRequirements : Requirements
     public PartRequirements(XYZRange dimRange,                                  // TODO: Should we remove this constructor or change it to an Initialize() function?
                             XYZRange posRange,
                             XYZRange rotRange,
-                            //XYZRange scaRange,
                             string[] allowedTypes,
                             string[] allowedMats,
                             TypeOfCollider colliderType,

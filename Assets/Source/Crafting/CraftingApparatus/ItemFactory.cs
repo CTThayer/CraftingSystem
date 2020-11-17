@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemFactory //: MonoBehaviour
+public class ItemFactory : MonoBehaviour
 {
     //MeshUtility meshUtil = new MeshUtility();
     MeshUtility meshUtil;

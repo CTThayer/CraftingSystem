@@ -36,6 +36,7 @@ public class ItemCraftingApparatus : CraftingApparatus
         get => _selectedDesignReqs;
         private set => _selectedDesignReqs = value;
     }
+    [SerializeField] private GameObject tempDesignReqsObject;
 
     // TODO: Add DesignRequirements / PartRequirements database reference(s) for retrieving requirements
 
@@ -60,6 +61,11 @@ public class ItemCraftingApparatus : CraftingApparatus
 
         itemName = "";
         itemDescription = "";
+
+        // Temp code for setting designreqs object position. This will go inside
+        // the method that sets the design reqs when selected from the menu
+        tempDesignReqsObject.transform.position = buildLocation.transform.position;
+        selectedDesignReqs = tempDesignReqsObject.GetComponent<DesignRequirements>();
     }
 
     // TODO: Fill in stub methods
