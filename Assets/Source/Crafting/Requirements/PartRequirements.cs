@@ -12,9 +12,6 @@ public enum TypeOfCollider
     Terrain,                // TODO: Is this actually necessary?
     Wheel,                  // TODO: Is this actually necessary?
     Compound,
-    //CompoundBox,
-    //CompoundMesh,
-    //CompoundMixed
     NONE
 }
 
@@ -175,24 +172,26 @@ public class PartRequirements : Requirements
     private bool HasCorrectCollider(ItemPart part)                              // TODO: TEST THIS!
     {
         bool isCorrectCollider = false;
-        Collider c = part.GetComponent<Collider>();
-        Collider[] colliders = part.gameObject.GetComponents<Collider>();       // TODO: Clean up this code. It is very clunky and inefficient right now.
 
-        if (c == null)
+        Collider c = part.GetComponent<Collider>();
+        List<Collider> colliders = new List<Collider>(part.gameObject.GetComponents<Collider>());
+        colliders.AddRange(part.gameObject.GetComponentsInChildren<Collider>());
+
+        if (c == null && colliders.Count == 0)
         {
             if (requiredCollider == TypeOfCollider.NONE)
                 return true;
             else
-                return isCorrectCollider;
+                return false;
         }
 
-        if (requiredCollider != TypeOfCollider.Compound && colliders.Length > 1)
+        if (requiredCollider != TypeOfCollider.Compound && colliders.Count > 1)
             return false;
-        else if (requiredCollider == TypeOfCollider.Compound && colliders.Length <= 1)
+        else if (requiredCollider == TypeOfCollider.Compound && colliders.Count <= 1)
             return false;
-        else if (requiredCollider == TypeOfCollider.Compound && colliders.Length > 1)
+        else if (requiredCollider == TypeOfCollider.Compound && colliders.Count > 1)
         {
-            for (int i = 0; i < colliders.Length; i++)
+            for (int i = 0; i < colliders.Count; i++)
             {
                 if (colliders[i] is TerrainCollider || colliders[i] is WheelCollider)
                     return false;
@@ -227,8 +226,6 @@ public class PartRequirements : Requirements
                     if (c is WheelCollider)
                         isCorrectCollider = true;
                     break;
-
-                // TODO: Add code to handle the Compound options
             }
             return isCorrectCollider;
         }

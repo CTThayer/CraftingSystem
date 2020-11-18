@@ -3656,6 +3656,11 @@ PrefabInstance:
       propertyPath: _partDimensionsRange._zMax
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 8374227324354409410, guid: c0448d1e86f4e9d42984e04c87b2f111,
+        type: 3}
+      propertyPath: _useConnectionPoints
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8502990779888641462, guid: c0448d1e86f4e9d42984e04c87b2f111,
         type: 3}
       propertyPath: parentSocket
@@ -5731,6 +5736,11 @@ PrefabInstance:
         type: 3}
       propertyPath: _partDimensionsRange._zMax
       value: 0.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 8374227324354409410, guid: c0448d1e86f4e9d42984e04c87b2f111,
+        type: 3}
+      propertyPath: _useConnectionPoints
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8502990779888641462, guid: c0448d1e86f4e9d42984e04c87b2f111,
         type: 3}

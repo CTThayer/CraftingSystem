@@ -66,6 +66,8 @@ public class ItemPart : MonoBehaviour
         Debug.Assert(_partQuality > 0);
 
         //_partVolume = CalculatePartVolume();
+
+        Debug.Assert(_connectedParts.Length == _connectionPoints.Length);
     }
 
     public void Initialize(string typeOfPart,
@@ -131,11 +133,18 @@ public class ItemPart : MonoBehaviour
         }
     }
     public GameObject GetConnectionPoint(int index) { return _connectionPoints[index]; }
-    public int GetNumberOfConnectionPoints() { return _connectionPoints.Length - 1; }
+    public int GetNumberOfConnectionPoints() { return _connectionPoints.Length; }
 
     [SerializeField] private ItemPart[] _connectedParts;
-    public ItemPart[] connectedParts { get; }
+    public ItemPart[] connectedParts { get => _connectedParts; }
     public ItemPart GetConnectedPart(int index) { return _connectedParts[index]; }
+    public void SetConnectedPart(int index, ItemPart partToAdd)
+    {
+        if (index >= 0 && index < _connectedParts.Length)
+        {
+            _connectedParts[index] = partToAdd;
+        }
+    }
     public int GetNumberOfConnectedParts() { return _connectedParts.Length - 1; }
     public int GetIndexOfConnection(ItemPart part)
     {
