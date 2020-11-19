@@ -43,8 +43,9 @@ public class PartSlot : ItemSlot
         if (storableObject != null)
         {
             ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
-            partSocket.AddPartToSocket(part);
-            storableObject.ReactivateInWorld(partSocket.transform, true);
+            Vector3 addLoc;
+            if (partSocket.AddPartToSocket(part, out addLoc))
+                storableObject.ReactivateInWorld(partSocket.transform, true);
         }
         storedItem = storableObject;
     }

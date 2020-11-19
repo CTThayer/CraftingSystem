@@ -145,7 +145,7 @@ public class ItemPart : MonoBehaviour
             _connectedParts[index] = partToAdd;
         }
     }
-    public int GetNumberOfConnectedParts() { return _connectedParts.Length - 1; }
+    //public int GetNumberOfConnectedParts() { return _connectedParts.Length - 1; }
     public int GetIndexOfConnection(ItemPart part)
     {
         if (part != null)

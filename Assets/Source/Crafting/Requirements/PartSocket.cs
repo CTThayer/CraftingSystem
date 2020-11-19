@@ -69,8 +69,8 @@ public class PartSocket : MonoBehaviour
         // it should have been removed before trying to add the new part.
         if (partInSocket == null || part != null)
         {
-            if (partReqs.PartMeetsBaseRequirements(part))
-            {
+            //if (partReqs.PartMeetsBaseRequirements(part))
+            //{
                 if (partReqs.useConnectionPoints)
                 {
                     return AddPartUsingConnectionPoints(part, out AddLocation);
@@ -79,7 +79,7 @@ public class PartSocket : MonoBehaviour
                 {
                     return AddPartWithoutConnectionPoints(part, out AddLocation);
                 }
-            }
+            //}
         }
         AddLocation = Vector3.negativeInfinity;
         return false;
@@ -87,55 +87,58 @@ public class PartSocket : MonoBehaviour
 
     private bool AddPartUsingConnectionPoints(ItemPart part, out Vector3 AddLocation)
     {
-        // Part needs exactly one more connection point than the number of child
-        // sockets (the extra is for the parent)                                // TODO: Is this necessary and how do we handle PartSockets with parent but no children???
-        if (part.GetNumberOfConnectionPoints() - 1 != childSockets.Length)
-        {
-            AddLocation = Vector3.negativeInfinity;
-            return false;
-        }
+        //// Part needs exactly one more connection point than the number of child
+        //// sockets (the extra is for the parent)                                // TODO: Is this necessary and how do we handle PartSockets with parent but no children???
+        //if (part.GetNumberOfConnectionPoints() - 1 != childSockets.Length)
+        //{
+        //    AddLocation = Vector3.negativeInfinity;
+        //    return false;
+        //}
 
         // Attempt to establish connection w/parent
-        PartSocket parentPartSocket = parentSocket.GetComponent<PartSocket>();
-        if (parentPartSocket != null)
+        if (parentSocket != null)
         {
-            ItemPart parentPart = parentPartSocket.partInSocket.GetComponent<ItemPart>();
-            if (parentPart == null)
+            PartSocket parentPartSocket = parentSocket.GetComponent<PartSocket>();
+            if (parentPartSocket != null)
             {
-                return AddPartWithoutConnectionPoints(part, out AddLocation);   // TODO: If we do this, then adding w/connection points also needs to set downstream children connections that were unset previously
+                ItemPart parentPart = parentPartSocket.partInSocket.GetComponent<ItemPart>();
+                if (parentPart == null)
+                {
+                    return AddPartWithoutConnectionPoints(part, out AddLocation);   // TODO: If we do this, then adding w/connection points also needs to set downstream children connections that were unset previously
+                }
+
+                // Configure part in the socket
+                partInSocket = part.gameObject;
+                initialPartPos = part.transform.position;
+                initialPartRotation = part.transform.rotation;
+
+                ItemPart thisPart = partInSocket.GetComponent<ItemPart>();
+                int index = parentPartSocket.GetIndexOfChild(this);
+                parentPart.SetConnectedPart(index, thisPart);
+                thisPart.SetConnectedPart(index, parentPart);
+                GameObject parentConnectionPoint = parentPart.GetConnectionPoint(index);         // Note: For this to work correctly, the indices of part socket child sockets must match the indices of connection points in the ItemPart.
+
+                AddLocation = parentConnectionPoint.transform.position;
+                //partInSocket.transform.position = parentConnectionPoint.transform.position;
+                partInSocket.transform.rotation = parentConnectionPoint.transform.rotation;
+
+                // TODO: Handle children - Is the following code correct for this?
+                if (moveChildrenOnAdd)
+                {
+                    MoveChildrenToConnectionPoints(part.connectionPoints);
+                }
+
+                // Update socket position and size to match bounds of added part
+                Vector3 partSize = partInSocket.GetComponent<Renderer>().bounds.size;
+                Vector3 sizeDelta = partSize - this.transform.localScale;
+                this.transform.localScale = partSize;
+
+                return true;
             }
-
-            // Configure part in the socket
-            partInSocket = part.gameObject;
-            initialPartPos = part.transform.position;
-            initialPartRotation = part.transform.rotation;
-
-            ItemPart thisPart = partInSocket.GetComponent<ItemPart>();
-            int index = parentPartSocket.GetIndexOfChild(this);
-            parentPart.SetConnectedPart(index, thisPart);
-            thisPart.SetConnectedPart(index, parentPart);
-            GameObject parentConnectionPoint = parentPart.GetConnectionPoint(index);         // Note: For this to work correctly, the indices of part socket child sockets must match the indices of connection points in the ItemPart.
-
-            AddLocation = parentConnectionPoint.transform.position;
-            //partInSocket.transform.position = parentConnectionPoint.transform.position;
-            partInSocket.transform.rotation = parentConnectionPoint.transform.rotation;
-
-            // TODO: Handle children - Is the following code correct for this?
-            if (moveChildrenOnAdd)
-            {
-                MoveChildrenToConnectionPoints(part.connectionPoints);
-            }
-
-            // Update socket position and size to match bounds of added part
-            Vector3 partSize = partInSocket.GetComponent<Renderer>().bounds.size;
-            Vector3 sizeDelta = partSize - this.transform.localScale;
-            this.transform.localScale = partSize;
-
-            return true;
         }
-
-        AddLocation = Vector3.negativeInfinity;
-        return false;
+        return AddPartWithoutConnectionPoints(part, out AddLocation);
+        //AddLocation = Vector3.negativeInfinity;
+        //return false;
     }
 
     //private void AddPartWithoutConnectionPoints(ItemPart part)
@@ -151,18 +154,16 @@ public class PartSocket : MonoBehaviour
         Vector3 sizeDelta = partSize - this.transform.localScale;
         this.transform.localScale = partSize;
 
+        if (useCenterForAddPos)
+            AddLocation = transform.position + (transform.localScale.y * 0.5f) * transform.up;
+        else
+            AddLocation = this.transform.position;
+
         // TODO: Handle children - Is the following code correct for this?
         if (moveChildrenOnAdd)
         {
             MoveChildrenToConnectionPoints(part.connectionPoints);
         }
-
-        if (useCenterForAddPos)
-        {
-            AddLocation = transform.position + (transform.localScale.y * 0.5f) * transform.up;
-        }
-        else
-            AddLocation = this.transform.position;
         return true;
     }
 
@@ -181,8 +182,8 @@ public class PartSocket : MonoBehaviour
             if (transform.localScale != originalScale)
                 deltaSca = originalScale - this.transform.localScale;
             this.transform.position = originalPosition;
-            this.transform.localScale = originalScale;
             this.transform.rotation = deltaRot;
+            this.transform.localScale = originalScale;
             UpdateDependentSockets(deltaPos, deltaRot, deltaSca);
 
             // Remove connections in parts if connectedObjects were set
@@ -238,14 +239,22 @@ public class PartSocket : MonoBehaviour
 
     private void OnParentScaleChanged(Vector3 parentScaleDelta)                  // TODO: is this correct?
     {
-        Vector3 delta = originalPosition;
-        delta.x *= parentScaleDelta.x;
-        delta.y *= parentScaleDelta.y;
-        delta.z *= parentScaleDelta.z;
-        transform.position += delta;
+        Vector3 newSocketPos = originalPosition;
+        newSocketPos.x *= parentScaleDelta.x;
+        newSocketPos.y *= parentScaleDelta.y;
+        newSocketPos.z *= parentScaleDelta.z;
+        //transform.position += newSocketPos;
+        transform.position = newSocketPos;
 
         if (partInSocket != null)
-            partInSocket.transform.position += delta;
+        {
+            Vector3 newPartPos = partInSocket.transform.position;
+            newPartPos.x *= parentScaleDelta.x;
+            newPartPos.y *= parentScaleDelta.y;
+            newPartPos.z *= parentScaleDelta.z;
+            partInSocket.transform.position = newPartPos;
+            //partInSocket.transform.position += newSocketPos;
+        }
     }
 
     private void OnParentRotationChanged(Quaternion parentRotationDelta)
@@ -262,7 +271,7 @@ public class PartSocket : MonoBehaviour
             return;
         for (int i = 0; i < childSockets.Length; i++)
         {
-            Vector3 posDelta = childSockets[i].transform.position - connectionPoints[i].transform.position;
+            Vector3 posDelta = connectionPoints[i].transform.position - childSockets[i].transform.position;
             Quaternion rotDelta = Quaternion.FromToRotation(childSockets[i].transform.up, connectionPoints[i].transform.up);
             childSockets[i].transform.position = connectionPoints[i].transform.position;
             childSockets[i].transform.rotation = connectionPoints[i].transform.rotation;

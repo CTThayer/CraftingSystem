@@ -7,17 +7,16 @@ public class CraftingMaterial : MonoBehaviour
     /****************************** Core Stats ********************************/
 
     [SerializeField] private string _materialType;                              // TODO: Change to Enum??
-    public string materialType { get; }
+    public string materialType { get => _materialType; }
 
     [SerializeField] private string _materialName;
-    public string materialName { get; }
+    public string materialName { get => _materialName; }
 
     [SerializeField] private string _description;
-    public string description { get; }
+    public string description { get => _description; }
 
     [SerializeField] private string[] _descriptors;
-    public string[] descriptors { get; }
-
+    public string[] descriptors { get => _descriptors; }
     public string GetDescriptor(int index)
     {
         return _descriptors[index];
@@ -71,31 +70,31 @@ public class CraftingMaterial : MonoBehaviour
     // to approach zero but never actually reach it.
 
     [SerializeField] private float _coldResistance;
-    public float coldResistance { get; } //set; }                               // TODO: should this be allowed to set?
+    public float coldResistance { get => _coldResistance; } //set; }                               // TODO: should this be allowed to set?
 
     [SerializeField] private float _corrosionResistance;
-    public float corrosionResistance { get; } //set; }                          // TODO: should this be allowed to set?
+    public float corrosionResistance { get => _corrosionResistance; } //set; }                          // TODO: should this be allowed to set?
 
     [SerializeField] private float _electricalResistance;
-    public float electricalResistance { get; } //set; }                         // TODO: should this be allowed to set?
+    public float electricalResistance { get => _electricalResistance; } //set; }                         // TODO: should this be allowed to set?
 
     [SerializeField] private float _heatResistance;
-    public float heatResistance { get; } //set; }                               // TODO: should this be allowed to set?
+    public float heatResistance { get => _heatResistance; } //set; }                               // TODO: should this be allowed to set?
 
     [SerializeField] private float _impactResistance;                           // TODO: do we actually want this one?
-    public float impactResistance { get; } //set; }                             // TODO: should this be allowed to set?
+    public float impactResistance { get => _impactResistance; } //set; }                             // TODO: should this be allowed to set?
 
     [SerializeField] private float _lightResistance;
-    public float lightResistance { get; } //set; }                              // TODO: should this be allowed to set?
+    public float lightResistance { get => _lightResistance; } //set; }                              // TODO: should this be allowed to set?
 
     [SerializeField] private float _metaphysicalResistance;
-    public float metaphysicalResistance { get; } //set; }                       // TODO: should this be allowed to set?
+    public float metaphysicalResistance { get => _metaphysicalResistance; } //set; }                       // TODO: should this be allowed to set?
 
     [SerializeField] private float _slashingResistance;
-    public float slashingResistance { get; } //set; }                           // TODO: should this be allowed to set?
+    public float slashingResistance { get => _slashingResistance; } //set; }                           // TODO: should this be allowed to set?
 
     [SerializeField] private float _wearResistance;
-    public float wearResistance { get; } //set; }                               // TODO: should this be allowed to set?
+    public float wearResistance { get => _wearResistance; } //set; }                               // TODO: should this be allowed to set?
     /*********************** END Resistance / Weakness ************************/
 
 
@@ -103,16 +102,16 @@ public class CraftingMaterial : MonoBehaviour
     /****************************** Conductivity ******************************/
 
     [SerializeField] private float _acousticConductivity;
-    public float acousticConductivity { get; } // set; }                        // TODO: should this be allowed to set?
+    public float acousticConductivity { get => _acousticConductivity; } // set; }                        // TODO: should this be allowed to set?
 
     [SerializeField] private float _electricalConductivity;
-    public float electricalConductivity { get; } // set; }                      // TODO: should this be allowed to set?
+    public float electricalConductivity { get => _electricalConductivity; } // set; }                      // TODO: should this be allowed to set?
 
     [SerializeField] private float _metaphysicalConductivity;
-    public float metaphysicalConductivity { get; } // set; }                    // TODO: should this be allowed to set?
+    public float metaphysicalConductivity { get => _metaphysicalConductivity; } // set; }                    // TODO: should this be allowed to set?
 
     [SerializeField] private float _thermalConductivity;
-    public float thermalConductivity { get; } // set; }                         // TODO: should this be allowed to set?
+    public float thermalConductivity { get => _thermalConductivity; } // set; }                         // TODO: should this be allowed to set?
 
     /*************************** END Conductivity *****************************/
 
