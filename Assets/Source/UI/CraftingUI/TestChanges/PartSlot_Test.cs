@@ -47,7 +47,6 @@ public class PartSlot_Test : ItemSlot
         if (storableObject != null)
         {
             ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
-            //bool success = partLayout.AddPartAt(indexInLayout, part);
             bool success = partLayout.Add(indexInLayout, part);
             if (success)
                 storedItem = storableObject;
@@ -57,7 +56,6 @@ public class PartSlot_Test : ItemSlot
     public override Storable RemoveFromSlot()
     {
         ItemPart part;
-        //bool success = partLayout.RemovePartAt(indexInLayout, out part);
         bool success = partLayout.Remove(indexInLayout, out part);
         Storable prevStoredItem = storedItem;
         if (prevStoredItem != null)

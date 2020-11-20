@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public class ItemPart : Item
 public class ItemPart : MonoBehaviour
 {
     [SerializeField] private string _partType;                                  // TODO: Change to Enum??

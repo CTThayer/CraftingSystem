@@ -84,6 +84,29 @@ public class PartPanel_Test : MonoBehaviour, ISlotPanelIO
         }
     }
 
+    public ItemSlot CanAdd(ItemSlot input)
+    {
+        if (input != null && input.storedItem != null)
+        {
+            ItemPart itemPart = input.storedItem.GetComponent<ItemPart>();
+            if (itemPart == null)
+                return null;
+            else
+            {
+                for (int i = 0; i < _partSlots.Length; i++)
+                {
+                    if (_partSlots[i].storedItem == null
+                        && _partSlots[i].CanReceiveItem(input.storedItem))
+                    {
+                        return _partSlots[i];
+                    }
+                }
+                return null;
+            }
+        }
+        return null;
+    }
+
     public bool AddPart(Storable storableItem, out Storable previousStorable)
     {
         for (int i = 0; i < _partSlots.Length; i++)
@@ -140,25 +163,4 @@ public class PartPanel_Test : MonoBehaviour, ISlotPanelIO
         return false;
     }
 
-    public ItemSlot CanAdd(ItemSlot input)
-    {
-        if (input != null && input.storedItem != null)
-        {
-            ItemPart itemPart = input.storedItem.GetComponent<ItemPart>();
-            if (itemPart == null)
-                return null;
-            else
-            {
-                for (int i = 0; i < _partSlots.Length; i++)
-                {
-                    if (_partSlots[i].CanReceiveItem(input.storedItem))
-                    {
-                        return _partSlots[i];
-                    }
-                }
-                return null;
-            }
-        }
-        return null;
-    }
 }

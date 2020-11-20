@@ -40,153 +40,6 @@ public class PartLayout : MonoBehaviour
         }
     }
 
-    //public bool AddPartAt(int index, ItemPart part)
-    //{
-    //    if (parts[index] != _defaultParts[index])
-    //    {
-    //        if (part == null)
-    //            return false;
-    //        else if (part.partType != _defaultParts[index].partType)
-    //            return false;
-    //    }
-    //    // Reactivate part and deactivate defaultPart
-    //    Storable partStorable = part.GetComponent<Storable>();
-    //    if (partStorable == null)
-    //        return false;
-    //    //Vector3 location;
-    //    Transform location;
-    //    if (index > 0)
-    //    {
-    //        ItemPart parentPart = parts[index].GetConnectedPart(0);
-    //        int indexInParent = parentPart.GetIndexOfConnection(parts[index]);
-    //        GameObject cpInParent = parentPart.GetConnectionPoint(indexInParent);
-    //        location = cpInParent.transform; //.position;
-    //    }
-    //    else
-    //        location = _defaultParts[index].transform; //.position;
-    //    partStorable.ReactivateInWorld(location, true);
-
-    //    // Add part to parts[] and set part connections
-    //    parts[index] = part;
-    //    TransferConnections(_defaultParts[index], parts[index]);
-
-    //    // Deactivate corresponding default part
-    //    _defaultParts[index].gameObject.SetActive(false);
-
-    //    //Update positioning of parts to reflect new part addition
-    //    //UpdateFromBasePart();
-
-    //    return true;
-    //}
-
-    //public bool RemovePartAt(int index, out ItemPart output)
-    //{
-    //    if (index >= 0 && index < parts.Length)
-    //    {
-    //        if (parts[index] != _defaultParts[index])
-    //        {
-    //            output = parts[index];
-    //            _defaultParts[index].gameObject.SetActive(true);
-    //            TransferConnections(parts[index], _defaultParts[index]);
-    //            RemoveAllConnectionsFrom(parts[index]);
-    //            parts[index] = _defaultParts[index];
-    //            UpdateFromBasePart();
-    //            return true;
-    //        }
-    //    }
-    //    output = null;
-    //    return false;
-    //}
-
-    //private void UpdateFromBasePart()
-    //{
-    //    Matrix4x4 baseMatrix = Matrix4x4.TRS(Vector3.zero, parts[_basePartIndex].transform.rotation, Vector3.one);
-
-    //    parts[_basePartIndex].transform.position = baseMatrix.MultiplyPoint(buildLocation);
-    //    UpdateDependents(parts[_basePartIndex], baseMatrix);
-    //}
-
-    //private void UpdateDependents(ItemPart part, Matrix4x4 baseMatrix)
-    //{
-    //    ItemPart[] connections = part.connectedParts;
-    //    GameObject[] CPs = part.connectionPoints;
-    //    for (int i = 0; i < connections.Length; i++)
-    //    {
-    //        connections[i].transform.rotation = CPs[i].transform.localRotation;
-
-    //        Matrix4x4 xMat = GetTRSMatrix(baseMatrix,
-    //                                      CPs[i].transform.localPosition,
-    //                                      CPs[i].transform.localRotation);
-
-    //        connections[i].transform.position = xMat.MultiplyPoint(buildLocation);
-
-    //        ItemPart[] subConnections = connections[i].connectedParts;
-    //        if (subConnections != null && subConnections.Length > 0)
-    //        {
-    //            UpdateDependents(connections[i], xMat);
-    //        }
-    //    }
-    //}
-
-    //private Matrix4x4 GetTRSMatrix(Matrix4x4 parentXform, Vector3 pivot, Quaternion localRotation)
-    //{
-    //    Matrix4x4 p = Matrix4x4.TRS(pivot, Quaternion.identity, Vector3.one);
-    //    Matrix4x4 invp = Matrix4x4.TRS(-pivot, Quaternion.identity, Vector3.one);
-    //    Matrix4x4 trs = Matrix4x4.TRS(Vector3.zero, localRotation, Vector3.one);
-    //    return parentXform * p * trs * invp;
-    //}
-
-    public bool VerifyConfiguration()
-    {
-        for (int i = 0; i < parts.Length; i++)
-        {
-            if (parts[i] == _defaultParts[i])
-                return false;
-        }
-        return true;
-    }
-
-    public bool RetrievePartsForItemAssembly(out ItemPart[] partArray)
-    {
-        if (VerifyConfiguration())
-        {
-            partArray = parts;
-            return true;
-        }
-        else
-        {
-            partArray = null;
-            return false;
-        }
-    }
-
-
-    //private void OffsetPartsBy(Vector3 Offset)
-    //{
-    //    Vector3 offset = GetRecenterBaseOffset();
-    //    foreach (ItemPart part in parts)
-    //    {
-    //        part.transform.position += offset;
-    //    }
-    //}
-
-    //private Vector3 GetRecenterBaseOffset()
-    //{
-    //    Vector3 basePos = parts[basePartIndex].transform.position;
-    //    Bounds baseBounds = parts[basePartIndex].GetComponent<Renderer>().bounds;
-    //    basePos.y -= baseBounds.extents.y;
-    //    Vector3 offset = buildLocation - basePos;
-    //    return offset;
-    //}
-
-    //private bool BasePartIsAboveBuildLoc()
-    //{
-    //    Vector3 pos = parts[basePartIndex].transform.position;
-    //    Bounds baseBounds = parts[basePartIndex].GetComponent<Renderer>().bounds;
-    //    pos.y -= baseBounds.extents.y;
-    //    return pos.y > buildLocation.y;
-    //}
-
     public bool Add(int index, ItemPart newPart)
     {
         if (index >= 0 && index < parts.Length)
@@ -197,27 +50,22 @@ public class PartLayout : MonoBehaviour
             {
                     return false;
             }
-            // Get ref to newPart's storable
+            // Get ref to newPart's storable & reactivate it
             Storable partStorable = newPart.GetComponent<Storable>();
             if (partStorable == null)
                 return false;
-            // Calculate the correct position for the new part & reactivate
-            Vector3 position;
-            Quaternion rotation;
-            bool b = GetActivationLocation(newPart, index, out position, out rotation);
-            if (b)
-                partStorable.ReactivateInWorld(position, rotation, true);
-            else
-                Debug.LogError("PartLayout: Add(): Error getting add location!");
+            partStorable.ReactivateInWorld(partStorable.transform, true);
 
             // Store oldPart ref, transfer connections, and add newPart to parts[]
             ItemPart oldPart = parts[index];
             TransferConnections(oldPart, newPart);
             parts[index] = newPart;
 
-            // Update all of the connected parts based on differences between
-            // the oldPart and the newPart
-            UpdateDependents2(oldPart, newPart, index);
+            // Set the new part to the correct position/rotation
+            SetPartToActivationLocation(newPart, index);
+
+            // Update all of the connected parts downstream from this one.
+            UpdateDependents(parts[index], index);
 
             // Deactivate corresponding default part
             _defaultParts[index].gameObject.SetActive(false);
@@ -233,28 +81,29 @@ public class PartLayout : MonoBehaviour
         {
             if (parts[index] != _defaultParts[index])
             {
+                // Store ref to part being removed, reactivate its replacement,
+                // transfer part's connections, and set parts[] ref to default
                 ItemPart partToRemove = parts[index];
                 _defaultParts[index].gameObject.SetActive(true);
-
                 TransferConnections(parts[index], _defaultParts[index]);
-
                 parts[index] = _defaultParts[index];
 
-                Vector3 position;
-                Quaternion rotation;
-                bool b = GetActivationLocation(parts[index], index, out position, out rotation);
-                if (b)
+                // Set default part to the correct location based on current parts
+                bool success = SetPartToActivationLocation(parts[index], index);
+                if (!success)
                 {
-                    parts[index].transform.position = position;
-                    parts[index].transform.rotation = rotation;
+                    Debug.LogError("PartLayout: Remove(): Activation of default"
+                                   + " part failed. Part was null or index " +
+                                   "was less than 0.");
                 }
-                else
-                    Debug.LogError("PartLayout: Add(): Error getting add location!");
 
-                UpdateDependents2(partToRemove, parts[index], index);
+                // Update all downstream parts based on switch to default part
+                UpdateDependents(parts[index], index);
 
+                // Remove all connection refs from part that is being removed
                 RemoveAllConnectionsFrom(partToRemove);
 
+                // return previous part/true
                 output = partToRemove;
                 return true;
             }
@@ -263,43 +112,82 @@ public class PartLayout : MonoBehaviour
         return false;
     }
 
-    private bool GetActivationLocation(ItemPart partToAdd,
-                                       int index,
-                                       out Vector3 position,
-                                       out Quaternion rotation)
+    private bool SetPartToActivationLocation(ItemPart partToAdd, int index)
     {
         if (index < 0 || partToAdd == null)
         {
-            position = Vector3.negativeInfinity;
-            rotation = Quaternion.identity;
             return false;
         }
         else if (index > 0)
         {
             ItemPart parentPart = parts[index].GetConnectedPart(0);
-            int indexInParent = parentPart.GetIndexOfConnection(parts[index]);
-            GameObject cpInParent = parentPart.GetConnectionPoint(indexInParent);
-            position = cpInParent.transform.position;
-            rotation = cpInParent.transform.rotation;
-            Vector3 posOffset = partToAdd.transform.position - partToAdd.GetConnectionPoint(0).transform.position;
-            position += posOffset;
+            UpdateDependentPartTransform(parentPart, partToAdd);
             return true;
         }
         else
         {
-            position = buildLocation;
+            // TODO: Is this the way to handle base parts moving forward?
+            Vector3 position = buildLocation;
             Vector3 size = partToAdd.GetComponent<Renderer>().bounds.extents;
             Vector3 posOffset = Vector3.up * size.y;
-            position += posOffset;
-            rotation = _defaultParts[index].transform.rotation;
+            partToAdd.transform.position = position + posOffset;
+            partToAdd.transform.rotation = _defaultParts[index].transform.rotation;
             return true;
         }
     }
 
-    private Vector3 GetCPTranslation(GameObject oldCP, GameObject newCP)
+    private void UpdateDependents(ItemPart parentPart, int index)
     {
-        return newCP.transform.position - oldCP.transform.position;
+        ItemPart[] dependentParts = parentPart.connectedParts;
+        if (dependentParts != null && dependentParts.Length > 0)
+        {
+            int start = index > 0 ? 1 : 0;
+            for (int i = start; i < dependentParts.Length; i++)
+            {
+                UpdateDependentPartTransform(parentPart, dependentParts[i]);
+                UpdateDependents(dependentParts[i], 1);
+            }
+        }
+        else
+            return;
     }
+
+    private bool UpdateDependentPartTransform(ItemPart newParent, 
+                                              ItemPart dependentPart)
+    {
+        if (newParent != null 
+            && dependentPart != null 
+            && newParent != dependentPart)
+        {
+            ItemPart parentPart = dependentPart.GetConnectedPart(0);
+            if (parentPart != newParent)
+            {
+                Debug.LogError("PartLayout: GetTranslation(): Connections " +
+                               "were not transferred correctly, parents do " +
+                               "not match expected results.");
+            }
+            int indexInParent = parentPart.GetIndexOfConnection(dependentPart);
+
+            // Get connection points
+            GameObject parentCP = parentPart.GetConnectionPoint(indexInParent);
+            GameObject childCP = dependentPart.GetConnectionPoint(0);
+
+            // Calculate rotation for new part
+            Quaternion rotateByAmount = GetCPRotationChange(childCP, parentCP);
+            dependentPart.transform.rotation *= rotateByAmount;
+
+            // Calculate position for new part
+            dependentPart.transform.position = parentCP.transform.position;
+            Vector3 posOffset = dependentPart.transform.position - 
+                         dependentPart.GetConnectionPoint(0).transform.position;
+            dependentPart.transform.position += posOffset;
+
+            return true;
+        }
+        else
+            return false;
+    }
+
 
     private Quaternion GetCPRotationChange(GameObject oldCP, GameObject newCP)
     {
@@ -311,55 +199,6 @@ public class PartLayout : MonoBehaviour
         {
             Quaternion change = Quaternion.Inverse(prevRot) * newRot;
             return change;
-        }
-    }
-
-    private void UpdateDependents2(ItemPart oldPart, ItemPart newPart, int index)
-    {
-        GameObject[] oldCPs = oldPart.connectionPoints;
-        GameObject[] newCPs = newPart.connectionPoints;
-        int start = index > 0 ? 1 : 0;
-        // Updated downstream dependents (connection indices > 0)
-        for (int i = start; i < newCPs.Length; i++)
-        {
-            Vector3 cpTranslation = GetCPTranslation(oldCPs[i], newCPs[i]);
-            Quaternion cpRotation = GetCPRotationChange(oldCPs[i], newCPs[i]);
-            ItemPart dependent = oldPart.GetConnectedPart(i);
-            GameObject cp = newCPs[i];
-            PropagateToDependents(dependent, cp, cpTranslation, cpRotation);
-        }
-    }
-
-    private void PropagateToDependents(ItemPart dependentPart,
-                                       GameObject parentCP,
-                                       Vector3 translation,
-                                       Quaternion addRotation)
-    {
-        if (dependentPart != null && parentCP != null)
-        {
-            dependentPart.gameObject.transform.position += translation;
-            if (dependentPart.GetConnectionPoint(0).transform.position != parentCP.transform.position)
-                Debug.LogError("PartLayout: PropagateToDependents(): Connection Points are misaligned.");
-            Quaternion currentRotation = dependentPart.transform.rotation;
-            Quaternion newRotation = currentRotation * addRotation;
-            dependentPart.transform.rotation = newRotation;
-
-            ItemPart[] childParts = dependentPart.connectedParts;
-            if (childParts != null && childParts.Length > 0)
-            {
-                GameObject[] parentCPs = dependentPart.connectionPoints;
-                for (int i = 1; i < childParts.Length; i++)
-                {
-                    GameObject childCP = childParts[i].GetConnectionPoint(0);
-                    Vector3 cpTranslation = GetCPTranslation(childCP, parentCPs[i]);
-                    PropagateToDependents(childParts[i], parentCPs[i], cpTranslation, addRotation);
-                }
-            }
-            else
-            {
-                Debug.Log("Reached End");
-                return;
-            }
         }
     }
 
@@ -385,6 +224,30 @@ public class PartLayout : MonoBehaviour
         {
             part.SetConnectedPart(index, null);
             index--;
+        }
+    }
+
+    public bool VerifyConfiguration()
+    {
+        for (int i = 0; i < parts.Length; i++)
+        {
+            if (parts[i] == _defaultParts[i])
+                return false;
+        }
+        return true;
+    }
+
+    public bool RetrievePartsForItemAssembly(out ItemPart[] partArray)
+    {
+        if (VerifyConfiguration())
+        {
+            partArray = parts;
+            return true;
+        }
+        else
+        {
+            partArray = null;
+            return false;
         }
     }
 

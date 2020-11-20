@@ -12,9 +12,9 @@ public class SlotContentSwapper
             else
                 SwapItemSlotAndEquipmentSlot(B, A);
         }
-        else if (A is PartSlot)
+        else if (A is PartSlot_Test)
         { 
-            if (B is PartSlot)
+            if (B is PartSlot_Test)
                 SwapPartSlotAndPartSlot(A, B);
             else
                 SwapItemSlotAndPartSlot(B, A);
@@ -23,7 +23,7 @@ public class SlotContentSwapper
         {
             if (B is EquipmentSlot)
                 SwapItemSlotAndEquipmentSlot(A, B);
-            else if (B is PartSlot)
+            else if (B is PartSlot_Test)
                 SwapItemSlotAndPartSlot(A, B);
             else
                 SwapItemSlotAndItemSlot(A, B);
@@ -58,7 +58,8 @@ public class SlotContentSwapper
 
     public void SwapItemSlotAndPartSlot(ItemSlot A, ItemSlot B)
     {
-        PartSlot P = B as PartSlot;
+        //PartSlot P = B as PartSlot;
+        PartSlot_Test P = B as PartSlot_Test;
         if (P != null)
         {
             if (A.CanReceiveItem(B.storedItem) && P.CanReceiveItem(A.storedItem))
@@ -89,8 +90,8 @@ public class SlotContentSwapper
 
     public void SwapPartSlotAndPartSlot(ItemSlot A, ItemSlot B)
     {
-        PartSlot PA = B as PartSlot;
-        PartSlot PB = B as PartSlot;
+        PartSlot_Test PA = B as PartSlot_Test;
+        PartSlot_Test PB = B as PartSlot_Test;
         if (PA != null && PB != null)
         {
             if (PA.CanReceiveItem(PB.storedItem) && PB.CanReceiveItem(PA.storedItem))
