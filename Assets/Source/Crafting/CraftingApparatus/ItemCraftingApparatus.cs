@@ -50,7 +50,7 @@ public class ItemCraftingApparatus : CraftingApparatus
 
     private bool itemIsComplete = false;
 
-    ItemFactory factory = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
+    [SerializeField] private ItemFactory factory; // = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
 
     // Start is called before the first frame update
     void Start()
@@ -61,6 +61,10 @@ public class ItemCraftingApparatus : CraftingApparatus
 
         itemName = "";
         itemDescription = "";
+
+        if (factory == null)
+            factory = GetComponent<ItemFactory>();
+        Debug.Assert(factory != null);
 
         // Temp code for setting designreqs object position. This will go inside
         // the method that sets the design reqs when selected from the menu

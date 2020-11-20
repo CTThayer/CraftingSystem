@@ -74,14 +74,14 @@ public class Storable : MonoBehaviour, IActionable
         isStored = true;
     }
 
-    public void ReactivateInWorld(Transform transform, bool isKinematicRigidbody)
+    public void ReactivateInWorld(Transform xform, bool isKinematicRigidbody)
     {
         if (!isStored)  // If item isn't in storage, don't try to reactivate
             return;
         
         // Update object
-        gameObject.transform.position = transform.position;
-        gameObject.transform.rotation = transform.rotation;
+        gameObject.transform.position = xform.position;
+        gameObject.transform.rotation = xform.rotation;
         // Do NOT set scale to match!
 
         // Reenable colliders
@@ -107,6 +107,43 @@ public class Storable : MonoBehaviour, IActionable
 
         isStored = false;
     }
+
+    public void ReactivateInWorld(Vector3 position, 
+                                  Quaternion rotation,
+                                  bool isKinematicRigidbody)
+    {
+        if (!isStored)  // If item isn't in storage, don't try to reactivate
+            return;
+
+        // Update object
+        gameObject.transform.position = position;
+        gameObject.transform.rotation = rotation;
+        // Do NOT set scale to match!
+
+        // Reenable colliders
+        Collider[] colliders = gameObject.GetComponents<Collider>();
+        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
+        int i = 0;
+        for (; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
+        }
+        for (i = 0; i < childColliders.Length; i++)
+        {
+            childColliders[i].enabled = true;
+        }
+
+        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
+        Rigidbody r = gameObject.GetComponent<Rigidbody>();
+        if (r != null)
+            r.isKinematic = isKinematicRigidbody;
+
+        // Reenable the MeshRenderer
+        gameObject.GetComponent<MeshRenderer>().enabled = true;
+
+        isStored = false;
+    }
+
 
     private bool SetStoredObjStats()
     {
