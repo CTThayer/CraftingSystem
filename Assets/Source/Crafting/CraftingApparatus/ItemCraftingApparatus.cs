@@ -72,21 +72,29 @@ public class ItemCraftingApparatus : CraftingApparatus
         selectedDesignReqs = tempDesignReqsObject.GetComponent<DesignRequirements>();
     }
 
-    // TODO: Fill in stub methods
-
     // Loads the requirements
     public override void LoadRequirements(GameObject reqsObject)
     {
         DesignRequirements designReqs = reqsObject.GetComponent<DesignRequirements>();
         if (designReqs != null)
         {
-            uiManager.partsPanel.LoadPartLayout(designReqs.designLayoutUIElements);
-            reqsObject.transform.position = buildLocation.transform.position;
-            reqsObject.transform.rotation = buildLocation.transform.rotation;
+            if (DesignIsSupportedType(designReqs))
+            {
+                uiManager.partsPanel.LoadPartLayout(designReqs.partLayout.prefabPartLayoutUI);
+                reqsObject.transform.position = buildLocation.transform.position;
+                reqsObject.transform.rotation = buildLocation.transform.rotation;
+            }
+            else
+            {
+                Debug.LogError("ItemCraftingApparatus: ERROR: Supplied " +
+                               "design requirements are NOT of a supported " +
+                               "type for this crafting apparatus and" +
+                               "therefore nothing was be loaded.");
+            }
         }
         else
         {
-            Debug.LogError("ERROR: ItemCraftingApparatus: Supplied GameObject" +
+            Debug.LogError("ItemCraftingApparatus: ERROR: Supplied GameObject" +
                            " does NOT have DesignRequirements and " +
                            "therefore nothing could be loaded.");
             return;
@@ -96,16 +104,26 @@ public class ItemCraftingApparatus : CraftingApparatus
     // Crafts the current object
     public override void Craft()
     {
-        string output;
-        ItemPart[] parts = selectedDesignReqs.GetPartsFromSockets();
-        bool success = factory.CreateItemFromParts(selectedDesignReqs,
-                                                   parts, 
-                                                   itemName, 
-                                                   itemDescription, 
-                                                   out resultObject, 
-                                                   out output);
-        itemIsComplete = success;
+        string output = "";
+        ItemPart[] parts = selectedDesignReqs.partLayout.GetPartsArray();
+        if (parts != null && ValidateNameAndDesc())
+        {
+            if (selectedDesignReqs.ValidateConfiguration(out output))
+            {
+                bool success = factory.CreateItemFromParts(selectedDesignReqs,
+                                                           parts,
+                                                           itemName,
+                                                           itemDescription,
+                                                           out resultObject,
+                                                           out output);
+                itemIsComplete = success;
+                uiManager.DisplayOutputMessage(output);
+                return;
+            }
+        }
+        itemIsComplete = false;
         uiManager.DisplayOutputMessage(output);
+        return;
     }
 
     // For use by Interactable
@@ -133,6 +151,30 @@ public class ItemCraftingApparatus : CraftingApparatus
 
     /**************************** Private Methods *****************************/
 
+    private bool ValidateNameAndDesc()
+    {
+        return itemName.Length > 0
+               && itemName.Length <= 80
+               && itemDescription.Length > 0
+               && itemDescription.Length <= 256;
+    }
+
+    private bool DesignIsSupportedType(DesignRequirements DR)
+    {
+        string designType = DR.itemType;
+        string designSubType = DR.itemSubType;
+        string concat = designType + designSubType;
+        for (int i = 0; i < _supportedItemTypes.Length; i++)
+        {
+            if (_supportedItemTypes[i] == designType
+                || _supportedItemTypes[i] == designSubType
+                || _supportedItemTypes[i] == concat)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /************************** END Private Methods ***************************/
 }

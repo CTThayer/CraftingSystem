@@ -13,9 +13,15 @@ public class PartLayout : MonoBehaviour
     [SerializeField] private int _basePartIndex;
     public int basePartIndex { get => _basePartIndex; }
 
-    private Vector3[] defaultPositions;                                         // TODO: Do we actually need to cache these?
-    private Quaternion[] defaultRotations;
+    [SerializeField] private GameObject _prefabPartLayoutUI;
+    public GameObject prefabPartLayoutUI { get => _prefabPartLayoutUI; }
+
     private ItemPart[] parts;
+    private PartRequirements[] partReqs;
+
+    private Vector3[] defaultPositions;                                         // TODO: Do we actually need to cache these?
+    private Quaternion[] defaultRotations;                                      // TODO: Do we actually need to cache these?
+
 
     // Start is called before the first frame update
     void Start()
@@ -27,16 +33,30 @@ public class PartLayout : MonoBehaviour
         {
             Debug.Assert(_defaultParts[i] != null);
         }
+
         Debug.Assert(_basePartIndex >= 0 && _basePartIndex < _defaultParts.Length);
 
+        Debug.Assert(_prefabPartLayoutUI != null);
+
+        partReqs = new PartRequirements[_defaultParts.Length];
         defaultPositions = new Vector3[_defaultParts.Length];
         defaultRotations = new Quaternion[_defaultParts.Length];
+
         parts = new ItemPart[_defaultParts.Length];
         Array.Copy(_defaultParts, parts, _defaultParts.Length);
         for (int i = 0; i < _defaultParts.Length; i++)
         {
+            partReqs[i] = _defaultParts[i].GetComponent<PartRequirements>();
             defaultPositions[i] = _defaultParts[i].transform.position;
             defaultRotations[i] = _defaultParts[i].transform.rotation;
+
+            ItemPart[] connectedParts = _defaultParts[i].connectedParts;
+            for (int j = 0; j < connectedParts.Length; j++)
+            {
+                Debug.Assert(connectedParts[i] != null);
+                // TODO: Add additional checks here (i.e. connections exist in
+                // the array of default parts)
+            }
         }
     }
 
@@ -237,7 +257,7 @@ public class PartLayout : MonoBehaviour
         return true;
     }
 
-    public bool RetrievePartsForItemAssembly(out ItemPart[] partArray)
+    public bool GetPartsArray(out ItemPart[] partArray)
     {
         if (VerifyConfiguration())
         {
@@ -249,6 +269,19 @@ public class PartLayout : MonoBehaviour
             partArray = null;
             return false;
         }
+    }
+
+    public ItemPart[] GetPartsArray()
+    {
+        if (VerifyConfiguration())
+            return parts;
+        else
+            return null;
+    }
+
+    public PartRequirements[] GetPartRequirements()
+    {
+        return partReqs;
     }
 
 }

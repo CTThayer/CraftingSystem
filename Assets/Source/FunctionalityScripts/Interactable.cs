@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Interactable : MonoBehaviour
 {
-
     [SerializeField] private string ObjectName;
     [SerializeField] private int ActionIndex;
     [SerializeField] private int DefaultIndex;
@@ -24,21 +23,13 @@ public class Interactable : MonoBehaviour
         Debug.Assert(DefaultIndex >= 0 && DefaultIndex < Actions.Length);
         if (DefaultIndex < 0 || DefaultIndex > Actions.Length)
             DefaultIndex = 0;
-
-        List<ActionDelegate> actionsList = new List<ActionDelegate>();
-        List<string> actionNamesList = new List<string>();
-        foreach (Component component in GetComponents<Component>())
-        {
-            IActionable actionComponent = component as IActionable;
-            if (actionComponent != null)
-            {
-                actionsList.AddRange(actionComponent.GetActions());
-                actionNamesList.AddRange(actionComponent.GetActionNames());
-            }
-        }
-        Actions = actionsList.ToArray();
-        ActionNames = actionNamesList.ToArray();
     }
+
+    public void Initialize()
+    {
+        ConfigureActions();
+    }
+
 
     /* Change Action Selection
      * Used to update the ActionIndex based on user input.
@@ -71,5 +62,25 @@ public class Interactable : MonoBehaviour
 
         ActionIndex = DefaultIndex;     // Reset to default action index
 
+    }
+
+    public void ConfigureActions()
+    {
+        List<ActionDelegate> actionsList = new List<ActionDelegate>();
+        List<string> actionNamesList = new List<string>();
+        foreach (Component component in GetComponents<Component>())
+        {
+            IActionable actionComponent = component as IActionable;
+            if (actionComponent != null)
+            {
+                ActionDelegate[] actions = actionComponent.GetActions();
+                string[] actionNames = actionComponent.GetActionNames();
+                Debug.Assert(actions.Length == actionNames.Length);
+                actionsList.AddRange(actions);
+                actionNamesList.AddRange(actionNames);
+            }
+        }
+        Actions = actionsList.ToArray();
+        ActionNames = actionNamesList.ToArray();
     }
 }

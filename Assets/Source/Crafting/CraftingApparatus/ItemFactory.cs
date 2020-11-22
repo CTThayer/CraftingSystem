@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ItemFactory : MonoBehaviour
 {
-    //MeshUtility meshUtil = new MeshUtility();
     MeshUtility meshUtil;
 
     public ItemFactory()
@@ -41,11 +40,12 @@ public class ItemFactory : MonoBehaviour
         string validationResult;
         if (reqs.ValidatePartConfig(parts, out validationResult))
         {
-            // Make all parts children of the primary manipulator so they can be
-            // controlled and moved using it.
+            // NOTE: Assumes that manipulators[0] is the primary manipulator
             GameObject itemParent = reqs.manipulators[0];
+            itemParent.transform.parent = null;
+            Debug.Assert(itemParent.transform.localScale == Vector3.one);
 
-            //Sum all necessary part data.
+            //Sum part data for item totals
             float totalVolume = 0;
             float totalMass = 0;
             float totalValue = 0;
@@ -83,6 +83,15 @@ public class ItemFactory : MonoBehaviour
             // Add required component scripts to the item
             AddComponentsToItem(ref itemParent, reqs.requiredScripts);
 
+            // Deactivate components in parts
+            PartRequirements[] partReqs = reqs.partLayout.GetPartRequirements();
+            for (int i = 0; i < parts.Length; i++)
+            {
+                // NOTE: Parts need to be caches in Item before doing this.
+                DeactivateComponentsOfPart(parts[i].gameObject, 
+                                           partReqs[i].componentsToDeactivate);
+            }
+
             // Return results
             resultItem = itemParent;
             outputString = validationResult;
@@ -112,6 +121,45 @@ public class ItemFactory : MonoBehaviour
             System.Type componentType = System.Type.GetType(reqComponents[i]);
             if (componentType != null)
                 item.AddComponent(componentType);
+            // TODO: Handle functionality script initialization here
+        }
+    }
+
+    /* Deactivate Components Of Part
+     * Deactivates the specified components of the specified GameObject 
+     * that is a part of the item being created.
+     * @Param: part - a reference to the GameObject for the part whose 
+     * components need to be disabled.
+     * @Param: compsToDeactivate - an array of strings corresponding to the type 
+     * values of the components (scripts) that should be attached to the item.
+     * NOTE: All failures of component removals are SILENT. Any strings that 
+     * are incorrect or invalid names/types will simply be skipped.
+     */
+    public void DeactivateComponentsOfPart(GameObject part, 
+                                           string[] compsToDeactivate)
+    {
+        if (part == null || compsToDeactivate == null || compsToDeactivate.Length == 0)
+            return;
+        for (int i = 0; i < compsToDeactivate.Length; i++)
+        {
+            System.Type componentType = System.Type.GetType(compsToDeactivate[i]);
+            if (componentType != null)
+            {
+                Component component = part.GetComponent(componentType);
+                Behaviour behaviour = component as Behaviour;
+                if (behaviour != null)
+                {
+                    behaviour.enabled = false;
+                }
+                else if (compsToDeactivate[i] == "Rigidbody")
+                {
+                    if (component != null)
+                        Destroy(component);
+                    // NOTE: It might be important to cache rigidbody data in
+                    // the ItemPart before doing this in case the rigidbody has
+                    // to be recreated later (most data should already be there)
+                }
+            }
         }
     }
 

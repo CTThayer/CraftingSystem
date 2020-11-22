@@ -27,13 +27,16 @@ public class PartRequirements : Requirements
     [SerializeField] private TypeOfCollider _requiredCollider;
     public TypeOfCollider requiredCollider { get => _requiredCollider; }
 
-    [SerializeField] private string[] _requiredScripts;                         // NOTE: Scripts to attach to this PART, not the end item (e.g. DamageDealer script is attached to blade, not the whole item)
-    public string[] requiredScripts { get => _requiredScripts; }                                    // NOTE: Strings MUST match the exact name of a script in order to be added.
+    [SerializeField] private string[] _requiredComponents;                      // NOTE: Components that must be attached to this part, NOT the top level of the item hierarchy
+    public string[] requiredComponents { get => _requiredComponents; }          // NOTE: Strings MUST match the exact name of a script in order to be added.
 
-    [SerializeField] private bool _useConnectionPoints;                         // NOTE: refers to connection points at the design level
-    public bool useConnectionPoints { get => _useConnectionPoints; }            // Not to be confused with connection points in PartSegments
+    [SerializeField] private string[] _componentsToDeactivate;                  // NOTE: Components that need to be deactivated on this part when an item is built using it.
+    public string[] componentsToDeactivate { get => _componentsToDeactivate; }  // NOTE: Strings MUST match the exact name of a script in order to be added.
 
-    [SerializeField] private bool _lockToConnectionPoint;                       // NOTE: Refers to locking the whole part to a specified connection point at the design level
+    [SerializeField] private bool _useConnectionPoints;
+    public bool useConnectionPoints { get => _useConnectionPoints; }
+
+    [SerializeField] private bool _lockToConnectionPoint;
     public bool lockToConnectionPoint { get => _lockToConnectionPoint; }
 
     [SerializeField] private XYZRange _partDimensionsRange;
@@ -44,12 +47,6 @@ public class PartRequirements : Requirements
 
     [SerializeField] private XYZRange _partRotationRange;
     public XYZRange partRotationRange { get => _partRotationRange; }
-
-    [SerializeField] private GameObject[] _requiredManipulators;                // TODO: Is this the correct way to handle this?
-    public GameObject[] requiredManipulators { get => _requiredManipulators; }
-
-    [SerializeField] private int _numConnections;                               // TODO: Is this actually necessary?
-    public int numConnections { get => _numConnections; }
 
     void Start()
     {
@@ -87,7 +84,7 @@ public class PartRequirements : Requirements
 
     /*********************** Public Validation Methods ************************/
 
-    public override bool ValidateConfiguration(out string output)                            // TODO: Finish this stub method
+    public override bool ValidateConfiguration(out string output)               // TODO: Finish this stub method
     {
         output = "finished";
         return true;
@@ -95,27 +92,19 @@ public class PartRequirements : Requirements
 
     public bool PartMeetsBaseRequirements(ItemPart part)
     {
+        //bool meetsReqs = IsAllowedItemType(part)
         return  IsAllowedItemType(part)
                 && HasAllowedMaterialType(part)
                 && HasCorrectCollider(part)
                 && FitsInDimensions(part)
                 && PartHasScripts(part);
+
+        //    if (_useConnectionPoints)
+        //    {
+        //        meetsReqs = meetsReqs && PartsAreConnected(part, otherPart);
+        //    }
+        //    return meetsReqs;
     }
-
-    //public bool PartMeetsRequirements(ItemPart part, ItemPart otherPart)
-    //{
-    //    bool meetsReqs = IsAllowedItemType(part) 
-    //                     && HasAllowedMaterialType(part)
-    //                     && HasCorrectCollider(part) 
-    //                     && FitsInDimensions(part)
-    //                     && PartHasScripts(part);
-
-    //    if (_useConnectionPoints)
-    //    {
-    //        meetsReqs = meetsReqs && PartsAreConnected(part, otherPart);
-    //    }
-    //    return meetsReqs;
-    //}
 
     /********************* END Public Validation Methods **********************/
 
@@ -246,9 +235,9 @@ public class PartRequirements : Requirements
      */
     private bool PartHasScripts(ItemPart part)
     {
-        for (int i = 0; i < _requiredScripts.Length; i++)
+        for (int i = 0; i < _requiredComponents.Length; i++)
         {
-            System.Type componentType = System.Type.GetType(_requiredScripts[i]);
+            System.Type componentType = System.Type.GetType(_requiredComponents[i]);
             if (componentType != null)
             {
                 if (part.GetComponent(componentType) == null)
@@ -264,8 +253,8 @@ public class PartRequirements : Requirements
      */
     public bool ValidatePartConnections(ItemPart part, out string s)
     {
-        if (part.connectedParts.Length == numConnections)
-        {
+        //if (part.connectedParts.Length == numConnections)
+        //{
             for (int i = 0; i < part.connectedParts.Length; i++)
             {
                 if (part.connectedParts[i] == null)
@@ -293,34 +282,34 @@ public class PartRequirements : Requirements
             }
             s = "";
             return true;
-        }
-        else
-        {
-            s = "Part " + part.name + "does not have the correct number " +
-                "of connections for this design. Please use a different part.";
-            return false;
-        }
+        //}
+        //else
+        //{
+        //    s = "Part " + part.name + "does not have the correct number " +
+        //        "of connections for this design. Please use a different part.";
+        //    return false;
+        //}
     }
 
     /* Part Has Enough Connections
      * Checks if the specified part has the expected number of connection points
      */
-    public bool PartHasEnoughConnections(ItemPart part)
-    {
-        return part.connectedParts.Length == numConnections;
-    }
+    //public bool PartHasEnoughConnections(ItemPart part)
+    //{
+    //    return part.connectedParts.Length == numConnections;
+    //}
 
     /* Parts Are Connected
      * Checks if two parts are connected via connection points in each part.
      */
-    private bool PartsAreConnected(ItemPart part, ItemPart otherPart)           // TODO: Is this unnecessary now?
-    {
-        if (part.GetIndexOfConnection(otherPart) >= 0
-            && otherPart.GetIndexOfConnection(otherPart) >= 0)
-            return true;
-        else
-            return false;
-    }
+    //private bool PartsAreConnected(ItemPart part, ItemPart otherPart)           // TODO: Is this unnecessary now?
+    //{
+    //    if (part.GetIndexOfConnection(otherPart) >= 0
+    //        && otherPart.GetIndexOfConnection(otherPart) >= 0)
+    //        return true;
+    //    else
+    //        return false;
+    //}
 
     /* Part Surfaces Touch
      * Checks if the colliders of the two parts touch or overlap.

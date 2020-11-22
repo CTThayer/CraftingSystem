@@ -47,23 +47,6 @@ public class Item : MonoBehaviour
         set => _itemDescription = (value != null) ? value : _itemDescription;
     }
 
-    //[SerializeField] private float _mass;
-    //public float mass
-    //{
-    //    get => _mass;
-    //    private set => _mass = (value > 0f) ? value : _mass;
-    //}
-
-    //[SerializeField] private float _volume;
-    //public float volume
-    //{
-    //    get => _volume;
-    //    private set => _volume = (value > 0f) ? value : _volume;
-    //}
-
-    //[SerializeField] private PhysicalStats _physicalStats;
-    //public PhysicalStats physicalStats { get; private set; }
-
     public PhysicalStats physicalStats;
 
     [SerializeField] private float _baseValue;
@@ -94,10 +77,9 @@ public class Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //// Ensure that the Item has a mesh and a collider
+        //// Ensure that the Item has a mesh
         //Debug.Assert(this.transform.GetComponent<MeshFilter>() != null);
         //Debug.Assert(this.transform.GetComponent<MeshFilter>().mesh != null);
-        //Debug.Assert(this.transform.GetComponent<Collider>() != null);
 
         // Validate properties (in case they were set in engine or incorrectly)
         Debug.Assert(_uniqueItemID != null && _uniqueItemID.Length > 0);

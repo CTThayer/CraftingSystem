@@ -46,7 +46,7 @@ public class PartCraftingApparatus : CraftingApparatus
         DesignRequirements designReqs = reqsObject.GetComponent<DesignRequirements>();
         if (designReqs != null)
         {
-            uiManager.partsPanel.LoadPartLayout(designReqs.designLayoutUIElements);
+            uiManager.partsPanel.LoadPartLayout(designReqs.partLayout.prefabPartLayoutUI);
             reqsObject.transform.position = buildLocation.transform.position;
             reqsObject.transform.rotation = buildLocation.transform.rotation;
         }

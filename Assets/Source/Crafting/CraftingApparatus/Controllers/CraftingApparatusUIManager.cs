@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class CraftingApparatusUIManager : MonoBehaviour
 {
+    [SerializeField] private CraftingApparatus _craftingApparatus;
+    public CraftingApparatus craftingApparatus { get => _craftingApparatus; }
+
     [SerializeField] private Canvas _craftingUICanvas;
     public Canvas craftingUICanvas
     {
@@ -16,7 +19,7 @@ public class CraftingApparatusUIManager : MonoBehaviour
     public InputField nameInputField
     {
         get => _nameInputField;
-        set { if (value != null) _nameInputField= value; }
+        set { if (value != null) _nameInputField = value; }
     }
 
     [SerializeField] private InputField _descInputField;
@@ -25,6 +28,9 @@ public class CraftingApparatusUIManager : MonoBehaviour
         get => _descInputField;
         set { if (value != null) _descInputField = value; }
     }
+
+    [SerializeField] private Button _craftItemButton;
+    public Button craftItemButton { get => _craftItemButton; }
 
     [SerializeField] private TwoPanelController _panelController;
     public TwoPanelController panelController
@@ -48,10 +54,17 @@ public class CraftingApparatusUIManager : MonoBehaviour
 
     void Awake()
     {
+        Debug.Assert(_craftingApparatus != null);
         Debug.Assert(craftingUICanvas != null);
         Debug.Assert(nameInputField != null);
         Debug.Assert(descInputField != null);
+        Debug.Assert(_craftItemButton != null);
         Debug.Assert(partsPanel != null);
+
+        craftItemButton.onClick.AddListener(craftingApparatus.Craft);
+
+        nameInputField.onEndEdit.AddListener(OnEndNameEdit);
+        descInputField.onEndEdit.AddListener(OnEndDescriptionEdit);
     }
 
     public void ActivateUI()
@@ -75,4 +88,37 @@ public class CraftingApparatusUIManager : MonoBehaviour
         _outputText.text = output;
     }
 
+    public void OnEndNameEdit(string input)
+    {
+        ItemCraftingApparatus ICA = craftingApparatus as ItemCraftingApparatus;
+        if (ICA != null)
+        {
+            if (input.Length < 80)
+            {
+                ICA.itemName = input;
+                DisplayOutputMessage("");
+            }
+            else
+            {
+                DisplayOutputMessage("The entered item name is too long.");
+            }
+        }
+    }
+
+    public void OnEndDescriptionEdit(string input)
+    {
+        ItemCraftingApparatus ICA = craftingApparatus as ItemCraftingApparatus;
+        if (ICA != null)
+        {
+            if (input.Length < 80)
+            {
+                ICA.itemDescription = input;
+                DisplayOutputMessage("");
+            }
+            else
+            {
+                DisplayOutputMessage("The entered item desccription is too long.");
+            }
+        }
+    }
 }

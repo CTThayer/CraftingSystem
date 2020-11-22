@@ -16,9 +16,10 @@ public class DesignRequirements : Requirements
     [SerializeField] private XYZRange _itemDimensionsRange;
     public XYZRange itemDimensionsRange { get => _itemDimensionsRange; }
 
-    // Sockets (G.O. references) for all required parts for this item design
-    [SerializeField] private GameObject[] _partSocketObjects;
-    public GameObject[] partSocketObjects { get => _partSocketObjects; }
+    // The "blueprint" for the item with all the GameObjects and logic for 
+    // adding parts to the design with supporting UI
+    [SerializeField] private PartLayout _partLayout;
+    public PartLayout partLayout { get => _partLayout; }
 
     // Required components (scripts) that need to be attached to the top-level
     // of the resulting item's hierarchy.
@@ -33,12 +34,9 @@ public class DesignRequirements : Requirements
     [SerializeField] private XYZRange[] _manipulatorPosRanges;
     public XYZRange[] manipulatorPosRanges { get => _manipulatorPosRanges; }
 
-    [SerializeField] private GameObject _designLayoutUIElements;
-    public GameObject designLayoutUIElements { get =>_designLayoutUIElements; }
-
-    // Do all parts of the item have to touch another part of the item?         // TODO: Is this necessary with connection points/surface contact??
-    [SerializeField] private bool _allSectionsMustTouch;
-    public bool allSectionsMustTouch { get => _allSectionsMustTouch; }
+    //// Do all parts of the item have to touch another part of the item?         // TODO: Is this necessary with connection points/surface contact??
+    //[SerializeField] private bool _allSectionsMustTouch;
+    //public bool allSectionsMustTouch { get => _allSectionsMustTouch; }
 
     // Does this design require ItemParts to use connection points for placement
     // and validation?
@@ -54,7 +52,6 @@ public class DesignRequirements : Requirements
     public bool requiresRigidbody { get => _requiresRigidbody; }
 
     // Private Fields assigned in Start()
-    private PartSocket[] partSockets;
     private PartRequirements[] partReqs;
 
     // Start is called before the first frame update
@@ -67,43 +64,46 @@ public class DesignRequirements : Requirements
                      && _itemDimensionsRange.yMin > 0f
                      && _itemDimensionsRange.zMin > 0f);
 
-        // Get and validate partSockets and partReqs from partSocketObjects
-        partSockets = new PartSocket[_partSocketObjects.Length];
-        partReqs = new PartRequirements[_partSocketObjects.Length];
-        for (int i = 0; i < _partSocketObjects.Length; i++)
-        {
-            Debug.Assert(_partSocketObjects[i] != null);
-            partSockets[i] = _partSocketObjects[i].GetComponent<PartSocket>();
-            partReqs[i] = _partSocketObjects[i].GetComponent<PartRequirements>();
-            Debug.Assert(partSockets[i] != null && partReqs[i] != null);
-        }
-
         // NOTE: remove these lines if it is later determined an that item 
         // without some sort of manipulation point can/should exist.
         Debug.Assert(_manipulators != null && _manipulators.Length > 0);
         Debug.Assert(_manipulatorPosRanges.Length == _manipulators.Length);
     }
 
-
     /**************************** Override Methods ****************************/
     public override bool ValidateConfiguration(out string output)
     {
-        ItemPart[] parts = GetPartsFromSockets();
-        return ValidatePartConfig(parts, out output);
+        ItemPart[] parts;
+        bool fullArray = partLayout.GetPartsArray(out parts);
+        if (fullArray)
+            return ValidatePartConfig(parts, out output);
+        else
+        {
+            output = "DesignRequirements: The current configuration is not " +
+                     "valid because not all parts required by this design " +
+                     "have been added to the workspace.";
+            return false;
+        }
     }
     /************************** END Override Methods **************************/
 
 
     /***************************** Public Methods *****************************/
-    public bool ValidatePartConfig(ItemPart[] parts, out string output)         // TODO: Can this be private?
+    // TODO: Are the part checks necessary? Can this be eliminated if the checks
+    // are run when the part is added?
+    // TODO: Can this be private? - Currently used by factory
+    public bool ValidatePartConfig(ItemPart[] parts, out string output)         
     {
+        // Get PartRequirements from partLayout                                 
+        partReqs = partLayout.GetPartRequirements();
+
         // Check for obvious errors
         if (parts == null || parts.Length == 0)
         {
             output = "ERROR: Invalid Configuration: No parts were provided.";
             return false;
         }
-        if (parts.Length != partSockets.Length)
+        if (parts.Length != partReqs.Length)
         {
             output = "ERROR: Invalid Configuration: Array dimension mismatch." +
                      "parts[] and partSockets[] are not the same size.";
@@ -139,28 +139,21 @@ public class DesignRequirements : Requirements
         return true;
     }
 
-    public ItemPart[] GetPartsFromSockets()
-    {
-        ItemPart[] parts = new ItemPart[partSockets.Length];
-        for (int i = 0; i < parts.Length; i++)
-        {
-            parts[i] = partSockets[i].GetPartInSocket();
-        }
-        return parts;
-    }
     /*************************** END Public Methods ***************************/
 
-    
+
     /************************* Private Helper Methods *************************/
+    // TODO: Are the part checks necessary? Can this be eliminated if the checks
+    // are run when the part is added?
     private bool CheckPartAgainstReqs(ItemPart part, 
                                       int index,
                                       out string output)
     {
         if (part == null)
         {
-            output = "ERROR: Invalid Configuration: Socket " + index + ": " +
-                     partSockets[index].name + " doesn't have a part " +
-                     "assigned to it.";
+            // TODO: Improve this messaging.
+            output = "ERROR: Invalid Configuration: Item is missing a part " +
+                     "at " + index + ".";
             return false;
         }
         if (partReqs[index].PartMeetsBaseRequirements(part))
@@ -185,9 +178,8 @@ public class DesignRequirements : Requirements
         else
         {
             output = "ERROR: Invalid Configuration: Part " + index + ": " +
-                     part.name + " in socket " + index + ": " +
-                     partSockets[index].name + " doesn't meet the requirements"
-                      + " for that socket.";
+                     part.name + " doesn't meet the requirements for that " +
+                     "part.";
             return false;
         }
     }
