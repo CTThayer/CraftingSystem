@@ -146,6 +146,8 @@ public class PartRequirements : Requirements
      */
     private bool HasAllowedMaterialType(ItemPart part)
     {
+        if (part == null)
+            return false;
         for (int i = 0; i < allowedMaterials.Length; i++)
         {
             if (allowedMaterials[i] == part.craftingMaterial.materialType)
@@ -162,9 +164,20 @@ public class PartRequirements : Requirements
     {
         bool isCorrectCollider = false;
 
+        // Get colliders on this object and its children
         Collider c = part.GetComponent<Collider>();
-        List<Collider> colliders = new List<Collider>(part.gameObject.GetComponents<Collider>());
-        colliders.AddRange(part.gameObject.GetComponentsInChildren<Collider>());
+        List<Collider> colliders = new List<Collider>();
+        Collider[] thisObjColliders = part.gameObject.GetComponents<Collider>();
+        Collider[] childObjColliders = part.gameObject.GetComponentsInChildren<Collider>();
+        colliders.AddRange(thisObjColliders);
+        for (int i = 0; i < childObjColliders.Length; i++)
+        {
+            for (int j = 0; j < thisObjColliders.Length; j++)
+            {
+                if (childObjColliders[i] != colliders[j])
+                    colliders.Add(childObjColliders[i]);
+            }
+        }
 
         if (c == null && colliders.Count == 0)
         {

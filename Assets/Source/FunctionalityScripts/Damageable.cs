@@ -16,6 +16,11 @@ public class Damageable : MonoBehaviour
         Debug.Assert(resistances.Length == resistanceModifiers.Length);
     }
 
+    public void Initialize()
+    {
+        // TODO: Generalize the initializer so that it doesn't take parameters
+    }
+
     public void Initialize(DamageType[] immunitiesArray,
                            DamageType[] resistancesArray,
                            float[] resistanceModsArray)
@@ -86,4 +91,11 @@ public class Damageable : MonoBehaviour
     {
 
     }
+
+    // TODO: Fill in this stub method
+    private void CalculateResistances()
+    {
+
+    }
+
 }

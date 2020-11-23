@@ -29,8 +29,7 @@ public class Interactable : MonoBehaviour
     {
         ConfigureActions();
     }
-
-
+ 
     /* Change Action Selection
      * Used to update the ActionIndex based on user input.
      * @Param i = an int for how many indices to increase the ActionIndex by.

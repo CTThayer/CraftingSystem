@@ -110,9 +110,10 @@ public class DesignRequirements : Requirements
             return false;
         }
 
-        // Check part configuration
-        Bounds overallBounds = new Bounds();
-        for (int i = 0; i < parts.Length; i++)
+        // Check part configuration & overall size
+        Bounds partABounds = parts[0].gameObject.GetComponent<Renderer>().bounds;
+        Bounds overallBounds = new Bounds(partABounds.center, partABounds.size);
+        for (int i = 1; i < parts.Length; i++)
         {
             bool partCheck = CheckPartAgainstReqs(parts[i], i, out output);
             if (partCheck == false)
@@ -122,18 +123,18 @@ public class DesignRequirements : Requirements
         if (CheckOverallItemBounds(overallBounds, out output) == false)
             return false;
 
-        // Check manipulator configuration
-        for (int m = 0; m < manipulators.Length; m++)
-        {
-            // If manipulator is outside correspoding range, return false
-            if (!manipulatorPosRanges[m].ContainsPoint(manipulators[m].transform.position))
-            {
-                // TODO: Add manipulator object error highlighting here
-                output = "ERROR: Invalid Configuration: Manipulator outside " +
-                         "acceptable position range.";
-                return false;
-            }
-        }
+        //// Check manipulator configuration
+        //for (int m = 0; m < manipulators.Length; m++)
+        //{
+        //    // If manipulator is outside correspoding range, return false
+        //    if (!manipulatorPosRanges[m].ContainsPoint(manipulators[m].transform.position))
+        //    {
+        //        // TODO: Add manipulator object error highlighting here
+        //        output = "ERROR: Invalid Configuration: Manipulator outside " +
+        //                 "acceptable position range.";
+        //        return false;
+        //    }
+        //}
 
         output = "SUCCESS: Part configuration is valid.";
         return true;
@@ -197,6 +198,21 @@ public class DesignRequirements : Requirements
         output = "";
         return true;
     }
+
+    private bool CheckOverallItemBounds(Vector3 overallBoundsSize, out string output)
+    {
+        // Check if overall item bounds fit within size constraints
+        if (!itemDimensionsRange.ContainsPoint(overallBoundsSize))
+        {
+            output = "ERROR: Invalid Configuration: Current configuration " +
+                     "does not fit within the required size constraints for " +
+                     "an item of this type. Please reconfigure your layout.";
+            return false;
+        }
+        output = "";
+        return true;
+    }
+
     /*********************** END Private Helper Methods ***********************/
 
 }

@@ -53,7 +53,7 @@ public class PartLayout : MonoBehaviour
             ItemPart[] connectedParts = _defaultParts[i].connectedParts;
             for (int j = 0; j < connectedParts.Length; j++)
             {
-                Debug.Assert(connectedParts[i] != null);
+                Debug.Assert(connectedParts[j] != null);
                 // TODO: Add additional checks here (i.e. connections exist in
                 // the array of default parts)
             }

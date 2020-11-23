@@ -68,8 +68,12 @@ public class Item : MonoBehaviour
     }
     
     // References to the ItemParts that make up this item.
-    [SerializeField] private ItemPart[] _itemParts;                             // TODO: Do we need this?
-    public ItemPart[] itemParts { get; private set; }                           // TODO: Should this still be a property?
+    [SerializeField] private ItemPart[] _itemParts;
+    public ItemPart[] itemParts
+    {
+        get => _itemParts;
+        private set { if (value != null) _itemParts = value; }
+    }
 
 
     /************************** END Common Properties *************************/
@@ -109,6 +113,7 @@ public class Item : MonoBehaviour
         uniqueItemID = itemID;
         itemName = name;
         itemDescription = itemDesc;
+        physicalStats = new PhysicalStats();
         physicalStats.mass = totalMass;
         physicalStats.volume = totalVolume;
         baseValue = value;

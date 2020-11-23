@@ -4,10 +4,17 @@ using UnityEngine;
 
 public enum DamageType
 {
-    Blunt,
     Chopping,
+    Cold,
+    Corrosion,
+    Electrical,
+    Heat,
+    Light,
+    Metaphysical,
     Piercing,
-    Slashing
+    Slashing,
+    Smashing,
+    Wear
 }
 
 public class DamageDealer : MonoBehaviour
@@ -75,6 +82,11 @@ public class DamageDealer : MonoBehaviour
         }
         Debug.Assert(damageDealerColliders != null && damageDealerColliders.Length > 0);
         Debug.Assert(baseDamage > 0);
+    }
+
+    public void Initialize()
+    {
+        // TODO: Generalize the initializer so that it doesn't take parameters
     }
 
     void OnCollisionEnter(Collision collision)

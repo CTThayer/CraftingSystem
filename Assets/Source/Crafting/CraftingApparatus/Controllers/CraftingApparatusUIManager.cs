@@ -39,8 +39,8 @@ public class CraftingApparatusUIManager : MonoBehaviour
         set { if (value != null) _panelController = value; }
     }
 
-    [SerializeField] private PartPanel _partsPanel;
-    public PartPanel partsPanel
+    [SerializeField] private PartPanel_Test _partsPanel;
+    public PartPanel_Test partsPanel
     {
         get => _partsPanel;
         set { if (value != null) _partsPanel = value; }
@@ -61,7 +61,7 @@ public class CraftingApparatusUIManager : MonoBehaviour
         Debug.Assert(_craftItemButton != null);
         Debug.Assert(partsPanel != null);
 
-        craftItemButton.onClick.AddListener(craftingApparatus.Craft);
+        //craftItemButton.onClick.AddListener(OnCraftItemButtonClick);
 
         nameInputField.onEndEdit.AddListener(OnEndNameEdit);
         descInputField.onEndEdit.AddListener(OnEndDescriptionEdit);
@@ -76,7 +76,7 @@ public class CraftingApparatusUIManager : MonoBehaviour
     public void ClearPartsPanel()
     {
         bool partPanelIsA = partsPanel.gameObject == panelController.panelA;
-        PartSlot[] partsPanelSlots = partsPanel.partSlots;
+        PartSlot_Test[] partsPanelSlots = partsPanel.partSlots;
         for (int i = 0; i < partsPanelSlots.Length; i++)
         {
             panelController.MoveItemBetweenPanels(partsPanelSlots[i], partPanelIsA);
@@ -120,5 +120,10 @@ public class CraftingApparatusUIManager : MonoBehaviour
                 DisplayOutputMessage("The entered item desccription is too long.");
             }
         }
+    }
+
+    public void OnCraftItemButtonClick()
+    {
+        craftingApparatus.Craft();
     }
 }

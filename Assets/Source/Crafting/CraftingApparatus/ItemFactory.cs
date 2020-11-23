@@ -38,7 +38,7 @@ public class ItemFactory : MonoBehaviour
     {
         // Validate parts against design requirements
         string validationResult;
-        if (reqs.ValidatePartConfig(parts, out validationResult))
+        if (reqs.ValidatePartConfig(parts, out validationResult))               // TODO: Is ValidatePartConfig getting called multiple times?
         {
             // NOTE: Assumes that manipulators[0] is the primary manipulator
             GameObject itemParent = reqs.manipulators[0];
@@ -53,11 +53,14 @@ public class ItemFactory : MonoBehaviour
             {
                 parts[p].transform.parent = itemParent.transform;
 
-                Mesh pMesh = parts[p].GetComponent<MeshFilter>().mesh;
-                float pVol = meshUtil.CalculateMeshVolume(pMesh);
+                //Mesh pMesh = parts[p].GetComponent<MeshFilter>().mesh;
+                //float pVol = meshUtil.CalculateMeshVolume(pMesh);             // TODO: Why isn't CalculateMeshVolume working??
+
+                float pVol = parts[p].physicalStats.volume;
                 totalVolume += pVol > 0f ? pVol : 0;
 
-                float pMass = pVol * parts[p].craftingMaterial.density;
+                //float pMass = pVol * parts[p].craftingMaterial.density;
+                float pMass = parts[p].physicalStats.mass;
                 totalMass += pMass > 0f ? pMass : 0;
 
                 float pVal = parts[p].partQuality * parts[p].craftingMaterial.baseValue;
@@ -66,8 +69,8 @@ public class ItemFactory : MonoBehaviour
 
             // Add the Item.cs script to the primaryManipulator gameObject so 
             // that it is attached to the top level of the item's hierarchy
-            itemParent.AddComponent<Item>();
             Item item = itemParent.AddComponent<Item>();
+            //Item item = itemParent.GetComponent<Item>();
 
             // Initialize item's attributes
             string id = GenerateItemID(itemParent);
@@ -87,7 +90,7 @@ public class ItemFactory : MonoBehaviour
             PartRequirements[] partReqs = reqs.partLayout.GetPartRequirements();
             for (int i = 0; i < parts.Length; i++)
             {
-                // NOTE: Parts need to be caches in Item before doing this.
+                // NOTE: Parts need to be cached in Item before doing this.
                 DeactivateComponentsOfPart(parts[i].gameObject, 
                                            partReqs[i].componentsToDeactivate);
             }

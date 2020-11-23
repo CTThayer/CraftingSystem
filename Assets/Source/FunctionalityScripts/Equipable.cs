@@ -38,6 +38,11 @@ public class Equipable : Storable, IActionable
 
     // TODO: Add field for storing what animation(s) go with this item when it is equipped to the character.
 
+    public void Initialize()
+    {
+        // TODO: Generalize the initializer so that it doesn't take parameters
+    }
+
     public void Initialize(EquipmentType equipmentType, Sprite icon)
     {
         // TODO: Implement initializer

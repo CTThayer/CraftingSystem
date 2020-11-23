@@ -39,6 +39,11 @@ public class Storable : MonoBehaviour, IActionable
         Debug.Assert(_objectPhysicalStats.volume > 0);
     }
 
+    public void Initialize()
+    {
+        // TODO: Generalize the initializer so that it doesn't take parameters
+    }
+
     public void Initialize(bool createdInStorage)
     {
         //isStored = createdInStorage;

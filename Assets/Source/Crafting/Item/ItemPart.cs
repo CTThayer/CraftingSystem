@@ -19,7 +19,11 @@ public class ItemPart : MonoBehaviour
     public PhysicalStats physicalStats;
 
     [SerializeField] private float _maxDurability;
-    public float maxDurability { get; private set; }
+    public float maxDurability
+    {
+        get => _maxDurability;
+        set => _maxDurability = value > 0 ? value : _maxDurability;
+    }
 
     [SerializeField] private float _currentDurability;
     public float currentDurability
@@ -40,7 +44,15 @@ public class ItemPart : MonoBehaviour
     }
 
     [SerializeField] private CraftingMaterial _craftingMaterial;                // TODO: DO WE NEED THIS REFERENCE?
-    public CraftingMaterial craftingMaterial { get; private set; }              // TODO: Does the need to be settable also?
+    public CraftingMaterial craftingMaterial
+    {
+        get => _craftingMaterial;
+        private set
+        {
+            if (value != null)
+                _craftingMaterial = value;
+        }
+    }
 
 
     private Color originalColor; // For selection/deselection purposes

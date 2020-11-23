@@ -4,6 +4,7 @@ using UnityEngine;
 
 public enum CraftingSkill
 {
+    Assembly,
     Blacksmithing,
     Glassblowing,
     Leatherworking,
@@ -85,14 +86,14 @@ public abstract class CraftingApparatus : MonoBehaviour
 
     /*********************** END User Configured Fields ***********************/
 
-    private CraftingApparatusUIManager _uiManager;
+    [SerializeField] protected CraftingApparatusUIManager _uiManager;
     public CraftingApparatusUIManager uiManager { get => _uiManager; }
 
-    private CraftingCameraController _camController;
-    public CraftingCameraController camController { get => _camController; }
-
-    private CraftingViewInputController _inputController;
+    [SerializeField] protected CraftingViewInputController _inputController;
     public CraftingViewInputController inputController { get => _inputController; }
+
+    [SerializeField] protected CraftingCameraController _camController;
+    public CraftingCameraController camController { get => _camController; }
 
     protected GameObject resultObject;                                            // TODO: Is this necessary? Or will factory scripts take care of this?
 

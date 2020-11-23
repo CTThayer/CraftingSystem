@@ -66,6 +66,13 @@ public class ItemCraftingApparatus : CraftingApparatus
             factory = GetComponent<ItemFactory>();
         Debug.Assert(factory != null);
 
+        if (_uiManager == null)
+            _uiManager = GetComponent<CraftingApparatusUIManager>();
+        if (_uiManager == null)
+            _inputController = GetComponent<CraftingViewInputController>();
+        if (_camController == null)
+            _camController = GetComponentInChildren<CraftingCameraController>();
+
         // Temp code for setting designreqs object position. This will go inside
         // the method that sets the design reqs when selected from the menu
         tempDesignReqsObject.transform.position = buildLocation.transform.position;
@@ -106,21 +113,30 @@ public class ItemCraftingApparatus : CraftingApparatus
     {
         string output = "";
         ItemPart[] parts = selectedDesignReqs.partLayout.GetPartsArray();
-        if (parts != null && ValidateNameAndDesc())
+        if (parts != null)
         {
-            if (selectedDesignReqs.ValidateConfiguration(out output))
+            if (ValidateNameAndDesc())
             {
-                bool success = factory.CreateItemFromParts(selectedDesignReqs,
-                                                           parts,
-                                                           itemName,
-                                                           itemDescription,
-                                                           out resultObject,
-                                                           out output);
-                itemIsComplete = success;
-                uiManager.DisplayOutputMessage(output);
-                return;
+                if (selectedDesignReqs.ValidateConfiguration(out output))
+                {
+                    bool success = factory.CreateItemFromParts(selectedDesignReqs,
+                                                               parts,
+                                                               itemName,
+                                                               itemDescription,
+                                                               out resultObject,
+                                                               out output);
+                    resultObject.transform.position = new Vector3(0f, 1f, 1f);
+                    itemIsComplete = success;
+                    uiManager.DisplayOutputMessage(output);
+                    return;
+                }
             }
+            else
+                output = "Error: Name and Description must be set before crafting.";
         }
+        else
+            output = "Error: Part configuration is incomplete or invalid.";
+
         itemIsComplete = false;
         uiManager.DisplayOutputMessage(output);
         return;
