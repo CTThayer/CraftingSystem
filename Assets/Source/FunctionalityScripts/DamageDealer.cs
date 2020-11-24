@@ -4,10 +4,17 @@ using UnityEngine;
 
 public enum DamageType
 {
-    Blunt,
     Chopping,
+    Cold,
+    Corrosion,
+    Electrical,
+    Heat,
+    Light,
+    Metaphysical,
     Piercing,
-    Slashing
+    Slashing,
+    Smashing,
+    Wear
 }
 
 public class DamageDealer : MonoBehaviour
@@ -37,7 +44,7 @@ public class DamageDealer : MonoBehaviour
     public Collider[] damageDealerColliders
     {
         get => _damageDealerColliders;
-        set
+        private set
         {
             if (value != null && value.Length > 0)
                 _damageDealerColliders = value;
@@ -47,6 +54,11 @@ public class DamageDealer : MonoBehaviour
     // TODO: Add Animator reference to allow this script to affect the animation
     // state when hits occur. For example, it could trigger a rebound animation
     // when this object hits another object of similar hardness.
+
+    // Private variables for tracking the current state
+    private bool isDamageDealingAction;
+    private bool isInitialHit;
+    private Damageable thisDamagable;
 
     // Start is called before the first frame update
     void Start()
@@ -72,13 +84,99 @@ public class DamageDealer : MonoBehaviour
         Debug.Assert(baseDamage > 0);
     }
 
-    // TODO: Add on collision enter to apply damage (and possibly update animation state)
+    public void Initialize()
+    {
+        // TODO: Generalize the initializer so that it doesn't take parameters
+    }
 
-    // TODO: Add on collision exit?
+    void OnCollisionEnter(Collision collision)
+    {
+        if (isDamageDealingAction && isInitialHit)
+        {
+            int contactPoints = collision.contactCount;
+            for (int i = 0; i < contactPoints; i++)
+            {
+                ContactPoint contact = collision.GetContact(i);
+                if(ColliderIsDamageDealer(contact.thisCollider))
+                {
+                    Damageable hitDamagable = collision.collider.GetComponent<Damageable>();
+                    if (hitDamagable != null)
+                    {
+                        DealDamage(hitDamagable);
+                        ApplySelfDamage(thisDamagable, hitDamagable);
+                        // TODO: Update animation state??
+                        isInitialHit = false;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 
-    // TODO: Make methods virtual so that we can have different types of damage
-    // dealers, i.e. MeleeDamageDealer, RangedDamageDealer, MagicDamageDealer, etc.
+    void OnCollisionExit(Collision collision)
+    {
+        // TODO: Update animation state??
+        isInitialHit = true;
+    }
+
+    public void Initialize(DamageType dType, float dBase, float dModifier)
+    {
+        damageType = dType;
+        baseDamage = dBase;
+        damageModifier = dModifier;
+        isDamageDealingAction = false;
+        isInitialHit = true;
+        thisDamagable = GetComponent<Damageable>();
+    }
+
+    public void Initialize(DamageType dType, float dBase, float dModifier, Collider[] colliders)
+    {
+        Initialize(dType, dBase, dModifier);
+        SetDamageDealerColliders(colliders);
+    }
+
+    public void SetDamageDealerColliders(Collider[] ddColliders)
+    {
+        if (ddColliders != null)
+        {
+            // TODO: check if these colliders actually belong to this gameObject??
+            damageDealerColliders = ddColliders;
+        }
+    }
+
+    // TODO: Fill in these stub methods
+    private void DealDamage(Damageable otherObject)
+    {
+        float damageAmount = baseDamage * damageModifier;
+        otherObject.OnDamageDealerHit(damageType, damageAmount);
+    }
+
+    private void ApplySelfDamage(Damageable thisObject, Damageable otherObject)
+    {
+        // TODO: How do we want to handle this?
+
+        //float damageAmount = baseDamage * damageModifier;
+        //thisObject.OnDamageDealerHit(damageAmount);
+    }
+
+
+    // NOTE: This might get really expensive if there are a lot of colliders on
+    // an item or if it sweeps through something with a lot of colliders. If it
+    // becomes an issue, caching damage dealer colliders in a HashTable might be
+    // an effective optimization since only the hash of the collider parameter
+    // would need to be checked making each contact check O(1)
+    private bool ColliderIsDamageDealer(Collider collider)
+    {
+        for (int i = 0; i < _damageDealerColliders.Length; i++)
+        {
+            if (collider == _damageDealerColliders[i])
+                return true;
+        }
+        return false;
+    }
 
     // TODO: Add animator update methods that are called when certain collisions are detected.
 
+    // TODO: Make methods virtual so that we can have different types of damage
+    // dealers, i.e. MeleeDamageDealer, RangedDamageDealer, MagicDamageDealer, etc.
 }

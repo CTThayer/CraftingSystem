@@ -20,12 +20,6 @@ public class PartSlot : ItemSlot
         }
     }
 
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-        //gameObject.name = _allowedPartTypes[i] + "Slot";
-    }
-
     public override bool CanReceiveItem(Storable storableObject)
     {
         if (storableObject == null)
@@ -44,24 +38,35 @@ public class PartSlot : ItemSlot
         return false;
     }
 
-    public void OnAddToSlot(Storable storableObject)
+    public override void AddToSlot(Storable storableObject)
     {
-        storableObject.ReactivateInWorld(partSocket.transform, false);
-        ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
-        partSocket.AddPartToSocket(part);
+        if (storableObject != null)
+        {
+            ItemPart part = storableObject.gameObject.GetComponent<ItemPart>();
+            Vector3 addLoc;
+            if (partSocket.AddPartToSocket(part, out addLoc))
+                storableObject.ReactivateInWorld(partSocket.transform, true);
+        }
+        storedItem = storableObject;
     }
 
-    public void OnRemoveFromSlot(Storable storableObject, Inventory storage)
+    public override Storable RemoveFromSlot()
     {
-        if (!storage.IsFull())
+        partSocket.RemovePartFromSocket();
+        Storable prevStoredItem = storedItem;
+        if (prevStoredItem != null)
         {
-            storage.AddItem(storableObject);
-            storableObject.AddToStorage(storage);
+            prevStoredItem.DeactivateInWorld();
+            storedItem = null;
         }
-        else
-        {
-            storableObject.transform.position = Vector3.zero;                   // TODO: Change this to use a Drop Location variable from either the Character, CraftingApparatus, or Inventory class.
-        }
+        return prevStoredItem;
     }
+
+    /**************************** EDITOR FUNCTIONS ****************************/
+    protected override void OnValidate()
+    {
+        base.OnValidate();
+    }
+    /************************** END EDITOR FUNCTIONS **************************/
 
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct PhysicalStats
+[System.Serializable]
+public class PhysicalStats
 {
     [SerializeField] private float _mass;
     public float mass
@@ -46,23 +47,6 @@ public class Item : MonoBehaviour
         set => _itemDescription = (value != null) ? value : _itemDescription;
     }
 
-    //[SerializeField] private float _mass;
-    //public float mass
-    //{
-    //    get => _mass;
-    //    private set => _mass = (value > 0f) ? value : _mass;
-    //}
-
-    //[SerializeField] private float _volume;
-    //public float volume
-    //{
-    //    get => _volume;
-    //    private set => _volume = (value > 0f) ? value : _volume;
-    //}
-
-    //[SerializeField] private PhysicalStats _physicalStats;
-    //public PhysicalStats physicalStats { get; private set; }
-
     public PhysicalStats physicalStats;
 
     [SerializeField] private float _baseValue;
@@ -84,8 +68,12 @@ public class Item : MonoBehaviour
     }
     
     // References to the ItemParts that make up this item.
-    [SerializeField] private ItemPart[] _itemParts;                             // TODO: Do we need this?
-    public ItemPart[] itemParts { get; private set; }                           // TODO: Should this still be a property?
+    [SerializeField] private ItemPart[] _itemParts;
+    public ItemPart[] itemParts
+    {
+        get => _itemParts;
+        private set { if (value != null) _itemParts = value; }
+    }
 
 
     /************************** END Common Properties *************************/
@@ -93,17 +81,16 @@ public class Item : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //// Ensure that the Item has a mesh and a collider
+        //// Ensure that the Item has a mesh
         //Debug.Assert(this.transform.GetComponent<MeshFilter>() != null);
         //Debug.Assert(this.transform.GetComponent<MeshFilter>().mesh != null);
-        //Debug.Assert(this.transform.GetComponent<Collider>() != null);
 
         // Validate properties (in case they were set in engine or incorrectly)
         Debug.Assert(_uniqueItemID != null && _uniqueItemID.Length > 0);
         Debug.Assert(_itemName != null && _itemName.Length > 0);
         Debug.Assert(_itemDescription != null && _itemDescription.Length > 0);
         Debug.Assert(physicalStats.mass > 0f);
-        Debug.Assert(physicalStats.mass > 0f);
+        Debug.Assert(physicalStats.volume > 0f);
         Debug.Assert(_baseValue > 0f);
         //Debug.Assert(itemParts != null && itemParts.Length > 0);
     }
@@ -126,6 +113,7 @@ public class Item : MonoBehaviour
         uniqueItemID = itemID;
         itemName = name;
         itemDescription = itemDesc;
+        physicalStats = new PhysicalStats();
         physicalStats.mass = totalMass;
         physicalStats.volume = totalVolume;
         baseValue = value;

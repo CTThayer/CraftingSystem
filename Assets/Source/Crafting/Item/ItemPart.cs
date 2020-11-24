@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-//public class ItemPart : Item
 public class ItemPart : MonoBehaviour
 {
     [SerializeField] private string _partType;                                  // TODO: Change to Enum??
@@ -19,25 +18,12 @@ public class ItemPart : MonoBehaviour
 
     public PhysicalStats physicalStats;
 
-    //[SerializeField] private PhysicalStats _physicalStats;
-    //public PhysicalStats physicalStats { get; private set; }
-
-    //[SerializeField] private float _partMass;
-    //public float partMass
-    //{
-    //    get => partMass;
-    //    set => _partMass = value > 0 ? value : 0;
-    //}
-
-    //[SerializeField] private float _partVolume;
-    //public float partVolume
-    //{
-    //    get => partVolume;
-    //    set => _partVolume = value > 0 ? value : 0;
-    //}
-
     [SerializeField] private float _maxDurability;
-    public float maxDurability { get; private set; }
+    public float maxDurability
+    {
+        get => _maxDurability;
+        set => _maxDurability = value > 0 ? value : _maxDurability;
+    }
 
     [SerializeField] private float _currentDurability;
     public float currentDurability
@@ -58,7 +44,15 @@ public class ItemPart : MonoBehaviour
     }
 
     [SerializeField] private CraftingMaterial _craftingMaterial;                // TODO: DO WE NEED THIS REFERENCE?
-    public CraftingMaterial craftingMaterial { get; private set; }              // TODO: Does the need to be settable also?
+    public CraftingMaterial craftingMaterial
+    {
+        get => _craftingMaterial;
+        private set
+        {
+            if (value != null)
+                _craftingMaterial = value;
+        }
+    }
 
 
     private Color originalColor; // For selection/deselection purposes
@@ -83,6 +77,8 @@ public class ItemPart : MonoBehaviour
         Debug.Assert(_partQuality > 0);
 
         //_partVolume = CalculatePartVolume();
+
+        Debug.Assert(_connectedParts.Length == _connectionPoints.Length);
     }
 
     public void Initialize(string typeOfPart,
@@ -135,18 +131,32 @@ public class ItemPart : MonoBehaviour
     {
         this.gameObject.GetComponent<Renderer>().material.color = originalColor;
     }
-
     
     // For parts that require the use of connection points/connected parts
     [SerializeField] private GameObject[] _connectionPoints;
-    public GameObject[] connectionPoints { get; }
+    public GameObject[] connectionPoints
+    {
+        get => _connectionPoints;
+        set
+        {
+            if (value != null && value.Length > 0)                              // TODO: Do we need more extensive checks here?
+                _connectionPoints = value;
+        }
+    }
     public GameObject GetConnectionPoint(int index) { return _connectionPoints[index]; }
-    public int GetNumberOfConnectionPoints() { return _connectionPoints.Length - 1; }
+    public int GetNumberOfConnectionPoints() { return _connectionPoints.Length; }
 
     [SerializeField] private ItemPart[] _connectedParts;
-    public ItemPart[] connectedParts { get; }
+    public ItemPart[] connectedParts { get => _connectedParts; }
     public ItemPart GetConnectedPart(int index) { return _connectedParts[index]; }
-    public int GetNumberOfConnectedParts() { return _connectedParts.Length - 1; }
+    public void SetConnectedPart(int index, ItemPart partToAdd)
+    {
+        if (index >= 0 && index < _connectedParts.Length)
+        {
+            _connectedParts[index] = partToAdd;
+        }
+    }
+    //public int GetNumberOfConnectedParts() { return _connectedParts.Length - 1; }
     public int GetIndexOfConnection(ItemPart part)
     {
         if (part != null)
