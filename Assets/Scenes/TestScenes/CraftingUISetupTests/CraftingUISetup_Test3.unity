@@ -4315,8 +4315,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -800, y: 50}
-  m_SizeDelta: {x: 450, y: 330}
+  m_AnchoredPosition: {x: -610, y: 274}
+  m_SizeDelta: {x: 450, y: 280}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &953958756
 MonoBehaviour:
@@ -5179,7 +5179,7 @@ MonoBehaviour:
   _usageTimeModifier: 0
   spawnLocation: {fileID: 1500379478}
   buildLocation: {fileID: 1500379478}
-  cameraObject: {fileID: 1248680238}
+  craftingCamera: {fileID: 0}
   _uiManager: {fileID: 1224247911}
   _inputController: {fileID: 1224247910}
   _camController: {fileID: 1248680239}
@@ -7826,7 +7826,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 3.5, y: 3.7999878}
+  m_AnchoredPosition: {x: 3.5, y: 3.7999268}
   m_SizeDelta: {x: 1320, y: 320}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2021470957

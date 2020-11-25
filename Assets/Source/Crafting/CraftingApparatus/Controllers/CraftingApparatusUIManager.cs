@@ -73,6 +73,12 @@ public class CraftingApparatusUIManager : MonoBehaviour
             craftingUICanvas.enabled = true;
     }
 
+    public void DeactivateUI()
+    {
+        if (craftingUICanvas.enabled)
+            craftingUICanvas.enabled = false;
+    }
+
     public void ClearPartsPanel()
     {
         bool partPanelIsA = partsPanel.gameObject == panelController.panelA;

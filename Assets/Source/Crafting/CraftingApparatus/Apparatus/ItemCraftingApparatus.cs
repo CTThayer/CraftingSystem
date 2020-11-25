@@ -49,6 +49,8 @@ public class ItemCraftingApparatus : CraftingApparatus
     public string itemDescription;  // Variable containing the description of the item
 
     private bool itemIsComplete = false;
+    private GameObject prevCamera;
+    private PlayerCharacterController characterUsingApp;
 
     [SerializeField] private ItemFactory factory; // = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
 
@@ -143,15 +145,22 @@ public class ItemCraftingApparatus : CraftingApparatus
     }
 
     // For use by Interactable
-    public override void Use()
+    public override void Use(PlayerCharacterController PCC)
     {
-        // TODO: Disable player camera
-        // TODO: Disable player input controller
+        // Disable player camera
+        prevCamera = PCC.playerCameraObj;
+        prevCamera.SetActive(false);
 
-        // TODO: Enable crafting camera
+        //Disable player input controller
+        characterUsingApp = PCC;
+        PCC.enabled = false;
+
+        // Enable crafting camera.
+        craftingCamera.SetActive(true);
         camController.enabled = true;
         inputController.enabled = true;
 
+        // Activate the UI
         uiManager.ActivateUI();
     }
 
@@ -163,12 +172,34 @@ public class ItemCraftingApparatus : CraftingApparatus
 
         // Destroy the instantiated design reqs game object
         Destroy(selectedDesignReqs.gameObject);
+
+        // Disable crafting camera
+        craftingCamera.SetActive(false);
+        camController.enabled = false;
+        inputController.enabled = false;
+
+        // Enable previous camera
+        prevCamera.SetActive(true);
+        characterUsingApp.enabled = true;
+
+        // Handle the item that was created or in progress.
+        if (itemIsComplete)
+        {
+            resultObject.GetComponent<Rigidbody>().isKinematic = false;
+        }
+        else
+        {
+            Destroy(resultObject);  // TODO: Is this necessary?
+            resultObject = null;
+        }
+
+        uiManager.DeactivateUI();
     }
 
     /**************************** Private Methods *****************************/
 
     private bool ValidateNameAndDesc()
-    {
+    { 
         return itemName.Length > 0
                && itemName.Length <= 80
                && itemDescription.Length > 0

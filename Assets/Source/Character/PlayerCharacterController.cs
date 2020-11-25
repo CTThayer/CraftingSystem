@@ -4,28 +4,35 @@ using UnityEngine;
 
 public class PlayerCharacterController : MonoBehaviour
 {
-    [SerializeField] private Camera Cam;
+    [SerializeField] private GameObject _playerCameraObj;
+    public GameObject playerCameraObj { get => _playerCameraObj; }
 
-    GameObject CurrentHit;
+    // Private Variables
+    private bool isInputActive;
+    private GameObject CurrentHit;
 
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(Cam != null);
+        Debug.Assert(_playerCameraObj != null);
+        isInputActive = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        CheckForInteractables();
-        HandleInteractionInput();
+        if (isInputActive)
+        {
+            CheckForInteractables();
+            HandleInteractionInput();
+        }
     }
 
     private void CheckForInteractables()
     {
         RaycastHit Hit;
         // NOTE: Check if transform.forward is actually what we want, this might need to be offset by some height value.
-        if (Physics.Raycast(this.transform.position, Cam.transform.forward, out Hit, 1.5f)) 
+        if (Physics.Raycast(this.transform.position, _playerCameraObj.transform.forward, out Hit, 1.5f)) 
         {
             if (Hit.transform.gameObject != CurrentHit)
             {
@@ -51,6 +58,11 @@ public class PlayerCharacterController : MonoBehaviour
     private void HandleInteractionInput()
     {
 
+    }
+
+    public void DeactivateCharacterInput()
+    {
+        isInputActive = false;
     }
 
 }

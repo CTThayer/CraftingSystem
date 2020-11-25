@@ -80,9 +80,9 @@ public abstract class CraftingApparatus : MonoBehaviour
 
     // TODO: Add required tools field AND tool check methods
 
-    public Transform spawnLocation; // Location where the item is spawned at creation time
-    public Transform buildLocation; // Location where the item construction starts
-    public Camera cameraObject;     // GameObject containing the camera to use with this apparatus. Can be set externally with 
+    public Transform spawnLocation;     // Location where the item is spawned at creation time
+    public Transform buildLocation;     // Location where the item construction starts
+    public GameObject craftingCamera;   // GameObject containing the camera to use with this apparatus. Can be set externally with 
 
     /*********************** END User Configured Fields ***********************/
 
@@ -102,7 +102,7 @@ public abstract class CraftingApparatus : MonoBehaviour
 
     public abstract void LoadRequirements(GameObject reqsObject);               // Loads the requirements object
     public abstract void Craft();                                               // Crafts the current object
-    public abstract void Use();                                                 // For Interactable
+    public abstract void Use(PlayerCharacterController PCC);                    // For Interactable
     public abstract void Exit();                                                // Exits the apparatus
 
     /**************************** Public Functions ****************************/
