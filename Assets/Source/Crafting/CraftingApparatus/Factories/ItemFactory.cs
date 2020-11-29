@@ -70,7 +70,6 @@ public class ItemFactory : MonoBehaviour
             // Add the Item.cs script to the primaryManipulator gameObject so 
             // that it is attached to the top level of the item's hierarchy
             Item item = itemParent.AddComponent<Item>();
-            //Item item = itemParent.GetComponent<Item>();
 
             // Initialize item's attributes
             string id = GenerateItemID(itemParent);
@@ -82,6 +81,9 @@ public class ItemFactory : MonoBehaviour
                             totalValue,
                             reqs.manipulators,
                             parts);
+
+            // Set name of primary manipulator to match item name since it now *is* the item
+            itemParent.name = name;
 
             // Add required component scripts to the item
             AddComponentsToItem(ref itemParent, reqs.requiredScripts);
@@ -145,23 +147,33 @@ public class ItemFactory : MonoBehaviour
             return;
         for (int i = 0; i < compsToDeactivate.Length; i++)
         {
-            System.Type componentType = System.Type.GetType(compsToDeactivate[i]);
-            if (componentType != null)
-            {
-                Component component = part.GetComponent(componentType);
+            //System.Type componentType = System.Type.GetType(compsToDeactivate[i]);
+            //if (componentType != null)
+            //{
+            //    Component component = part.GetComponent(componentType);
+            Component component = part.GetComponent(compsToDeactivate[i]);
+            if (component != null)
+            { 
                 Behaviour behaviour = component as Behaviour;
                 if (behaviour != null)
                 {
-                    behaviour.enabled = false;
+                    //behaviour.enabled = false;
+                    Destroy(behaviour);
+                    Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
-                else if (compsToDeactivate[i] == "Rigidbody")
+                else if (component is Rigidbody)
                 {
-                    if (component != null)
-                        Destroy(component);
-                    // NOTE: It might be important to cache rigidbody data in
-                    // the ItemPart before doing this in case the rigidbody has
-                    // to be recreated later (most data should already be there)
+                    Destroy(component);
+                    Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
+                //else if (compsToDeactivate[i] == "Rigidbody")
+                //{
+                //    if (component != null)
+                //        Destroy(component);
+                //    // NOTE: It might be important to cache rigidbody data in
+                //    // the ItemPart before doing this in case the rigidbody has
+                //    // to be recreated later (most data should already be there)
+                //}
             }
         }
     }

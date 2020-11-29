@@ -69,23 +69,39 @@ public class CraftingApparatusUIManager : MonoBehaviour
 
     public void ActivateUI()
     {
-        if (!craftingUICanvas.enabled)
+        if (!craftingUICanvas.isActiveAndEnabled)
+        {
+            craftingUICanvas.gameObject.SetActive(true);
             craftingUICanvas.enabled = true;
+        }
     }
 
     public void DeactivateUI()
     {
-        if (craftingUICanvas.enabled)
+        if (craftingUICanvas.isActiveAndEnabled)
+        {
+            craftingUICanvas.gameObject.SetActive(false);
             craftingUICanvas.enabled = false;
+        }
     }
 
-    public void ClearPartsPanel()
+    public void RemovePartsFromPartsPanel()
     {
         bool partPanelIsA = partsPanel.gameObject == panelController.panelA;
         PartSlot_Test[] partsPanelSlots = partsPanel.partSlots;
         for (int i = 0; i < partsPanelSlots.Length; i++)
         {
-            panelController.MoveItemBetweenPanels(partsPanelSlots[i], partPanelIsA);
+            if (partsPanelSlots[i].storedItem != null)
+                panelController.MoveItemBetweenPanels(partsPanelSlots[i], partPanelIsA);
+        }
+    }
+
+    public void DestroyUsedPartIcons()
+    {
+        PartSlot_Test[] slots = partsPanel.partSlots;
+        for (int i = 0; i < slots.Length; i++)
+        {
+            slots[i].storedItem = null;
         }
     }
 

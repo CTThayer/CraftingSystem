@@ -437,3 +437,163 @@ InputManager:
     type: 0
     axis: -1
     joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Zoom
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 0
+    dead: 0
+    sensitivity: 0.1
+    snap: 0
+    invert: 0
+    type: 1
+    axis: 2
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Aim
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: mouse 1
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Aim
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: 
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 1
+    dead: 0.3
+    sensitivity: 1
+    snap: 0
+    invert: 0
+    type: 2
+    axis: 9
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Rotate Character
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: mouse 1
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Follow
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: space
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Grip
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: mouse 0
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Forward
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: w
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Back
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: s
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Left
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: a
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0
+  - serializedVersion: 3
+    m_Name: Camera Right
+    descriptiveName: 
+    descriptiveNegativeName: 
+    negativeButton: 
+    positiveButton: d
+    altNegativeButton: 
+    altPositiveButton: 
+    gravity: 100
+    dead: 0.3
+    sensitivity: 100
+    snap: 0
+    invert: 0
+    type: 0
+    axis: -1
+    joyNum: 0

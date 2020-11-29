@@ -6,14 +6,14 @@ public class EquipmentSlot : ItemSlot
 {
     public EquipmentType equipmentType;
 
-    [SerializeField] private GameObject _parentBone;
-    public GameObject parentBone
+    [SerializeField] private GameObject _equipLocation;
+    public GameObject equipLocation
     {
-        get => _parentBone;
+        get => _equipLocation;
         private set
         {
             if (value != null)
-                _parentBone = value;
+                _equipLocation = value;
         }
     }
 
@@ -25,15 +25,15 @@ public class EquipmentSlot : ItemSlot
     public void EquipToBone(Equipable equipableItem)
     {
         Storable s = equipableItem as Storable;
-        s.ReactivateInWorld(parentBone.transform, true);
-        s.transform.parent = parentBone.transform;
+        s.ReactivateInWorld(equipLocation.transform, true);
+        s.transform.parent = equipLocation.transform;
     }
 
-    private void EquipToBone(Storable storableObj)
-    {
-        storableObj.ReactivateInWorld(parentBone.transform, true);
-        storableObj.transform.parent = parentBone.transform;
-    }
+    //private void EquipToBone(Storable storableObj)
+    //{
+    //    storableObj.ReactivateInWorld(equipLocation.transform, true);
+    //    storableObj.transform.parent = equipLocation.transform;
+    //}
 
     /* UnequipFromBone()
      * Unparents the stored item from the bone associated with this slot and 
@@ -67,7 +67,7 @@ public class EquipmentSlot : ItemSlot
     {
         if (storableObject != null && storedItem == null)
         {
-            EquipToBone(storableObject);
+            EquipToBone(storableObject as Equipable);
             //Debug.Log("Added " + storableObject.name + " to EquipmentSlot");
         }
         storedItem = storableObject;

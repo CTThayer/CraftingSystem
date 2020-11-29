@@ -26,8 +26,6 @@ public class PartLayout : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        buildLocation = transform.position;
-
         Debug.Assert(_defaultParts != null && _defaultParts.Length > 0);
         for (int i = 0; i < _defaultParts.Length; i++)
         {
@@ -62,6 +60,8 @@ public class PartLayout : MonoBehaviour
 
     public bool Add(int index, ItemPart newPart)
     {
+        //buildLocation = transform.position;
+
         if (index >= 0 && index < parts.Length)
         {
             if (parts[index] != _defaultParts[index]                            // If there is a part in this spot, exit and remove it first

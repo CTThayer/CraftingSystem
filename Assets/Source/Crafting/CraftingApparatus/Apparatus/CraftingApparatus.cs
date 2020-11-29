@@ -11,7 +11,7 @@ public enum CraftingSkill
     Woodworking
 }
 
-public abstract class CraftingApparatus : MonoBehaviour
+public abstract class CraftingApparatus : MonoBehaviour, IActionable
 {
     /************************* User Configured Fields *************************/
 
@@ -102,9 +102,28 @@ public abstract class CraftingApparatus : MonoBehaviour
 
     public abstract void LoadRequirements(GameObject reqsObject);               // Loads the requirements object
     public abstract void Craft();                                               // Crafts the current object
-    public abstract void Use(PlayerCharacterController PCC);                    // For Interactable
+    public abstract string Use(PlayerCharacter PCC);                            // For Interactable
     public abstract void Exit();                                                // Exits the apparatus
 
     /**************************** Public Functions ****************************/
+
+
+
+    /********************* IActionable Interface Members **********************/
+    /* IActionable is used by Interactable to get all actions that can be taken
+     * on any given object. These methods MUST be implemented for interaction 
+     * to work correctly.                                                     */
+
+    public ActionDelegate[] GetActions()
+    {
+        ActionDelegate[] actions = new ActionDelegate[1] { Use };
+        return actions;
+    }
+
+    public string[] GetActionNames()
+    {
+        string[] actionNames = new string[1] { "Use Crafting Apparatus" };
+        return actionNames;
+    }
 
 }

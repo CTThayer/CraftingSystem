@@ -176,7 +176,7 @@ public class Storable : MonoBehaviour, IActionable
      * to work correctly.                                                     */
 
     // Returns all the ActionDelegate methods associated with this component
-    public ActionDelegate[] GetActions()
+    public virtual ActionDelegate[] GetActions()
     {
         ActionDelegate[] actions = new ActionDelegate[1];
         actions[0] = AddToInventory;
@@ -184,7 +184,7 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     // Returns all the UI display names for the ActionDelegate methods
-    public string[] GetActionNames()
+    public virtual string[] GetActionNames()
     {
         string[] actionNames = new string[1];
         actionNames[0] = "Add to Inventory";
@@ -192,10 +192,17 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     /*********************** IActionable Event Members ************************/
-    public virtual string AddToInventory(GameObject caller)
+    public virtual string AddToInventory(PlayerCharacter pc)
     {
         string result = "";
-
+        if (pc != null)
+        {
+            bool r = pc.inventory.AddItem(this);
+            if (r)
+                result = "Added " + this.name + " to inventory.";
+            else
+                result = "Cannot add " + this.name + " to inventory.";
+        }
         return result;
     }
 }

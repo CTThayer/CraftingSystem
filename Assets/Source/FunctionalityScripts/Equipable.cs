@@ -48,7 +48,7 @@ public class Equipable : Storable, IActionable
         // TODO: Implement initializer
     }
 
-    public void Equip(Character c)
+    public void Equip()
     {
         // 1.a. Set this item's position and rotation to match the equip 
         //      location on the character.
@@ -87,57 +87,68 @@ public class Equipable : Storable, IActionable
      * to work correctly.                                                     */
 
     // Returns all the ActionDelegate methods associated with this component
-    public ActionDelegate[] GetActions()
+    public override ActionDelegate[] GetActions()
     {
-        ActionDelegate[] actions = new ActionDelegate[1];
-        actions[0] = AddToInventory;                                                   // TODO: change format of Action Delegates to reflect character parameter OR make generic (if possible)
-        actions[1] = Equip;
-        return actions;
+        List<ActionDelegate> actions = new List<ActionDelegate>(base.GetActions());
+        actions.Add(Equip);
+        return actions.ToArray();
     }
 
     // Returns all the UI display names for the ActionDelegate methods
-    public string[] GetActionNames()
+    public override string[] GetActionNames()
     {
-        string[] actionNames = new string[1];
-        actionNames[0] = "Add to Inventory";
-        actionNames[1] = "Equip";
-        return actionNames;
+        List<string> actionNames = new List<string>(base.GetActionNames());
+        actionNames.Add("Equip");
+        return actionNames.ToArray();
     }
 
     /*********************** IActionable Event Members ************************/
-    public override string AddToInventory(GameObject caller)
+    public string Equip(PlayerCharacter character)
     {
         string result = "";
-        Character character = caller.GetComponent<Character>();                 // TODO: Consider just passing character instead of GameObject as the "caller"
         if (character != null)
         {
-            character.inventory.AddItem(this);
+            Storable prevEquippedItem;
+            if (character.equipmentPanel.AddItem(this, out prevEquippedItem))
+            {
+                if (prevEquippedItem != null)
+                {
+                    bool success = character.inventory.AddItem(prevEquippedItem);
+                    if (!success)
+                    {
+                        Vector3 dropPos = GetWorldDropLocation(character);
+                        prevEquippedItem.ReactivateInWorld(dropPos, this.transform.rotation, false);
+                        result += "Dropped " + prevEquippedItem.name + ", ";
+                    }
+                }
+                result += "Equipped " + this.name;
+            }
+            else
+                result += "Cannot Equip " + this.name;
         }
         return result;
     }
 
-    public string Equip(GameObject caller)                                      // TODO: Consider just passing character instead of GameObject as the "caller"
+    private Vector3 GetWorldDropLocation(PlayerCharacter character)
     {
-        string result = "";
-        Character character = caller.GetComponent<Character>();
-        if (character != null)
+        Vector3 dropPosition;
+        Bounds objBounds = GetComponent<Renderer>().bounds;
+        Vector3 castOrigin = character.interactionController.raycastOrigin.transform.position;
+        Vector3 direction = character.playerCamObj.transform.forward;
+        float length = 2.0f;
+        RaycastHit hitInfo;
+        if (Physics.BoxCast(castOrigin, objBounds.extents, direction, out hitInfo, this.transform.rotation, length))
         {
-            Storable prevEquippedItem;
-            character.equipmentPanel.AddItem(this, out prevEquippedItem);
-            if (prevEquippedItem != null)
-            {
-                bool success = character.inventory.AddItem(prevEquippedItem);
-                if (!success)
-                {
-                    // TODO: change transform to position & rotation because 
-                    // transforms can't be constructed at runtime without a 
-                    // GameObject and setting objects to the exact same pos/rot
-                    // as the one being picked up likely has a lot of problems.
-                    prevEquippedItem.ReactivateInWorld(this.transform, true);
-                }
-            }
+            Vector3 offset = Vector3.Project(objBounds.extents, -direction) + new Vector3(0.02f, 0.02f, 0.02f);
+            dropPosition = hitInfo.point - offset;
         }
-        return result;
+        else
+        {
+            dropPosition = castOrigin + (direction * length);
+        }
+        return dropPosition;
     }
+
+
 
 }

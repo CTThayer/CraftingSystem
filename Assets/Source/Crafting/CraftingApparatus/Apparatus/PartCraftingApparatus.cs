@@ -81,9 +81,10 @@ public class PartCraftingApparatus : CraftingApparatus
     }
 
     // For use by Interactable
-    public override void Use(PlayerCharacterController PCC)
+    public override string Use(PlayerCharacter PCC)
     {
 
+        return "";
     }
 
     // Exits the apparatus
