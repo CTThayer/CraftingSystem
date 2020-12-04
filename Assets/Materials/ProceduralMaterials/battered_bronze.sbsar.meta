@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 56286d5690f06844da25b86a48b40207
+guid: 23c2d857c59a58448b27cf9751e66098
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,15 +11,14 @@ ScriptedImporter:
   version: 29
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Stylized Moroccan Terracotta Tiles
-    prototypeName: Stylized Moroccan Terracotta Tiles
+  - graphLabel: Battered Bronze
+    prototypeName: Battered Bronze
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://stylized_moroccan_terracotta_tiles\" label=\"\"
-      >\n  <presetinput identifier=\"$randomseed\" uid=\"3699752678\" type=\"4\"
-      value=\"6569\" />\n  <presetinput identifier=\"cuts_density\" uid=\"3774751731\"
-      type=\"0\" value=\"0\" />\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://battered_bronze\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"2465788647\" type=\"8\" value=\"10,10\" />\n
+      </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -30,7 +29,7 @@ ScriptedImporter:
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 3794343673927127807, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: 8309010543414514836, guid: 23c2d857c59a58448b27cf9751e66098,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -51,22 +50,22 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: -2215248645658156771, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: 7904846500085334196, guid: 23c2d857c59a58448b27cf9751e66098,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: 2311543235184785465, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -1523801695088260577, guid: 23c2d857c59a58448b27cf9751e66098,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: -8191369236730194648, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -1238181034769249112, guid: 23c2d857c59a58448b27cf9751e66098,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -111848361052435669, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -7223584691135108519, guid: 23c2d857c59a58448b27cf9751e66098,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -237,39 +236,39 @@ ScriptedImporter:
         from: 0
         to: 3
     textureParameters:
-    - textureName: Stylized Moroccan Terracotta Tiles - diffuse
+    - textureName: Battered Bronze - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - baseColor
+    - textureName: Battered Bronze - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - normal
+    - textureName: Battered Bronze - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - specular
+    - textureName: Battered Bronze - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - glossiness
+    - textureName: Battered Bronze - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - roughness
+    - textureName: Battered Bronze - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - metallic
+    - textureName: Battered Bronze - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - height
+    - textureName: Battered Bronze - height
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - ambientOcclusion
+    - textureName: Battered Bronze - ambientOcclusion
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -279,16 +278,16 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 256
-      textureHeight: 256
+      textureWidth: 1024
+      textureHeight: 1024
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: -4235239887747780470, guid: 56286d5690f06844da25b86a48b40207,
+    material: {fileID: 5640884347482187983, guid: 23c2d857c59a58448b27cf9751e66098,
       type: 3}
     generatedTextures:
-    - {fileID: -2215248645658156771, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: 3794343673927127807, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: 2311543235184785465, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: -111848361052435669, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: -8191369236730194648, guid: 56286d5690f06844da25b86a48b40207, type: 3}
+    - {fileID: 7904846500085334196, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
+    - {fileID: 8309010543414514836, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
+    - {fileID: -1523801695088260577, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
+    - {fileID: -7223584691135108519, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
+    - {fileID: -1238181034769249112, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465785, g: 0.49641222, b: 0.57481694, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &4
 LightmapSettings:
@@ -630,7 +630,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 105793722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.434, z: -0.219}
+  m_LocalPosition: {x: -3.5300002, y: 0.434, z: -0.219}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 283840724}
@@ -3623,15 +3623,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   craftingCam: {fileID: 693409787}
-  LookAtPosition: {x: 0, y: 0, z: 0}
-  RotationSpeed: 5
-  ZoomSpeed: 0.5
-  ZoomDistance_MIN: 0.1
-  ZoomDistance_MAX: 5
   _originalLookAtObj: {fileID: 160540333}
-  PanSpeed: 0.25
+  RotationSpeed: 5
+  PolarDeadzone_TOP: 15
+  PolarDeadzone_BOT: 50
+  ZoomSpeed: 30
+  ZoomDistance_MIN: 0.1
+  ZoomDistance_MAX: 20
+  PanSpeed: 1
   PanDistance_MAX: 1.5
-  PolarDeadzone: 15
 --- !u!20 &693409787
 Camera:
   m_ObjectHideFlags: 0
@@ -4106,7 +4106,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 746612899}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.05, z: -0.25}
+  m_LocalPosition: {x: -3.5300002, y: 0.05, z: -0.25}
   m_LocalScale: {x: 1, y: 0.1, z: 0.5}
   m_Children: []
   m_Father: {fileID: 1770553463}
@@ -5499,6 +5499,8 @@ MonoBehaviour:
     _electricalConductivity: 0
     _metaphysicalConductivity: 0
     _thermalConductivity: 0
+  materialSubstance: {fileID: 0}
+  materialSubstanceGraph: {fileID: 0}
 --- !u!4 &868652280
 Transform:
   m_ObjectHideFlags: 0
@@ -6100,6 +6102,8 @@ MonoBehaviour:
     _electricalConductivity: 0
     _metaphysicalConductivity: 0
     _thermalConductivity: 0
+  materialSubstance: {fileID: 0}
+  materialSubstanceGraph: {fileID: 0}
 --- !u!4 &913661703
 Transform:
   m_ObjectHideFlags: 0
@@ -8965,7 +8969,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1537604848}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.5, y: 0, z: 0}
+  m_LocalPosition: {x: -4.03, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 2, z: 0.1}
   m_Children:
   - {fileID: 234455009}
@@ -9112,11 +9116,11 @@ MonoBehaviour:
   spawnLocation: {fileID: 160540334}
   buildLocation: {fileID: 160540334}
   craftingCamera: {fileID: 693409785}
-  _uiManager: {fileID: 1539496920}
   _inputController: {fileID: 1539496919}
   _camController: {fileID: 693409786}
   _supportedItemTypes:
   - Axe
+  _uiManager: {fileID: 1539496920}
   tempDesignReqsObject: {fileID: 833840560}
   addToInventoryOnComplete: 0
   itemName: 
@@ -9175,7 +9179,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1539496916}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.3200073, y: 0.5, z: -12.84}
+  m_LocalPosition: {x: 0.07, y: 0.5, z: -8.09}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 160540334}
@@ -9509,7 +9513,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1592688968}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
+  m_LocalPosition: {x: -3.5300002, y: 0.25, z: 0}
   m_LocalScale: {x: 1, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 283840724}
@@ -10707,7 +10711,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1760364864}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.19, y: 1.31, z: -7.11}
+  m_LocalPosition: {x: -2.3400002, y: 1.31, z: -7.11}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_Children: []
   m_Father: {fileID: 1929807643}

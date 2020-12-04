@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Substance.Game;
 
 public class CraftingMaterial : MonoBehaviour
 {
@@ -63,6 +64,8 @@ public class CraftingMaterial : MonoBehaviour
     /****************************** Conductivity ******************************/
     public ConductivityProperties conductivity;
 
+    public Substance.Game.Substance materialSubstance;
+    public Substance.Game.SubstanceGraph materialSubstanceGraph;
 
     // Start is called before the first frame update
     void Start()

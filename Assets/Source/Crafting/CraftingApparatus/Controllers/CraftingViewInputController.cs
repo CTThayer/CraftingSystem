@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class CraftingViewInputController : MonoBehaviour
 {
-    [SerializeField] private CraftingApparatus craftingApparatus;
+    [SerializeField] protected CraftingApparatus craftingApparatus;
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         if (craftingApparatus == null)
         {
@@ -29,7 +29,7 @@ public class CraftingViewInputController : MonoBehaviour
      * from Update() each frame. Deals with mouse click selection,
      * and arrow key input for selecting the AddLocation.
      */
-    private void HandleInput()
+    protected virtual void HandleInput()
     {
         // Manipulate Camera
         if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
@@ -38,12 +38,8 @@ public class CraftingViewInputController : MonoBehaviour
             {
                 Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"),
                                                  Input.GetAxis("Mouse Y"));
-                craftingApparatus.camController.ProcessTumble(mouseDelta);
-                return;     // Return to avoid multiple actions
-            }
-            if (Input.mouseScrollDelta.y != 0)
-            {
-                craftingApparatus.camController.ProcessZoom(Input.mouseScrollDelta.y);
+                //craftingApparatus.camController.ProcessTumble(mouseDelta);
+                craftingApparatus.camController.ProcessRotation(mouseDelta);
                 return;     // Return to avoid multiple actions
             }
             if (Input.GetMouseButton(1))
@@ -51,6 +47,13 @@ public class CraftingViewInputController : MonoBehaviour
                 Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"),
                                                  Input.GetAxis("Mouse Y"));
                 craftingApparatus.camController.ProcessPan(mouseDelta);
+                return;     // Return to avoid multiple actions
+            }
+            //if (Input.mouseScrollDelta.y != 0)
+            float zoom = Input.GetAxis("Mouse ScrollWheel");
+            if (zoom != 0)
+            {
+                craftingApparatus.camController.ProcessZoom(zoom);
                 return;     // Return to avoid multiple actions
             }
         }

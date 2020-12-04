@@ -6,7 +6,7 @@ public class ItemPartAssembler : MonoBehaviour
 {
     private float PosTolerance = 0.00001f;
     private float NormTolerance = 0.005f;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -21,7 +21,7 @@ public class ItemPartAssembler : MonoBehaviour
      * @Param ComponentSegment[] segments - Array of ComponentSegments to weld. 
      * Returns bool for whether the configuration is valid.
      */
-    public bool ValidateSegmentConfiguration(ItemPartSegment[] segments, 
+    public bool ValidateSegmentConfiguration(ItemPartSegment[] segments,
                                              float componentMaxLength)
     {
         if (segments == null || segments.Length == 0)
@@ -181,7 +181,7 @@ public class ItemPartAssembler : MonoBehaviour
             isDuplicate = false;
             for (int j = 0; j < newVertices.Count; j++)
             {
-                if((originalVertices[i] - newVertices[j]).sqrMagnitude < PosTolerance
+                if ((originalVertices[i] - newVertices[j]).sqrMagnitude < PosTolerance
                     && Vector3.Angle(originalNormals[i], newNormals[j]) < NormTolerance)
                 {
                     isDuplicate = true;
@@ -189,7 +189,7 @@ public class ItemPartAssembler : MonoBehaviour
                     break;
                 }
             }
-            if(!isDuplicate)
+            if (!isDuplicate)
             {
                 map[i] = newVertices.Count;
                 newVertices.Add(originalVertices[i]);
@@ -289,7 +289,6 @@ public class ItemPartAssembler : MonoBehaviour
     }
 
     /* Cube Map UVs
-     * 
      * Calculates UVs for the supplied mesh using simplified cube projection.
      * @Param m - Mesh that needs UV projection.
      */
@@ -304,7 +303,7 @@ public class ItemPartAssembler : MonoBehaviour
         Vector3[] vertices = m.vertices;
         Vector3[] normals = m.normals;
         Vector2[] uvs = new Vector2[vertices.Length];
-        
+
         //Vector3 bounds = m.bounds.size;
         float[] b = new float[3] { m.bounds.size.x,
                                    m.bounds.size.y,
@@ -315,7 +314,7 @@ public class ItemPartAssembler : MonoBehaviour
         {
             // Determine which plane to map uvs to:
             char c = GetUVAxis(normals[i].x, normals[i].y, normals[i].z);
-            switch(c)
+            switch (c)
             {
                 case 'X':
                     {
@@ -386,12 +385,11 @@ public class ItemPartAssembler : MonoBehaviour
     }
 
     /* Get UV Bounds
-    * 
-    * Calculates the bounding box values of the supplied UV set.
-    * @Param Vector2[] uvs - An array of UV values (Vector2). 
-    * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
-    * Returns null if an empty set of UVs is passed in.
-    */
+     * Calculates the bounding box values of the supplied UV set.
+     * @Param Vector2[] uvs - An array of UV values (Vector2). 
+     * Returns a float[] in the format MinU, MinV, MaxU, MaxV. 
+     * Returns null if an empty set of UVs is passed in.
+     */
     private float[] GetUVBounds(Vector2[] uvs)
     {
         if (uvs != null && uvs.Length > 0)
@@ -413,6 +411,37 @@ public class ItemPartAssembler : MonoBehaviour
             Debug.Log("GetUVBounds: Supplied UV array was empty.");
             return null;
         }
+    }
+
+    /* Get Compound Collider From Segments
+     * Gathers all the colliders attached to any of the segments in the array
+     * parameter and makes copies of them on new GameObjects that are positioned
+     * the same as the originals, then returns an array of these new GameObjects
+     */
+    public GameObject[] GetCompoundColliderFromSegments(ItemPartSegment[] segments)
+    {
+        List<GameObject> colliderObjects = new List<GameObject>();
+        int total = 0;
+        for (int i = 0; i < segments.Length; i++)
+        {
+            Collider[] colliders = segments[i].GetComponents<Collider>();
+            if (colliders != null)
+            {
+                foreach (Collider c in colliders)
+                {
+                    if (c.GetComponent<SegmentConnectionPoint>() == null)
+                    {
+                        GameObject go = new GameObject();
+                        go.transform.position = segments[i].transform.position;
+                        go.transform.rotation = segments[i].transform.rotation;
+                        Collider colliderCopy = go.AddComponent<Collider>();
+                        colliderCopy = Instantiate(c);
+                        colliderObjects.Add(go);
+                    }
+                }
+            }
+        }
+        return colliderObjects.ToArray();
     }
 
 }

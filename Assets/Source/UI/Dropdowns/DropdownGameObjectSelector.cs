@@ -62,7 +62,6 @@ public class DropdownGameObjectSelector : MonoBehaviour
 
     private void UpdateDropdownList()
     {
-        //DropdownMenu.ClearOptions();
         DropdownMenu.options.Clear();
         List<string> ObjectNames = new List<string>();
         for (int i = 0; i < Objects.Length; i++)

@@ -137,4 +137,9 @@ public class TwoPanelController : MonoBehaviour
         else
             PanelBRightClick(slot);
     }
+
+    public bool IsPanelA(GameObject panel)
+    {
+        return panel == panelA;
+    }
 }

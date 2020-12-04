@@ -28,6 +28,15 @@ public class ItemCraftingApparatus : CraftingApparatus
         }
     }
 
+    [SerializeField] protected ItemCraftingApparatusUIManager _uiManager;
+    public ItemCraftingApparatusUIManager uiManager { get => _uiManager; }
+
+    //[SerializeField] protected CraftingViewInputController _inputController;
+    //public CraftingViewInputController inputController { get => _inputController; }
+
+    //[SerializeField] protected CraftingCameraController _camController;
+    //public CraftingCameraController camController { get => _camController; }
+
     // Temporary field for design requirements to be set manually for testing purposes. 
     // TODO: This should be changed/removed when menu UI for selecting design from database is added.
     private DesignRequirements _selectedDesignReqs;
@@ -45,13 +54,12 @@ public class ItemCraftingApparatus : CraftingApparatus
     /*********************** END User Configured Fields ***********************/
 
     // For use by the Crafting Apparatus UI Manager
-    [HideInInspector]
-    public string itemName;         // Variable containing the name of the item
-    [HideInInspector]
-    public string itemDescription;  // Variable containing the description of the item
+    //[HideInInspector]
+    //public string itemName;         // Variable containing the name of the item
+    //[HideInInspector]
+    //public string itemDescription;  // Variable containing the description of the item
 
     private bool itemIsComplete = false;
-    private PlayerCharacter characterUsingApp;
 
     [SerializeField] private ItemFactory factory; // = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
 
@@ -70,7 +78,7 @@ public class ItemCraftingApparatus : CraftingApparatus
         Debug.Assert(factory != null);
 
         if (_uiManager == null)
-            _uiManager = GetComponent<CraftingApparatusUIManager>();
+            _uiManager = GetComponent<ItemCraftingApparatusUIManager>();
         if (_uiManager == null)
             _inputController = GetComponent<CraftingViewInputController>();
         if (_camController == null)
@@ -155,17 +163,17 @@ public class ItemCraftingApparatus : CraftingApparatus
             Debug.LogError("ItemCraftingApparatus: Use(): PlayerCharacter ref was null");
             return "PlayerCharacter was null";
         }
-        if (characterUsingApp == null)
+        if (_characterUsingApp == null)
         {
             //if (!selectedDesignReqs.gameObject.activeSelf)
                 selectedDesignReqs.gameObject.SetActive(true);
             LoadRequirements(selectedDesignReqs.gameObject);
 
             // Deactivate character input/movement/camera
-            characterUsingApp = pc;
-            characterUsingApp.DeactivateCharacterInput();
-            characterUsingApp.DeactivateCharacterCamera();
-            characterUsingApp.DeactivateCharacterHUD();
+            _characterUsingApp = pc;
+            _characterUsingApp.DeactivateCharacterInput();
+            _characterUsingApp.DeactivateCharacterCamera();
+            _characterUsingApp.DeactivateCharacterHUD();
 
             // Enable crafting camera.
             craftingCamera.SetActive(true);
@@ -185,7 +193,7 @@ public class ItemCraftingApparatus : CraftingApparatus
     // Exits the apparatus
     public override void Exit()
     {
-        if (characterUsingApp == null)
+        if (_characterUsingApp == null)
         {
             Debug.LogError("ItemCraftingApparatus: Exit(): PlayerCharacter ref was null while trying to exit. How did this happen?");
             return;
@@ -217,10 +225,10 @@ public class ItemCraftingApparatus : CraftingApparatus
         uiManager.DeactivateUI();
 
         // Reenable character input and character camera
-        characterUsingApp.ReactivateCharacterCamera();
-        characterUsingApp.ReactivateCharacterHUD();
-        characterUsingApp.ReactivateCharacterInput();
-        characterUsingApp = null;
+        _characterUsingApp.ReactivateCharacterCamera();
+        _characterUsingApp.ReactivateCharacterHUD();
+        _characterUsingApp.ReactivateCharacterInput();
+        _characterUsingApp = null;
     }
 
     /**************************** Private Methods *****************************/
@@ -269,7 +277,7 @@ public class ItemCraftingApparatus : CraftingApparatus
         if (addToInventoryOnComplete)
         {
             Storable resultStorable = resultObject.GetComponent<Storable>();
-            bool b = characterUsingApp.inventory.AddItem(resultStorable);
+            bool b = _characterUsingApp.inventory.AddItem(resultStorable);
             if (b)
                 return;
         }

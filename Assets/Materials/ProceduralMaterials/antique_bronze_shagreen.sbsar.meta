@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 56286d5690f06844da25b86a48b40207
+guid: 4555517faab09ad428a73a8ce23c0ff5
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,15 +11,14 @@ ScriptedImporter:
   version: 29
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Stylized Moroccan Terracotta Tiles
-    prototypeName: Stylized Moroccan Terracotta Tiles
+  - graphLabel: Antique Bronze Shagreen
+    prototypeName: Antique Bronze Shagreen
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://stylized_moroccan_terracotta_tiles\" label=\"\"
-      >\n  <presetinput identifier=\"$randomseed\" uid=\"3699752678\" type=\"4\"
-      value=\"6569\" />\n  <presetinput identifier=\"cuts_density\" uid=\"3774751731\"
-      type=\"0\" value=\"0\" />\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://antique_bronze_shagreen\" label=\"\" >\n 
+      <presetinput identifier=\"$outputsize\" uid=\"3740566081\" type=\"8\" value=\"10,10\"
+      />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -30,7 +29,7 @@ ScriptedImporter:
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 3794343673927127807, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: 616382598929281241, guid: 4555517faab09ad428a73a8ce23c0ff5,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -51,22 +50,22 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: -2215248645658156771, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -1211405393191431556, guid: 4555517faab09ad428a73a8ce23c0ff5,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: 2311543235184785465, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -5279060674379607881, guid: 4555517faab09ad428a73a8ce23c0ff5,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: -8191369236730194648, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: 3944168520705649035, guid: 4555517faab09ad428a73a8ce23c0ff5,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -111848361052435669, guid: 56286d5690f06844da25b86a48b40207,
+        texture: {fileID: -84037556824971382, guid: 4555517faab09ad428a73a8ce23c0ff5,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -237,39 +236,39 @@ ScriptedImporter:
         from: 0
         to: 3
     textureParameters:
-    - textureName: Stylized Moroccan Terracotta Tiles - diffuse
+    - textureName: Antique Bronze Shagreen - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - baseColor
+    - textureName: Antique Bronze Shagreen - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - normal
+    - textureName: Antique Bronze Shagreen - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - specular
+    - textureName: Antique Bronze Shagreen - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - glossiness
+    - textureName: Antique Bronze Shagreen - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - roughness
+    - textureName: Antique Bronze Shagreen - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - metallic
+    - textureName: Antique Bronze Shagreen - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - height
+    - textureName: Antique Bronze Shagreen - height
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Stylized Moroccan Terracotta Tiles - ambientOcclusion
+    - textureName: Antique Bronze Shagreen - ambientOcclusion
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -279,16 +278,16 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 256
-      textureHeight: 256
+      textureWidth: 1024
+      textureHeight: 1024
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: -4235239887747780470, guid: 56286d5690f06844da25b86a48b40207,
+    material: {fileID: 5655380310462222835, guid: 4555517faab09ad428a73a8ce23c0ff5,
       type: 3}
     generatedTextures:
-    - {fileID: -2215248645658156771, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: 3794343673927127807, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: 2311543235184785465, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: -111848361052435669, guid: 56286d5690f06844da25b86a48b40207, type: 3}
-    - {fileID: -8191369236730194648, guid: 56286d5690f06844da25b86a48b40207, type: 3}
+    - {fileID: -1211405393191431556, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
+    - {fileID: 616382598929281241, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
+    - {fileID: -5279060674379607881, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
+    - {fileID: -84037556824971382, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
+    - {fileID: 3944168520705649035, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
