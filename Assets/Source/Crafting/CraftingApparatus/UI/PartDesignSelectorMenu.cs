@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 
-
 public class PartDesignSelectorMenu : MonoBehaviour
 {
     [SerializeField] private PartCraftingApparatus _craftingApparatus;
@@ -63,7 +62,7 @@ public class PartDesignSelectorMenu : MonoBehaviour
         if (supportedTypes != null)
         {
             List<string> designList = new List<string>(supportedTypes);
-            _partTypeDropdown.AddOptions(designList);
+            SetPartTypeDropdownOptions(designList);
         }
         else
         {
@@ -94,16 +93,19 @@ public class PartDesignSelectorMenu : MonoBehaviour
 
     public void SetPartTypeDropdownOptions(List<string> partTypes)
     {
-        _partSubtypeDropdown.AddOptions(partTypes);
+        _partTypeDropdown.ClearOptions();
+        _partTypeDropdown.AddOptions(partTypes);
     }
 
     public void SetSubTypeDropdownOptions(List<string> subtypes)
     {
+        _partSubtypeDropdown.ClearOptions();
         _partSubtypeDropdown.AddOptions(subtypes);
     }
 
     public void SetPartNamesDropdownOptions(List<string> names)
     {
+        _partNamesDropdown.ClearOptions();
         _partNamesDropdown.AddOptions(names);
     }
 

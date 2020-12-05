@@ -15,7 +15,7 @@ public class Storable : MonoBehaviour, IActionable
         private set => _isStored = value;
     }
 
-    private PhysicalStats _objectPhysicalStats;
+    [SerializeField] private PhysicalStats _objectPhysicalStats;
     public PhysicalStats objectPhysicalStats
     {
         get => _objectPhysicalStats;
