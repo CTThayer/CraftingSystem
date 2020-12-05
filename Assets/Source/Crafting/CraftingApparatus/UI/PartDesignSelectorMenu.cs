@@ -7,19 +7,19 @@ using UnityEngine.Events;
 public class PartDesignSelectorMenu : MonoBehaviour
 {
     [SerializeField] private PartCraftingApparatus _craftingApparatus;
-    public PartCraftingApparatus craftingApparatus
-    {
-        get => _craftingApparatus;
-        set
-        {
-            if (value != null)
-            {
-                supportedTypes = value.supportedPartTypes;
-                List<string> options = new List<string>(supportedTypes);
-                SetPartTypeDropdownOptions(options);
-            }
-        }
-    }
+    //public PartCraftingApparatus craftingApparatus
+    //{
+    //    get => _craftingApparatus;
+    //    //set
+    //    //{
+    //    //    if (value != null)
+    //    //    {
+    //    //        supportedTypes = value.supportedPartTypes;
+    //    //        List<string> options = new List<string>(supportedTypes);
+    //    //        SetPartTypeDropdownOptions(options);
+    //    //    }
+    //    //}
+    //}
 
     [SerializeField] private string[] supportedTypes;
     [SerializeField] private Dropdown _partTypeDropdown;
@@ -28,17 +28,16 @@ public class PartDesignSelectorMenu : MonoBehaviour
     [SerializeField] private Button _confirmButton;
     [SerializeField] private Button _backButton;
 
-    private bool _isInitialized;
+    private bool _isInitialized = false;
     public bool isInitialized { get => _isInitialized; }
 
-    private string selectedType;
-    private string selectedSubtype;
-    private string selectedPartName;
+    //private string selectedType;
+    //private string selectedSubtype;
+    //private string selectedPartName;
 
-    private void OnValidate()
-    {
-        craftingApparatus = _craftingApparatus;
-    }
+    public string selectedType;
+    public string selectedSubtype;
+    public string selectedPartName;
 
     // Start is called before the first frame update
     void Start()
@@ -49,9 +48,9 @@ public class PartDesignSelectorMenu : MonoBehaviour
 
     public void Initialize(PartCraftingApparatus apparatus)
     {
-        if (craftingApparatus != null)
+        if (_craftingApparatus != null)
         {
-            craftingApparatus = apparatus;
+            _craftingApparatus = apparatus;
             Initialize();
         }
     }
@@ -59,21 +58,23 @@ public class PartDesignSelectorMenu : MonoBehaviour
     public void Initialize()
     {
         Debug.Assert(_partTypeDropdown != null);
-        if (supportedTypes != null)
-        {
-            List<string> designList = new List<string>(supportedTypes);
-            SetPartTypeDropdownOptions(designList);
-        }
-        else
-        {
-            Debug.Log("DesignSelectorDropdown: DesignTypes was not " +
-                      "initialized with default set of values.");
-        }
-
         Debug.Assert(_partSubtypeDropdown != null);
         Debug.Assert(_partNamesDropdown != null);
         Debug.Assert(_confirmButton != null);
         Debug.Assert(_backButton != null);
+
+        supportedTypes = _craftingApparatus.supportedPartTypes;
+        List<string> types = new List<string>(supportedTypes);
+        SetPartTypeDropdownOptions(types);
+        selectedType = types[0];
+
+        List<string> subtypes = GetSubTypesForPartType(types[0]);
+        SetSubTypeDropdownOptions(subtypes);
+        selectedSubtype = subtypes[0];
+
+        List<string> names = GetNames(types[0], subtypes[0]);
+        SetPartNamesDropdownOptions(names);
+        selectedPartName = names[0];
 
         _confirmButton.onClick.AddListener(OnConfirm);
         _backButton.onClick.AddListener(OnBack);
@@ -119,36 +120,46 @@ public class PartDesignSelectorMenu : MonoBehaviour
         _confirmButton.onClick.AddListener(back);
     }
 
-    public void OnPartTypeSelection(int index)
+    public void OnPartTypeSelectionChange(int index)
     {
         selectedType = _partTypeDropdown.options[index].text;
         _partSubtypeDropdown.ClearOptions();
         SetSubTypeDropdownOptions(GetSubTypesForPartType(selectedType));
+
+        selectedSubtype = _partSubtypeDropdown.options[0].text;
         _partNamesDropdown.ClearOptions();
+        SetPartNamesDropdownOptions(GetNames(selectedType, selectedSubtype));
+
+        selectedPartName = _partNamesDropdown.options[0].text;
     }
 
-    public void OnPartSubtypeSelection(int index)
+    public void OnPartSubtypeSelectionChange(int index)
     {
         selectedSubtype = _partSubtypeDropdown.options[index].text;
         _partNamesDropdown.ClearOptions();
         SetPartNamesDropdownOptions(GetNames(selectedType, selectedSubtype));
+
+        selectedPartName = _partNamesDropdown.options[0].text;
     }
 
-    public void OnPartSelection(int index)
+    public void OnPartNameSelectionChange(int index)
     {
         selectedPartName = _partNamesDropdown.options[index].text;
     }
 
     public void OnConfirm()
     {
-        //GameObject design = _craftingApparatus.partDesignDB.GetPartDesign(selectedType, selectedSubtype, selectedPartName);
-        //_craftingApparatus.SetPartDesign(design);
-
-        _craftingApparatus.LoadDesign(selectedType,
+        if (selectedType != null && selectedType != ""
+            && selectedSubtype != null && selectedSubtype != ""
+            && selectedPartName != null && selectedPartName != "")
+        {
+            _craftingApparatus.LoadDesign(selectedType,
                                       selectedSubtype,
                                       selectedPartName);
-        _craftingApparatus.ActivatePartCreator();
-        this.gameObject.SetActive(false);
+            _craftingApparatus.ActivatePartCreator();
+            transform.parent.gameObject.SetActive(false);
+        }
+        // TODO: Handle case where options aren't set
     }
 
     public void OnBack()

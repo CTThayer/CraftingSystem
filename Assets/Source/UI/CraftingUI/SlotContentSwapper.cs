@@ -19,12 +19,19 @@ public class SlotContentSwapper
             else
                 SwapItemSlotAndPartSlot(B, A);
         }
+        else if (A is ResourceSlot)
+        {
+            if (B is ItemSlot)
+                SwapItemSlotAndResourceSlot(B, A);
+        }
         else
         {
             if (B is EquipmentSlot)
                 SwapItemSlotAndEquipmentSlot(A, B);
             else if (B is PartSlot_Test)
                 SwapItemSlotAndPartSlot(A, B);
+            else if (B is ResourceSlot)
+                SwapItemSlotAndResourceSlot(A, B);
             else
                 SwapItemSlotAndItemSlot(A, B);
         }
@@ -99,6 +106,21 @@ public class SlotContentSwapper
                 Storable sB = PB.RemoveFromSlot();
                 PA.AddToSlot(sA);
                 PB.AddToSlot(sB);
+            }
+        }
+    }
+
+    public void SwapItemSlotAndResourceSlot(ItemSlot A, ItemSlot B)
+    {
+        ResourceSlot RB = B as ResourceSlot;
+        if (RB != null)
+        {
+            if (A.CanReceiveItem(B.storedItem) && RB.CanReceiveItem(A.storedItem))
+            {
+                Storable sA = A.RemoveFromSlot();
+                Storable sB = RB.RemoveFromSlot();
+                A.AddToSlot(sB);
+                RB.AddToSlot(sA);
             }
         }
     }

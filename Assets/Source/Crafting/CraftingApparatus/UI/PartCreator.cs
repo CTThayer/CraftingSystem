@@ -12,10 +12,10 @@ public class PartCreator : MonoBehaviour
 
     [SerializeField] private TextureVariationFactory textureFactory;
 
-    private bool _isInitialized;
+    private bool _isInitialized = false;
     public bool isInitialized { get => _isInitialized; }
 
-    private bool _materialsAreSet;
+    private bool _materialsAreSet = false;
     public bool materialsAreSet { get => _materialsAreSet; }
 
     // Start is called before the first frame update

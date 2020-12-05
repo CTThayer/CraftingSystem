@@ -148,6 +148,7 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         else
         {
             ClearSlotContents();
+            DestroySlotLayout();
         }
     }
 

@@ -53,6 +53,7 @@ public class PartCraftingApparatus : CraftingApparatus
     [HideInInspector] public string partName;
     [HideInInspector] public string partDesc;
 
+    private bool _partIsComplete;
 
     // Start is called before the first frame update
     void Start()
@@ -97,12 +98,16 @@ public class PartCraftingApparatus : CraftingApparatus
                     string output = "SUCCESS: " + resultObject.name + " was " +
                                 "created and has been added to your inventory.";
                     uiManager.partCreatorUIController.DisplayOutput(output);
+                    resultObject = null;
+                    _partIsComplete = true;
                 }
                 else if (success)
                 {
                     string output = "SUCCESS: " + resultObject.name + " was " +
                                     "created!";
                     uiManager.partCreatorUIController.DisplayOutput(output);
+                    resultObject = null;
+                    _partIsComplete = true;
                 }
                 else
                 {
@@ -110,6 +115,11 @@ public class PartCraftingApparatus : CraftingApparatus
                                     "configured.";
                     uiManager.partCreatorUIController.DisplayOutput(output);
                 }
+            }
+            else
+            {
+                string output = "ERROR: No crafting resources have been added.";
+                uiManager.partCreatorUIController.DisplayOutput(output);
             }
         }
     }
@@ -149,6 +159,10 @@ public class PartCraftingApparatus : CraftingApparatus
     // Exits the apparatus
     public override void Exit()
     {
+        // If ther is an active part that has not been finished, destroy it
+        if (resultObject != null && !_partIsComplete)
+            Destroy(resultObject);
+
         uiManager.DeactivateUI();
         DeactivatePartDesigner();
         DeactivatePartCreator();
@@ -208,7 +222,14 @@ public class PartCraftingApparatus : CraftingApparatus
     {
         if (resultObject != null)
             Destroy(resultObject);                                              // TODO: Is this correct?
+
         resultObject = Instantiate(design);
+        resultObject.transform.position = buildLocation.transform.position;
+        resultObject.transform.rotation = buildLocation.transform.rotation;
+        Vector3 size = resultObject.GetComponent<Renderer>().bounds.extents;
+        Vector3 posOffset = Vector3.up * size.y;
+        resultObject.transform.position += posOffset;
+        _partIsComplete = false;
     }
 
     public bool LoadDesign(string type, string subtype, string name)
@@ -217,6 +238,13 @@ public class PartCraftingApparatus : CraftingApparatus
         if (design != null)
         {
             resultObject = Instantiate(design);
+            resultObject.transform.position = buildLocation.transform.position;
+            resultObject.transform.rotation = buildLocation.transform.rotation;
+            Vector3 size = resultObject.GetComponent<Renderer>().bounds.extents;
+            Vector3 posOffset = Vector3.up * size.y;
+            resultObject.transform.position += posOffset;
+            _partIsComplete = false;
+
             return true;
         }
         return false;
