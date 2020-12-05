@@ -30,6 +30,9 @@ public class InteractionController : MonoBehaviour
     private com.ootii.Cameras.CameraController camController;
     private int layerMask;
 
+    private Vector3 reticlePosition;
+    private Color debugRayColor = new Color(0f, 0f, 1f, 1f);
+
     void OnValidate()
     {
         if (_character == null)
@@ -47,6 +50,8 @@ public class InteractionController : MonoBehaviour
 
         Debug.Assert(scrollSensitivity > 0);
 
+        reticlePosition = HUD.gameObject.transform.position;
+
         _isInteractionActive = true;
         wasInteractingLastUpdate = false;
     }
@@ -63,11 +68,21 @@ public class InteractionController : MonoBehaviour
         if (_isInteractionActive)
         {
             RaycastHit hitInfo;
-            Ray ray = new Ray(_raycastOrigin.transform.position, _characterCamera.transform.forward);
+
+
+            Vector3 rPosWorld = _characterCamera.ScreenToWorldPoint(reticlePosition);
+            Vector3 direction = (raycastOrigin.transform.position - rPosWorld).normalized;
+
+            //Ray ray = new Ray(_raycastOrigin.transform.position, _characterCamera.transform.forward);
+            //Ray ray = _characterCamera.ScreenPointToRay(reticlePosition);
+            Ray ray = new Ray(_raycastOrigin.transform.position, direction);
+
+            Debug.DrawRay(_raycastOrigin.transform.position, direction * castDistance, debugRayColor);
+
             if (Physics.Raycast(ray, out hitInfo, castDistance, layerMask, QueryTriggerInteraction.UseGlobal))
             {
                 //currentHitInteractable = hitInfo.transform.gameObject.GetComponent<Interactable>();
-                currentHitInteractable = hitInfo.transform.root.gameObject.GetComponent<Interactable>();
+                SetInFocusInteractable(hitInfo);
                 if (currentHitInteractable != lastHitInteractable)
                     UpdateFocus();
                 if (currentHitInteractable != null)
@@ -119,6 +134,33 @@ public class InteractionController : MonoBehaviour
             HUD.OnActionResponse(actionResponse);
             camController.IsZoomEnabled = true;
             wasInteractingLastUpdate = false;
+        }
+    }
+
+    public void SetInFocusInteractable(RaycastHit hitInfo)
+    {
+        Interactable i = hitInfo.transform.gameObject.GetComponent<Interactable>();
+        if (i != null)
+        {
+            currentHitInteractable = i;
+        }
+        else
+        {
+            Interactable[] hitCluster = hitInfo.transform.root.gameObject.GetComponentsInChildren<Interactable>();
+            if (hitCluster == null)
+                return;
+            else
+            {
+                foreach (Interactable interactable in hitCluster)
+                {
+                    if (interactable.gameObject == hitInfo.collider.gameObject)
+                    {
+                        currentHitInteractable = interactable;
+                        return;
+                    }
+                }
+                currentHitInteractable = null;
+            }
         }
     }
 
