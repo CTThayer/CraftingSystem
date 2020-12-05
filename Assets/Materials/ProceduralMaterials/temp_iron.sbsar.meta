@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 23c2d857c59a58448b27cf9751e66098
+guid: a3918de938da6e44a9704dfb27c56459
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,26 +11,30 @@ ScriptedImporter:
   version: 29
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Battered Bronze
-    prototypeName: Battered Bronze
+  - graphLabel: Metal Grinded
+    prototypeName: Metal Grinded
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://battered_bronze\" label=\"\" >\n  <presetinput
-      identifier=\"$outputsize\" uid=\"2465788647\" type=\"8\" value=\"10,10\" />\n 
-      <presetinput identifier=\"$randomseed\" uid=\"3314214069\" type=\"4\" value=\"461\"
+    preset: " <sbspreset pkgurl=\"pkg://metal_grinded\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"1986453806\" type=\"8\" value=\"10,10\" />\n 
+      <presetinput identifier=\"$randomseed\" uid=\"555022204\" type=\"4\" value=\"7490\"
+      />\n  <presetinput identifier=\"color\" uid=\"42076609\" type=\"2\" value=\"0.5,0.5,0.5\"
+      />\n  <presetinput identifier=\"grinding\" uid=\"42099902\" type=\"0\" value=\"0.768\"
+      />\n  <presetinput identifier=\"slashes\" uid=\"42955659\" type=\"0\" value=\"0.4\"
+      />\n  <presetinput identifier=\"roughness\" uid=\"42080047\" type=\"0\" value=\"0.622\"
       />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-      shaderKeywords: _MAINTEX _METALLICGLOSSMAP _NORMALMAP _OCCLUSIONMAP _PARALLAXMAP
+      shaderKeywords: _MAINTEX _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
       lightmapFlags: 4
       enableInstancingVariants: 0
       doubleSidedGI: 0
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 8309010543414514836, guid: 23c2d857c59a58448b27cf9751e66098,
+        texture: {fileID: 6275118376171300557, guid: a3918de938da6e44a9704dfb27c56459,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -51,22 +55,21 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: 7904846500085334196, guid: 23c2d857c59a58448b27cf9751e66098,
+        texture: {fileID: 7055666772098914877, guid: a3918de938da6e44a9704dfb27c56459,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: -1523801695088260577, guid: 23c2d857c59a58448b27cf9751e66098,
+        texture: {fileID: 7107561213847055023, guid: a3918de938da6e44a9704dfb27c56459,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: -1238181034769249112, guid: 23c2d857c59a58448b27cf9751e66098,
-          type: 3}
+        texture: {instanceID: 0}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -7223584691135108519, guid: 23c2d857c59a58448b27cf9751e66098,
+        texture: {fileID: 2309880954771716325, guid: a3918de938da6e44a9704dfb27c56459,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -181,15 +184,6 @@ ScriptedImporter:
       bImage: 1
       bNumerical: 0
       bLinear: 1
-    - outputName: ambientOcclusion
-      identifier: ambientocclusion
-      usageName: ambientOcclusion
-      channelStr: ambientOcclusion
-      label: Ambient Occlusion
-      usage: 5
-      bImage: 1
-      bNumerical: 0
-      bLinear: 1
     texturePackingList:
     - targetName: diffuse
       components:
@@ -231,45 +225,36 @@ ScriptedImporter:
       - sourceName: height
         from: 0
         to: 3
-    - targetName: ambientOcclusion
-      components:
-      - sourceName: ambientOcclusion
-        from: 0
-        to: 3
     textureParameters:
-    - textureName: Battered Bronze - diffuse
+    - textureName: Metal Grinded - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - baseColor
+    - textureName: Metal Grinded - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - normal
+    - textureName: Metal Grinded - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - specular
+    - textureName: Metal Grinded - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - glossiness
+    - textureName: Metal Grinded - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - roughness
+    - textureName: Metal Grinded - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - metallic
+    - textureName: Metal Grinded - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Battered Bronze - height
-      wrapMode: 0
-      filterMode: 1
-      aniso: 1
-    - textureName: Battered Bronze - ambientOcclusion
+    - textureName: Metal Grinded - height
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -284,11 +269,10 @@ ScriptedImporter:
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: 5640884347482187983, guid: 23c2d857c59a58448b27cf9751e66098,
+    material: {fileID: 2714208726103106065, guid: a3918de938da6e44a9704dfb27c56459,
       type: 3}
     generatedTextures:
-    - {fileID: 7904846500085334196, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
-    - {fileID: 8309010543414514836, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
-    - {fileID: -1523801695088260577, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
-    - {fileID: -7223584691135108519, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
-    - {fileID: -1238181034769249112, guid: 23c2d857c59a58448b27cf9751e66098, type: 3}
+    - {fileID: 7055666772098914877, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
+    - {fileID: 6275118376171300557, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
+    - {fileID: 7107561213847055023, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
+    - {fileID: 2309880954771716325, guid: a3918de938da6e44a9704dfb27c56459, type: 3}

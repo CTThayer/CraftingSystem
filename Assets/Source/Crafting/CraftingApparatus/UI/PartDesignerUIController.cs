@@ -46,44 +46,52 @@ public class PartDesignerUIController : MonoBehaviour
 
     public void Initialize()
     {
-        if (partDesigner == null)
-            partDesigner = GetComponent<PartDesigner>();
-        Debug.Assert(partDesigner != null);
+        if (!_isInitialized)
+        {
+            if (partDesigner == null)
+                partDesigner = GetComponent<PartDesigner>();
+            Debug.Assert(partDesigner != null);
 
-        if (segmentDatabase == null)
-            segmentDatabase = GetComponent<PartSegmentDatabase>();
-        Debug.Assert(segmentDatabase != null);
+            if (segmentDatabase == null)
+                segmentDatabase = GetComponent<PartSegmentDatabase>();
+            Debug.Assert(segmentDatabase != null);
 
-        Debug.Assert(canvas != null);
+            Debug.Assert(canvas != null);
 
-        if (outputText == null)
-            outputText = canvas.transform.Find("Output_Text").GetComponent<Text>();
-        if (selectedPartTypeText == null)
-            selectedPartTypeText = canvas.transform.Find("SelectedPartType_Text").GetComponent<Text>();
-        if (designFamilyDropdown != null)
-            designFamilyDropdown = canvas.transform.Find("PartDesignFamily_Dropdown").GetComponent<Dropdown>();
-        if (_segmentSelector == null)
-            _segmentSelector = canvas.transform.Find("SegmentSelector_Dropdown").GetComponent<DropdownGameObjectSelector>();
-        Debug.Assert(outputText != null);
-        Debug.Assert(selectedPartTypeText != null);
-        Debug.Assert(newDesignSelectorMenu != null);
-        Debug.Assert(finishDesignButton != null);
-        Debug.Assert(designFamilyDropdown != null);
-        Debug.Assert(_segmentSelector != null);
-        Debug.Assert(continuePrompt != null);
-        designFamilyDropdown.gameObject.SetActive(false);
-        continuePrompt.SetActive(false);
+            if (outputText == null)
+                outputText = canvas.transform.Find("Output_Text").GetComponent<Text>();
+            if (selectedPartTypeText == null)
+                selectedPartTypeText = canvas.transform.Find("SelectedPartType_Text").GetComponent<Text>();
+            if (designFamilyDropdown == null)
+                designFamilyDropdown = canvas.transform.Find("PartDesignFamily_Dropdown").GetComponent<Dropdown>();
+            if (_segmentSelector == null)
+                _segmentSelector = canvas.transform.Find("SegmentSelector_Dropdown").GetComponent<DropdownGameObjectSelector>();
 
-        // Setup call the callbacks for the UI elements and menus
-        SetupCallbacks();
+            Debug.Assert(continuePrompt != null);
+            if (continuePromptController == null)
+                continuePromptController = continuePrompt.GetComponentInChildren<ContinuePromptController>();
+            
+            Debug.Assert(outputText != null);
+            Debug.Assert(selectedPartTypeText != null);
+            Debug.Assert(newDesignSelectorMenu != null);
+            Debug.Assert(finishDesignButton != null);
+            Debug.Assert(designFamilyDropdown != null);
+            Debug.Assert(_segmentSelector != null);
+            Debug.Assert(continuePromptController != null);
+            
+            continuePrompt.SetActive(false);
 
-        // Initialize dropdown options
-        SetDesignFamilyDropdownOptions();
+            // Setup call the callbacks for the UI elements and menus
+            SetupCallbacks();
 
-        _isInitialized = true;
+            // Initialize dropdown options
+            //SetDesignFamilyDropdownOptions();
+
+            _isInitialized = true;
+        }
     }
 
-    public void ExitUI()
+    public void ExitUI()                                                        // Is this right? Seems like it needs to call exit on _crafingApparatus unless this is an endpoint function
     {
         // TODO: do we need to deactivate any of the other UI elements?
         canvas.gameObject.SetActive(false);
@@ -110,9 +118,19 @@ public class PartDesignerUIController : MonoBehaviour
 
     public void SetDesignFamilyDropdownOptions()
     {
+        designFamilyDropdown.ClearOptions();
         List<string> familyNames = segmentDatabase.GetDesignFamilyNamesByPartType(_partType);
-        designFamilyDropdown.AddOptions(familyNames);
-        UpdateSegmentSelector(familyNames[0]);
+        if (familyNames != null && familyNames.Count > 0)
+        {
+            designFamilyDropdown.AddOptions(familyNames);
+            UpdateSegmentSelector(familyNames[0]);
+        }
+        else
+        {
+            Debug.Log("PartDesignerUIController: SetDesignFamilyDropdownOptions"
+                      + ": segmentDatabase returned a null list of design " +
+                      "family names so the dropdown cannot be set.");
+        }
     }
 
     public void SetOutputText(string output)
@@ -173,6 +191,13 @@ public class PartDesignerUIController : MonoBehaviour
         UpdateSegmentSelector(designFamilyDropdown.options[index].text);
     }
 
+    public void OnExitButtonClicked()
+    {
+        // TODO: Clear workspace
+
+        partDesigner.craftingApparatus.Exit();
+    }
+
     public void OnFinishButtonClicked()
     {
         if (partDesigner.AssemblePartDesign())
@@ -191,30 +216,28 @@ public class PartDesignerUIController : MonoBehaviour
 
     public void OnLaunchMenuConfirm()
     {
-        newDesignSelectorMenu.gameObject.SetActive(false);
+        newDesignSelectorMenu.transform.parent.gameObject.SetActive(false);
+        OnTypeSelection(newDesignSelectorMenu.dropdown.value);
     }
 
-    public void OnLaunchMenuBackButton()
+    public void OnLaunchMenuBack()
     {
         partDesigner.craftingApparatus.uiManager.OnRestart();
     }
 
-    public void OnPartTypeSelection(string partType)
+    public void OnTypeSelection(int index)
     {
-        // TODO: Validate partType with DB?
-        SetPartType(partType);
-        partDesigner.partType = partType;
-        selectedPartTypeText.text = partType;
-    }
+        string _pType = newDesignSelectorMenu.dropdown.options[index].text;
+        SetPartType(_pType);
+        partDesigner.partType = _pType;
+        selectedPartTypeText.text = _pType;
 
+        SetDesignFamilyDropdownOptions();
+    }
     /********************** END Functions for Callbacks ***********************/
 
 
     /*************************** Callback Config ******************************/
-    public UnityAction confirmSelection;
-    public UnityAction backButtonPressed;
-    public UnityAction finishButtonPressed;
-
     public void SetupCallbacks()
     {
         SetupPartTypeSelector();
@@ -227,35 +250,32 @@ public class PartDesignerUIController : MonoBehaviour
     {
         if (newDesignSelectorMenu != null)
         {
-            confirmSelection += OnLaunchMenuConfirm;
-            backButtonPressed += OnLaunchMenuBackButton;
-            newDesignSelectorMenu.SetConfirmButtonDelegate(confirmSelection);
-            newDesignSelectorMenu.SetBackButtonDelegate(backButtonPressed);
-            newDesignSelectorMenu.SetDropdownDelegate(OnPartTypeSelection);
+            newDesignSelectorMenu.backButton.onClick.AddListener(this.OnLaunchMenuConfirm);
+            newDesignSelectorMenu.backButton.onClick.AddListener(this.OnLaunchMenuBack);
+            //newDesignSelectorMenu.dropdown.onValueChanged.AddListener(this.OnTypeSelection);
+
+            newDesignSelectorMenu.dropdown.ClearOptions();
+            List<string> partOptions = new List<string>(partDesigner.craftingApparatus.supportedPartTypes);
+            newDesignSelectorMenu.dropdown.AddOptions(partOptions);
         }
     }
 
     public void SetupContinueMenu()
     {
-        continuePromptController = continuePrompt.GetComponentInChildren<ContinuePromptController>();
-        Debug.Assert(continuePromptController != null);
         continuePromptController.SetNoButtonCallback(OnDoNotContinue);
         continuePromptController.SetYesButtonCallback(OnContinue);
     }
 
     public void SetupDropDownCallbacks()
     {
-        designFamilyDropdown.onValueChanged.AddListener(
-            delegate { OnDesignFamilySelection(designFamilyDropdown.value); } );
+        designFamilyDropdown.onValueChanged.AddListener(this.OnDesignFamilySelection);
         _segmentSelector.SetDropdownDelegate(partDesigner.SetComponentToAdd);
     }
 
     public void SetupFinishButtonCallbacks()
     {
-        finishButtonPressed += OnFinishButtonClicked;
-        finishDesignButton.onClick.AddListener(finishButtonPressed);
+        finishDesignButton.onClick.AddListener(this.OnFinishButtonClicked);
     }
 
     /************************* END Callbacks Config ***************************/
-
 }

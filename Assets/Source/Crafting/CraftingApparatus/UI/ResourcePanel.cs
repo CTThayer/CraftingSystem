@@ -1,24 +1,47 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ResourcePanel : MonoBehaviour
+public class ResourcePanel : MonoBehaviour, ISlotPanelIO
 {
     private ResourceSlot[] _slots;
     public ResourceSlot[] slots { get => _slots; }
 
     public TwoPanelController panelController;
-    
+
+    private bool _isInitialized;
+    public bool isInitialized { get => _isInitialized; }
+
+    public event Action<ItemSlot> OnPointerEnterEvent;
+    public event Action<ItemSlot> OnPointerExitEvent;
+    public event Action<ItemSlot> OnRightClickEvent;
+    public event Action<ItemSlot> OnBeginDragEvent;
+    public event Action<ItemSlot> OnEndDragEvent;
+    public event Action<ItemSlot> OnDragEvent;
+    public event Action<ItemSlot> OnDropEvent;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        if (!_isInitialized)
+            Initialize();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize()
     {
-        
+        if (panelController == null)
+            panelController = transform.parent.gameObject.GetComponent<TwoPanelController>();
+        Debug.Assert(panelController != null);
+
+        if (_slots == null)
+            _slots = GetComponentsInChildren<ResourceSlot>();
+        if (_slots != null)
+        {
+            ConfigurSlotDelegates();
+        }
+
+        _isInitialized = true;
     }
 
     public void LoadResourceSlots(GameObject resourceSlotsPrefab)
@@ -106,8 +129,6 @@ public class ResourcePanel : MonoBehaviour
         return false;
     }
 
-
-
     public bool SlotsAreEmpty()
     {
         for(int i = 0; i < _slots.Length; i++)
@@ -145,6 +166,65 @@ public class ResourcePanel : MonoBehaviour
         {
             ItemSlot slot = _slots[i] as ItemSlot;
             panelController.MoveItemBetweenPanels(slot, isA);
+        }
+    }
+
+    public bool SetDelegateActions(Action<ItemSlot>[] delegates)
+    {
+        if (delegates != null && delegates.Length == 7)
+        {
+            OnPointerEnterEvent += delegates[0];
+            OnPointerExitEvent += delegates[1];
+            OnRightClickEvent += delegates[2];
+            OnBeginDragEvent += delegates[3];
+            OnEndDragEvent += delegates[4];
+            OnDragEvent += delegates[5];
+            OnDropEvent += delegates[6];
+            return true;
+        }
+        return false;
+    }
+
+    public ItemSlot CanAdd(ItemSlot input)
+    {
+        if (input != null)
+        {
+            CraftingResource inputCR = input.storedItem as CraftingResource;
+            if (inputCR != null)
+            {
+                for (int i = 0; i < slots.Length; i++)
+                {
+                    if (slots[i].ResourceIsAllowedType(inputCR))
+                    {
+                        int count = slots[i].GetResourceCountInSlot();
+                        if (count == 0)
+                            return slots[i];
+                        else
+                        {
+                            if (inputCR.resourceType == slots[i].GetCurrentResourceType()
+                                && count < slots[i].GetResourceCountMax())
+                            {
+                                return slots[i];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public void ConfigurSlotDelegates()
+    {
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].OnPointerEnterEvent += OnPointerEnterEvent;
+            _slots[i].OnPointerExitEvent += OnPointerExitEvent;
+            _slots[i].OnRightClickEvent += OnRightClickEvent;
+            _slots[i].OnBeginDragEvent += OnBeginDragEvent;
+            _slots[i].OnEndDragEvent += OnEndDragEvent;
+            _slots[i].OnDragEvent += OnDragEvent;
+            _slots[i].OnDropEvent += OnDropEvent;
         }
     }
 }

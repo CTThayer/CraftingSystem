@@ -5,9 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 
 
-public class PartSelectorMenu : MonoBehaviour
+public class PartDesignSelectorMenu : MonoBehaviour
 {
-
     [SerializeField] private PartCraftingApparatus _craftingApparatus;
     public PartCraftingApparatus craftingApparatus
     {
@@ -36,6 +35,11 @@ public class PartSelectorMenu : MonoBehaviour
     private string selectedType;
     private string selectedSubtype;
     private string selectedPartName;
+
+    private void OnValidate()
+    {
+        craftingApparatus = _craftingApparatus;
+    }
 
     // Start is called before the first frame update
     void Start()

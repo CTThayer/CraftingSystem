@@ -44,6 +44,7 @@ public class CraftingMaterial : MonoBehaviour
         set => _craftingDifficulty = value > 0 ? value : 0;
     }
 
+    [Tooltip("Density in Kg/m^3")]
     [SerializeField] private float _density;
     public float density
     {

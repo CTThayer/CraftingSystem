@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CraftingPanelController : MonoBehaviour
 {
-    [SerializeField] private Storage storage;
+    [SerializeField] private Storage_OLD storage;
     [SerializeField] private PartPanel partPanel;
     [SerializeField] private PartSlotTooltip partSlotTooltip;
     [SerializeField] private Image draggableSlot;

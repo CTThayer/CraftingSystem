@@ -32,7 +32,7 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
         Debug.Assert(_objectPhysicalStats != null);
         Debug.Assert(_objectPhysicalStats.mass > 0);

@@ -58,7 +58,6 @@ public class SlotContentSwapper
 
     public void SwapItemSlotAndPartSlot(ItemSlot A, ItemSlot B)
     {
-        //PartSlot P = B as PartSlot;
         PartSlot_Test P = B as PartSlot_Test;
         if (P != null)
         {

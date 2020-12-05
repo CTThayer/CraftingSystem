@@ -10,12 +10,16 @@ public class PartCreatorUIController : MonoBehaviour
     public PartCreator partCreator { get => _partCreator; }
     [SerializeField] private ResourcePanel _resourcePanel;
     public ResourcePanel resourcePanel { get => _resourcePanel; }
-    [SerializeField] private PartTypeSelectorMenu _partSelectorMenu;
+    [SerializeField] private StorageUI _storageUI;
+
+    [SerializeField] private PartDesignSelectorMenu _partDesignSelectorMenu;
     [SerializeField] private CraftingTextIOPanel _textIOPanel;
     [SerializeField] private Button _craftPartButton;
 
     private bool _isInitialized;
     public bool isInitialized { get => _isInitialized; }
+
+    private PartCraftingApparatusUIManager uiManager;
 
     // Start is called before the first frame update
     void Start()
@@ -24,11 +28,14 @@ public class PartCreatorUIController : MonoBehaviour
             Initialize();
     }
 
+    public void Initialize(PartCraftingApparatusUIManager manager)
+    {
+        uiManager = manager;
+        Initialize();
+    }
+
     public void Initialize()
     {
-        PartCraftingApparatusUIManager uiManager =
-            transform.parent.GetComponent<PartCraftingApparatusUIManager>();
-
         if (uiManager == null)
             Debug.LogError("ERROR: PartCreatorUIController: Initialize() - " +
                            "Could not find UI manager.");
@@ -47,25 +54,31 @@ public class PartCreatorUIController : MonoBehaviour
 
         if (_resourcePanel == null)
         {
-            _resourcePanel = transform.parent.GetComponent<ResourcePanel>();
+            _resourcePanel = transform.GetComponentInChildren<ResourcePanel>();
         }
         Debug.Assert(_resourcePanel != null);
 
-        if (_partSelectorMenu == null)
+        if (_storageUI == null)
         {
-            _partSelectorMenu = transform.parent.GetComponent<PartTypeSelectorMenu>();
+            _storageUI = transform.GetComponentInChildren<StorageUI>();
         }
-        Debug.Assert(_partSelectorMenu != null);
+        Debug.Assert(_storageUI != null);
+
+        if (_partDesignSelectorMenu == null)
+        {
+            _partDesignSelectorMenu = transform.GetComponentInChildren<PartDesignSelectorMenu>();
+        }
+        Debug.Assert(_partDesignSelectorMenu != null);
 
         if (_textIOPanel == null)
         {
-            _textIOPanel = transform.parent.GetComponent<CraftingTextIOPanel>();
+            _textIOPanel = transform.GetComponentInChildren<CraftingTextIOPanel>();
         }
         Debug.Assert(_textIOPanel != null);
 
         if (_craftPartButton == null)
         {
-            Button[] buttons = transform.parent.GetComponentsInChildren<Button>();
+            Button[] buttons = transform.GetComponentsInChildren<Button>();
             foreach (Button button in buttons)
             {
                 if (button.name == "CraftPart_Button")
@@ -81,7 +94,7 @@ public class PartCreatorUIController : MonoBehaviour
 
     public void LaunchPartCreatorUI()
     {
-        _partSelectorMenu.gameObject.SetActive(true);
+        _partDesignSelectorMenu.gameObject.SetActive(true);
         _textIOPanel.SetInteractivity(false);
         _craftPartButton.interactable = false;
     }
@@ -90,6 +103,8 @@ public class PartCreatorUIController : MonoBehaviour
     {
         _textIOPanel.SetInteractivity(true);
         _craftPartButton.interactable = true;
+
+        _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
     }
 
     public void DisplayOutput(string s)

@@ -46,6 +46,12 @@ public class ItemCraftingApparatusUIManager : MonoBehaviour
         set { if (value != null) _partsPanel = value; }
     }
 
+    [SerializeField] private StorageUI _storageUI;
+    public StorageUI storageUI
+    {
+        get => _storageUI;
+    }
+
     [SerializeField] private Text _outputText;
     public Text outputText
     {
@@ -73,6 +79,8 @@ public class ItemCraftingApparatusUIManager : MonoBehaviour
         {
             craftingUICanvas.gameObject.SetActive(true);
             craftingUICanvas.enabled = true;
+
+            _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
         }
     }
 
@@ -82,6 +90,8 @@ public class ItemCraftingApparatusUIManager : MonoBehaviour
         {
             craftingUICanvas.gameObject.SetActive(false);
             craftingUICanvas.enabled = false;
+
+            _storageUI.SetStorage(null);
         }
     }
 

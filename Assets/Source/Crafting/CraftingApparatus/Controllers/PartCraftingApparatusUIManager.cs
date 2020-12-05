@@ -53,7 +53,8 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
         Debug.Assert(_partCreatorUICanvas != null);
         Debug.Assert(_partCreatorUIController != null);
         if (!_partCreatorUIController.isInitialized)
-            _partCreatorUIController.Initialize();
+            _partCreatorUIController.Initialize(this);
+            //_partCreatorUIController.Initialize();
     }
 
     public void ActivateUI()
@@ -181,6 +182,15 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
      */
     public void OnSelectPartDesigner()
     {
+        // Switch cameras
+        _craftingApparatus.SwitchToCraftingCamera();
+
+        // Deactivate the initial menu and its canvas
+        _initialPartCraftingMenu.enabled = false;
+        _initialPartCraftingMenu.gameObject.SetActive(false);
+        _initialMenusCanvas.gameObject.SetActive(false);
+
+        // Launch the part designer and activate its canvas
         _partDesignUICanvas.gameObject.SetActive(true);
         _craftingApparatus.ActivatePartDesigner();
         _partDesignerUIController.LaunchPartDesignerUI();
@@ -193,6 +203,15 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
      */
     public void OnSelectPartCreator()
     {
+        // Switch cameras
+        _craftingApparatus.SwitchToCraftingCamera();
+
+        // Deactivate the initial menu and its canvas
+        _initialPartCraftingMenu.enabled = false;
+        _initialPartCraftingMenu.gameObject.SetActive(false);
+        _initialMenusCanvas.gameObject.SetActive(false);
+
+        // Launch the part creator and activate it's canvas
         _partCreatorUICanvas.gameObject.SetActive(true);
         _craftingApparatus.ActivatePartCreator();
         _partCreatorUIController.LaunchPartCreatorUI();

@@ -105,7 +105,6 @@ public class TwoPanelController : MonoBehaviour
 
         bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
         bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
-
         if (canDrop && canSwap)
         {
             swapper.Swap(dropSlot, draggedSlot);

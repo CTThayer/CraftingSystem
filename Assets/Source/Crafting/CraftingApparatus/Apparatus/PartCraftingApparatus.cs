@@ -132,8 +132,8 @@ public class PartCraftingApparatus : CraftingApparatus
             _characterUsingApp.DeactivateCharacterHUD();
 
             // Enable crafting camera.
-            craftingCamera.SetActive(true);
-            camController.enabled = true;
+            //craftingCamera.SetActive(true);
+            //camController.enabled = true;
             inputController.enabled = true;
 
             // Activate the UI
@@ -149,7 +149,13 @@ public class PartCraftingApparatus : CraftingApparatus
     // Exits the apparatus
     public override void Exit()
     {
-
+        uiManager.DeactivateUI();
+        DeactivatePartDesigner();
+        DeactivatePartCreator();
+        characterUsingApp.ReactivateCharacterInput();
+        characterUsingApp.ReactivateCharacterHUD();
+        SwitchToPlayerCamera();
+        _characterUsingApp = null;
     }
 
 
@@ -178,7 +184,7 @@ public class PartCraftingApparatus : CraftingApparatus
         _uiManager.partCreatorUIController.ActivateBackgroundUI();
     }
 
-    public void DectivatePartCreator()
+    public void DeactivatePartCreator()
     {
         _partCreatorObj.SetActive(false);
         _partCreatorObj.GetComponent<CraftingViewInputController>().enabled = false;

@@ -31,7 +31,7 @@ public class DropdownGameObjectSelector : MonoBehaviour
         // NOTE: this ensures that the top object/option in the
         // dropdown is automatically selected when the dataset changes.
         // Comment this out if you do not want this behavior.
-        SelectActionDelegate(Objects[0]);
+        //SelectActionDelegate(Objects[0]);
     }
 
     public void SetDropdownDelegate(SelectionDelegate del)

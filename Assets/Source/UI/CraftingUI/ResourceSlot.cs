@@ -17,20 +17,20 @@ public class ResourceSlot : ItemSlot
 
     public override bool CanReceiveItem(Storable storableObject)
     {
-        if (storableObject == null)
-        { 
-            if (resources.Count == 0)
-            {
-                CraftingResource resource = storableObject.GetComponent<CraftingResource>();
-                return resource != null && ResourceIsAllowedType(resource);
-            }
-            else if (resources.Count > 0 && resources.Count < maxCount)
-            {
-                CraftingResource resource = storableObject.GetComponent<CraftingResource>();
-                CraftingResource first = resources[0].GetComponent<CraftingResource>();
-                return resource != null
-                       && resource.resourceType == first.resourceType;
-            }
+        if (storableObject == null)     // I guess??
+            return true;
+
+        if (resources.Count == 0)
+        {
+            CraftingResource resource = storableObject as CraftingResource;
+            return resource != null && ResourceIsAllowedType(resource);
+        }
+        else if (resources.Count > 0 && resources.Count < maxCount)
+        {
+            CraftingResource resource = storableObject as CraftingResource;
+            CraftingResource first = resources[0] as CraftingResource;
+            return resource != null
+                    && resource.resourceType == first.resourceType;
         }
         return false;
     }
@@ -43,14 +43,25 @@ public class ResourceSlot : ItemSlot
             if (CanReceiveItem(storableObject))
             {
                 if (resources.Count == 0)
+                {
                     storedItem = storableObject;
+                    _resourceMaterial = resource.craftingMaterial;
+                }
                 resources.Add(storableObject);
-                _resourceMaterial = resource.craftingMaterial;
+            }
+        }
+        else
+        {
+            if (storedItem != null || resources.Count > 0)
+            {
+                Debug.LogError("Attempting to add a null resource to a " +
+                               "non-empty resource slot. Resource slots " +
+                               "should always be emptied before adding.");
             }
         }
     }
 
-    public override Storable RemoveFromSlot()
+    public override Storable RemoveFromSlot()                                   // TODO: I think this needs to remove ALL things in slot.
     {
         Storable s = null;
         if (resources.Count > 1)
@@ -65,6 +76,13 @@ public class ResourceSlot : ItemSlot
             storedItem = null;
         }
         return s;
+    }
+
+    public List<Storable> RemoveAllFromSlot()
+    {
+        List<Storable> copy = new List<Storable>(resources);
+        resources.Clear();
+        return copy;
     }
 
     public bool ConsumeResources(int quantity)
@@ -87,7 +105,18 @@ public class ResourceSlot : ItemSlot
         return resources.Count;
     }
 
-    private bool ResourceIsAllowedType(CraftingResource resource)
+    public int GetResourceCountMax()
+    {
+        return maxCount;
+    }
+
+    public string GetCurrentResourceType()
+    {
+        CraftingResource cr = resources[0] as CraftingResource;
+        return cr.resourceType;
+    }
+
+    public bool ResourceIsAllowedType(CraftingResource resource)
     {
         for (int i = 0; i < _allowedResourceTypes.Length; i++)
         {

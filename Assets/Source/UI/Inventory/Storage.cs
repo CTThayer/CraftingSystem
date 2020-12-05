@@ -1,196 +1,188 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-public class Storage : MonoBehaviour, ISlotPanelIO
+public class Storage : MonoBehaviour
 {
-    [SerializeField] private GameObject uiSlotsParent;
+    [SerializeField] private int _rows;
+    public int rows { get => _rows; }
+    [SerializeField] private int _columns;
+    public int columns { get => _columns; }
 
-    [SerializeField] private List<Storable> startingItems;
-    private bool startIsConfigured = false;
-    [SerializeField] private ItemSlot[] storageSlots;
-    [SerializeField] private Vector2 slotLayout;
+    [SerializeField] protected float massCurrent;
+    [SerializeField] protected float volumeCurrent;
+    [SerializeField] protected float massMAX;
+    [SerializeField] protected float volumeMAX;
 
-    [SerializeField] private Vector3 storageDimensions;
-    [SerializeField] private float volumeCapacity;
-    [SerializeField] private float volumeCurrentlyUsed;
-    [SerializeField] private float massCapacity;
-    [SerializeField] private float massCurrentlyUsed;
+    //private Storable[,] _storedItems;
+    //public Storable[,] storedItems { get => _storedItems; }
 
-    public event Action<ItemSlot> OnPointerEnterEvent;
-    public event Action<ItemSlot> OnPointerExitEvent;
-    public event Action<ItemSlot> OnRightClickEvent;
-    public event Action<ItemSlot> OnBeginDragEvent;
-    public event Action<ItemSlot> OnEndDragEvent;
-    public event Action<ItemSlot> OnDragEvent;
-    public event Action<ItemSlot> OnDropEvent;
+    [SerializeField] private Storable[] _storedItems;
+    public Storable[] storedItems { get => _storedItems; }
 
-    //private void Awake()
-    private void Start()
+    //private int count = 0;
+
+    // For demo/debug purposes.
+    //[SerializeField] private List<Storable> startingItems;
+
+    void OnValidate()
     {
-        Debug.Assert(storageSlots.Length - 1 <= slotLayout.x * slotLayout.y);
-
-        for (int i = 0; i < storageSlots.Length; i++)
+        if (_rows > 0 && _columns > 0)
         {
-            storageSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
-            storageSlots[i].OnPointerExitEvent += OnPointerExitEvent;
-            storageSlots[i].OnRightClickEvent += OnRightClickEvent;
-            storageSlots[i].OnBeginDragEvent += OnBeginDragEvent;
-            storageSlots[i].OnEndDragEvent += OnEndDragEvent;
-            storageSlots[i].OnDragEvent += OnDragEvent;
-            storageSlots[i].OnDropEvent += OnDropEvent;
+            if (_storedItems == null)
+                _storedItems = new Storable[_rows * _columns];
+            // if (_storedItems == null || _storedItems.GetLength(0) != _rows || _storedItems.GetLength(1) != _columns)
+            //_storedItems = new Storable[_rows, _columns];
+
+            //Debug.Assert(startingItems.Count <= _rows * _columns);
+            //for (int i = 0; i < startingItems.Count; i++)
+            //{
+            //    int x = i / _columns;
+            //    int y = i % _columns;
+            //    AddItem(startingItems[i], x, y);
+            //}
         }
-
-        // Ensures item references get set in a BUILD
-        ClearPreviousState();
-        SetStartingItems();
-    }
-
-    // Refreshes UI to match current list of starting storables
-    private void SetStartingItems()
-    {
-        int i = 0;
-        int lowerCount = startingItems.Count < storageSlots.Length ? startingItems.Count : storageSlots.Length;
-        for (; i < lowerCount; i++)
+        else
         {
-            AddItem(startingItems[i]);
-        }
-        for (; i < storageSlots.Length; i++)
-        {
-            storageSlots[i].storedItem = null;
+            Debug.Log("Storage: OnValidate(): rows and/or columns are not set to" +
+                      " valid integers.");
         }
     }
 
-    // Attempts to add the specified storable to the storage.
-    public bool AddItem(Storable storableObject)
+    public void Start()
     {
-        float m = storableObject.objectPhysicalStats.mass;
-        float v = storableObject.objectPhysicalStats.volume;
-        if (massCurrentlyUsed + m < massCapacity
-            && volumeCurrentlyUsed + v < volumeCapacity)
+        //_storedItems = new Storable[_rows, _columns];
+    }
+
+    public bool AddItem(Storable s)
+    {
+        //int x, y;
+        //if (GetEmptySlot(out x, out y))
+        int index;
+        if (GetEmptySlot(out index))
         {
-            for (int i = 0; i < storageSlots.Length; i++)
-            {
-                if (storageSlots[i].storedItem == null)
-                {
-                    storageSlots[i].storedItem = storableObject;
-                    massCurrentlyUsed += m;
-                    volumeCurrentlyUsed += v;
-                    storableObject.DeactivateInWorld();
-                    return true;
-                }
-            }
+            _storedItems[index] = s;
+            s.DeactivateInWorld();
+            //count++;
+            massCurrent += s.objectPhysicalStats.mass;
+            volumeCurrent += s.objectPhysicalStats.volume;
+            return true;
         }
         return false;
     }
 
-    public bool RemoveItem(Storable storableObject)
+    //public bool AddItem(Storable s, int x, int y)
+    //{
+    //    if (count < _rows * _columns && x <= _rows && y <= _columns)
+    //    {
+    //        if (_storedItems[x, y] == null)
+    //        {
+    //            if (_storedItems[x, y] == s)
+    //                return true;                                                // TODO: It should return here, but is it correct to return true here? 
+    //            _storedItems[x, y] = s;
+    //            s.DeactivateInWorld();
+    //            count++;
+    //            return true;
+    //        }
+    //    }
+    //    return false;
+    //}
+
+    public bool AddItem(Storable s, int index)
     {
-        for (int i = 0; i < storageSlots.Length; i++)
+        if (index < _storedItems.Length)
         {
-            if (storageSlots[i].storedItem == storableObject)
+            if (_storedItems[index] == null)
             {
-                storageSlots[i].storedItem = null;
-                massCurrentlyUsed -= storableObject.objectPhysicalStats.mass;
-                volumeCurrentlyUsed -= storableObject.objectPhysicalStats.volume;
-
-                // TODO: Where should we reactivate the object in the world?
-
+                _storedItems[index] = s;
+                if (s != null)
+                {
+                    s.DeactivateInWorld();
+                    massCurrent += s.objectPhysicalStats.mass;
+                    volumeCurrent += s.objectPhysicalStats.volume;
+                }
+                //count++;
                 return true;
             }
         }
         return false;
     }
 
-    public bool IsFull()
+    //public Storable RemoveItem(int x, int y)
+    //{
+    //    if (x <= _rows && y <= _columns)
+    //    {
+    //        Storable s = _storedItems[x, y];
+    //        _storedItems[x, y] = null;
+    //        count--;
+    //        return s;
+    //    }
+    //    return null;
+    //}
+
+    public Storable RemoveItem(int index)
     {
-        for (int i = 0; i < storageSlots.Length; i++)
+        if (index <= _storedItems.Length)
         {
-            if (storageSlots[i].storedItem == null)
+            Storable s = _storedItems[index];
+            _storedItems[index] = null;
+            if (s != null)
             {
-                return false;
+                massCurrent -= s.objectPhysicalStats.mass;
+                volumeCurrent -= s.objectPhysicalStats.volume;
             }
+            return s;
         }
-        return true;
+        return null;
     }
 
-    public bool SetDelegateActions(Action<ItemSlot>[] delegates)
+    public bool GetEmptySlot(out int index)
     {
-        if (delegates != null && delegates.Length == 7)
+        for (int i = 0; i < _storedItems.Length; i++)
         {
-            OnPointerEnterEvent += delegates[0];
-            OnPointerExitEvent += delegates[1];
-            OnRightClickEvent += delegates[2];
-            OnBeginDragEvent += delegates[3];
-            OnEndDragEvent += delegates[4];
-            OnDragEvent += delegates[5];
-            OnDropEvent += delegates[6];
-            return true;
+            if (_storedItems[i] == null)
+            {
+                index = i;
+                return true;
+            }
         }
+        index = -1;
         return false;
     }
 
-    public ItemSlot CanAdd(ItemSlot input)
+
+    //public bool GetEmptySlot(out int x, out int y)
+    //{
+    //    if (count < _rows * _columns)
+    //    {
+    //        for (int i = 0; i < _rows; i++)
+    //        {
+    //            for (int j = 0; j < _columns; j++)
+    //            {
+    //                if (_storedItems[i, j] == null)
+    //                {
+    //                    x = i;
+    //                    y = j;
+    //                    return true;
+    //                }
+    //            }
+    //        }
+    //    }
+    //    x = -1;
+    //    y = -1;
+    //    return false;
+    //}
+
+    public bool StorableFitsInStorage(Storable storable)
     {
-        Storable storableObject = input.storedItem;
-        float m = storableObject.objectPhysicalStats.mass;
-        float v = storableObject.objectPhysicalStats.volume;
-        if (massCurrentlyUsed + m < massCapacity
-            && volumeCurrentlyUsed + v < volumeCapacity)
-        {
-            for (int i = 0; i < storageSlots.Length; i++)
-            {
-                if (storageSlots[i].storedItem == null)
-                {
-                    return storageSlots[i];
-                }
-            }
-            return null;
-        }
+        if (storable == null)
+            return true;                                                        // Is this correct? Do we want false instead?
+        float m = storable.objectPhysicalStats.mass;
+        float v = storable.objectPhysicalStats.volume;
+        if (massCurrent + m <= massMAX && volumeCurrent + v < volumeMAX)
+            return true;
         else
-        {
-            return null;
-        }
+            return false;
     }
 
-    // Ensures clean state before setting up "startingItems" in storage
-    private void ClearPreviousState()
-    {
-        for (int i = 0; i < storageSlots.Length; i++)
-        {
-            if (storageSlots[i].storedItem != null)
-            {
-                Storable sObj = storageSlots[i].storedItem;
-                Rigidbody r = sObj.GetComponent<Rigidbody>();
-                sObj.ReactivateInWorld(sObj.transform, r.isKinematic);
-            }
-            storageSlots[i].storedItem = null;
-        }
-        massCurrentlyUsed = 0;
-        volumeCurrentlyUsed = 0;
-    }
-
-    /**************************** EDITOR FUNCTIONS ****************************/
-    // Called in the editor only (unless explicitly called elsewhere). This is
-    // called when the script is loaded or a value is changed in the inspector.
-    private void OnValidate()
-    {
-        ClearPreviousState();
-
-        if (uiSlotsParent != null)
-            storageSlots = uiSlotsParent.GetComponentsInChildren<ItemSlot>();
-
-        for (int i = 0; i < startingItems.Count; i++)
-        {
-            if (startingItems[i] != null)
-                startingItems[i].Initialize(true);
-        }
-
-        // This line causes a Null Reference Exception at line 68 (float m...)
-        // This seems to be b/c the startingItems[i] not being initialized when 
-        // on validate for Storage.cs runs in editor b/c it works fine in playmode
-        SetStartingItems();    // Allows UI to refresh in the editor
-    }
-    /************************** END EDITOR FUNCTIONS **************************/
 }

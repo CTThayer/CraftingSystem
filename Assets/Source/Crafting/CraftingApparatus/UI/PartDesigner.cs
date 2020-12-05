@@ -44,12 +44,13 @@ public class PartDesigner : MonoBehaviour
 
         if (_uiController.isInitialized)
         {
-            ComponentToAdd = _uiController.segmentSelector.GetObjectFromDropdown(0);
+            //ComponentToAdd = _uiController.segmentSelector.GetObjectFromDropdown(0);
         }
         else
         {
             _uiController.Initialize();
-            ComponentToAdd = _uiController.segmentSelector.GetObjectFromDropdown(0);
+            //_uiController.OnDesignFamilySelection(0);
+            //ComponentToAdd = _uiController.segmentSelector.GetObjectFromDropdown(0);
         }
     }
 
@@ -102,6 +103,8 @@ public class PartDesigner : MonoBehaviour
     private int count = 0;
     private string AddSegment()
     {
+        if (ComponentToAdd == null)
+            return "Cannot add segment because no segment is selected.";
         if (isFirstSegment)
         {
             // NOTE: If base-segments are used then the first segment needs to

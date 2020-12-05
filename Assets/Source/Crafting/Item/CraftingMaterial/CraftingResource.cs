@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CraftingResource : MonoBehaviour
+public class CraftingResource : Storable
 {
     public string resourceType
     {
@@ -18,14 +18,11 @@ public class CraftingResource : MonoBehaviour
     [SerializeField] private CraftingMaterial _craftingMaterial;
     public CraftingMaterial craftingMaterial { get => _craftingMaterial; }
 
-    [SerializeField] private float _volume;
-    public float volume { get => _volume; }
-
     // Start is called before the first frame update
     void Start()
     {
         Debug.Assert(_craftingMaterial != null);
-        Debug.Assert(_volume > 0);
+        base.Start();
     }
 
     private void OnValidate()
