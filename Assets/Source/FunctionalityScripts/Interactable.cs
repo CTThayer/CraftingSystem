@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour, IInitializer
 {
     [SerializeField] private int actionIndex;
     [SerializeField] private int defaultIndex;
@@ -11,10 +11,13 @@ public class Interactable : MonoBehaviour
     private ActionDelegate[] actions;
     [SerializeField] private string[] actionNames;
 
+    private bool _isInitialized;
+
     // Start is called before the first frame update
     void Start()
     {
-        Initialize();
+        if (!_isInitialized)
+            Initialize();
 
         if (actionIndex < 0 || actionIndex > actions.Length)
             actionIndex = 0;
@@ -28,6 +31,7 @@ public class Interactable : MonoBehaviour
     public void Initialize()
     {
         ConfigureActions();
+        _isInitialized = true;
     }
 
     void OnValidate()

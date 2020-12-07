@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Damagable : MonoBehaviour
+public class Damagable : MonoBehaviour, IInitializer
 {
     // TODO: What data do we need here?? Item ref? ItemPart ref? Local durability/health?
 

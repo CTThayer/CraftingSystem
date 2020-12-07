@@ -22,6 +22,8 @@ public class PlayerCharacter : MonoBehaviour
     [SerializeField] private EquipmentPanel _equipmentPanel;
     public EquipmentPanel equipmentPanel { get => _equipmentPanel; }
 
+    [SerializeField] private EquipmentMenuController _equipmentMenu;
+
     // Character HUD Canvas
     [SerializeField] private Canvas playerHUD;
 
@@ -41,28 +43,29 @@ public class PlayerCharacter : MonoBehaviour
             characterMotionController = GetComponent<MotionController>();
         if (_playerCamObj == null)
             _playerCamObj = _interactionController.characterCamera.gameObject;
-        //if (characterPanelController == null)
-        //    characterPanelController = GetComponent<TwoPanelController>();
+        if (_equipmentMenu == null)
+            _equipmentMenu = GetComponent<EquipmentMenuController>();
+
         Debug.Assert(characterMotionController != null);
         Debug.Assert(_interactionController != null);
-        //Debug.Assert(characterPanelController != null);
         Debug.Assert(_playerCamObj != null);
+        Debug.Assert(_equipmentMenu != null);
+
         _isInputActive = true;
     }
 
+
     public void DeactivateCharacterInput()
     {
-        characterMotionController.InputSource.IsEnabled = false;          // TODO: Is this correct?
+        characterMotionController.InputSource.IsEnabled = false;
         _interactionController.isInteractionActive = false;
-        // TODO: Deactivate character panel
         _isInputActive = false;
     }
 
     public void ReactivateCharacterInput()
     {
-        characterMotionController.InputSource.IsEnabled = true;          // TODO: Is this correct?
+        characterMotionController.InputSource.IsEnabled = true;
         _interactionController.isInteractionActive = true;
-        // TODO: Reactivate character panel
         _isInputActive = true;
     }
 
@@ -88,5 +91,27 @@ public class PlayerCharacter : MonoBehaviour
         playerHUD.enabled = true;
     }
 
+    public void DisableCameraController()
+    {
+        com.ootii.Cameras.CameraController cc = 
+            playerCamObj.GetComponent<com.ootii.Cameras.CameraController>();
+        cc.enabled = false;
+    }
 
+    public void EnableCameraController()
+    {
+        com.ootii.Cameras.CameraController cc =
+            playerCamObj.GetComponent<com.ootii.Cameras.CameraController>();
+        cc.enabled = true;
+    }
+
+    public void DeactivateEquipmentMenu()
+    {
+        _equipmentMenu.enabled = false;
+    }
+
+    public void ReactivateEquipmentMenu()
+    {
+        _equipmentMenu.enabled = true;
+    }
 }

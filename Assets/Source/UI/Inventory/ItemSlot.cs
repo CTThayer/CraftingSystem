@@ -26,17 +26,13 @@ public class ItemSlot : MonoBehaviour,
     public event Action<ItemSlot> OnDropEvent;
 
     // Delegate to add/remove from the array in the Storage class
-    //public delegate bool AddSpecific(Storable s, int x, int y);
     public delegate bool AddSpecific(Storable s, int index);
     public AddSpecific OnAddSpecific;
-    //public delegate Storable RemoveSpecific(int x, int y);
     public delegate Storable RemoveSpecific(int index);
     public RemoveSpecific OnRemoveSpecific;
 
-    // Indices in Storage's array that this slot corresponds to
+    // Index in storage array that this slot corresponds to
     public int index;
-    //public int xIndex;
-    //public int yIndex;
 
     private Color normalColor = Color.white;
     private Color disabledColor = new Color(1, 1, 1, 0);
@@ -50,6 +46,7 @@ public class ItemSlot : MonoBehaviour,
             _storedItem = value;
             if (_storedItem == null)
             {
+                image.sprite = null;
                 image.color = disabledColor;
             }
             else
@@ -112,12 +109,6 @@ public class ItemSlot : MonoBehaviour,
 
     public virtual void AddToSlot(Storable storableObject)
     {
-        //if (storableObject != null)
-        //    storableObject.DeactivateInWorld();                                 // Do we actually do this here?
-        //if (xIndex >= 0 && yIndex >= 0)
-        //{
-        //    OnAddSpecific(storableObject, xIndex, yIndex);
-        //}
         if (index >= 0)
             OnAddSpecific(storableObject, index);
         storedItem = storableObject;
@@ -125,21 +116,10 @@ public class ItemSlot : MonoBehaviour,
 
     public virtual Storable RemoveFromSlot()
     {
-        //Storable prevItem = storedItem;
         Storable s = null;
-        //if (xIndex >= 0 && yIndex >= 0)
-        //{
-        //    s = OnRemoveSpecific(xIndex, yIndex);
         if (index >= 0)
         {
             s = OnRemoveSpecific(index);
-            //if (prevItem != s)
-            //{
-            //    Debug.LogError("ItemSlot: RemoveFromSlot(): Contents of slot " +
-            //        "do not match corresponding storage contents. Check if " +
-            //        " Storage and StorageUI are configured correctly and " +
-            //        "check if slot indices match intended Storage indices.");
-            //}
         }
         storedItem = null;
         return s;

@@ -8,9 +8,6 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
     [SerializeField] private Storage loadedStorage;
     [SerializeField] private ItemSlot[] storageSlots;
 
-    //[SerializeField] private int maxHeight;
-    //[SerializeField] private int maxWidth;
-
     public event Action<ItemSlot> OnPointerEnterEvent;
     public event Action<ItemSlot> OnPointerExitEvent;
     public event Action<ItemSlot> OnRightClickEvent;
@@ -19,11 +16,23 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
     public event Action<ItemSlot> OnDragEvent;
     public event Action<ItemSlot> OnDropEvent;
 
-    //private void Awake()
+    void OnValidate()
+    {
+        storageSlots = GetComponentsInChildren<ItemSlot>();
+        if (storageSlots == null || storageSlots.Length == 0)
+        {
+            Debug.LogError("StorageUI: No ItemSlot components were found " +
+                            "on StorageUI gameObject.");
+        }
+        else
+        {
+            if (storageSlots != null)
+                ClearPreviousState();
+        }
+    }
+
     private void Start()
     {
-        //Debug.Assert(storageSlots.Length - 1 <= maxWidth * maxHeight);
-
         for (int i = 0; i < storageSlots.Length; i++)
         {
             storageSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
@@ -33,15 +42,7 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
             storageSlots[i].OnEndDragEvent += OnEndDragEvent;
             storageSlots[i].OnDragEvent += OnDragEvent;
             storageSlots[i].OnDropEvent += OnDropEvent;
-
-            //if (loadedStorage != null)
-            //{
-            //    storageSlots[i].OnAddSpecific += loadedStorage.AddItem;
-            //    storageSlots[i].OnRemoveSpecific += loadedStorage.RemoveItem;
-            //}
         }
-
-        //ClearPreviousState();
     }
 
     public bool SetDelegateActions(Action<ItemSlot>[] delegates)
@@ -66,7 +67,7 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
         {
             loadedStorage = storage;
             ClearPreviousState();
-            //UpdateAddRemoveDelegates();
+            UpdateAddRemoveDelegates();
             //LoadStorageContents(storage.storedItems);
             LoadStorageContents();
             return true;
@@ -78,39 +79,6 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
             return false;
         }
     }
-
-    /* Load Storage Contents
-     * Performs all of the setup for the storage slots
-     * Truncates the displayed inventory if it is larger than the amound of 
-     * slots in this StorageUI. This isn't ideal, but it should work for now.
-     */
-    //public void LoadStorageContents(Storable[,] storedItems)
-    //{
-    //    if (storedItems != null)
-    //    {
-    //        int rows = storedItems.GetLength(0);
-    //        int columns = storedItems.GetLength(1);
-    //        int count = 0;
-    //        for (int x = 0; x < rows; x++)
-    //        {
-    //            for (int y = 0; y < columns; y++)
-    //            {
-    //                if (count < storageSlots.Length)
-    //                {
-    //                    int slotIndex = (x * rows) + y;
-    //                    storageSlots[slotIndex].OnAddSpecific += loadedStorage.AddItem;
-    //                    storageSlots[slotIndex].OnRemoveSpecific += loadedStorage.RemoveItem;
-    //                    storageSlots[slotIndex].xIndex = x;
-    //                    storageSlots[slotIndex].yIndex = y;
-    //                    storageSlots[slotIndex].AddToSlot(storedItems[x, y]);
-    //                    count++;
-    //                }
-    //                else return;
-    //            }
-    //        }
-    //    }
-    //}
-
 
     public void LoadStorageContents()
     {
@@ -143,7 +111,7 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
             storageSlots[i].storedItem = null;
 
             // TODO: May need to deactivate the ItemSlot or the object here
-            // to ensure that only a number of active slots is never higher than
+            // to ensure that the number of active slots is never higher than
             // the number of slots in the storage.
         }
     }
@@ -156,21 +124,6 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
             storageSlots[i].OnRemoveSpecific = loadedStorage.RemoveItem;
         }
     }
-
-    //public ItemSlot CanAdd(ItemSlot input)
-    //{
-    //    if (loadedStorage.StorableFitsInStorage(input.storedItem))
-    //    {
-    //        int x, y;
-    //        if (loadedStorage.GetEmptySlot(out x, out y))
-    //        {
-    //            int index = (loadedStorage.rows * x) + y;
-    //            if (index < storageSlots.Length)
-    //                return storageSlots[index];
-    //        }
-    //    }
-    //    return null;
-    //}
 
     public ItemSlot CanAdd(ItemSlot input)
     {

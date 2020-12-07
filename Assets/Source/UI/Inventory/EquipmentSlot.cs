@@ -24,16 +24,14 @@ public class EquipmentSlot : ItemSlot
      */
     public void EquipToBone(Equipable equipableItem)
     {
-        Storable s = equipableItem as Storable;
-        s.ReactivateInWorld(equipLocation.transform, true);
-        s.transform.parent = equipLocation.transform;
+        if (_equipLocation != null)
+        {
+            equipableItem.ReactivateInWorld(equipLocation.transform, true);
+            equipableItem.transform.position = equipLocation.transform.position;
+            equipableItem.transform.rotation = equipLocation.transform.rotation;
+            equipableItem.transform.parent = equipLocation.transform;
+        }
     }
-
-    //private void EquipToBone(Storable storableObj)
-    //{
-    //    storableObj.ReactivateInWorld(equipLocation.transform, true);
-    //    storableObj.transform.parent = equipLocation.transform;
-    //}
 
     /* UnequipFromBone()
      * Unparents the stored item from the bone associated with this slot and 
@@ -47,6 +45,7 @@ public class EquipmentSlot : ItemSlot
         if (this.storedItem != null)
         {
             this.storedItem.transform.parent = null;
+            storedItem.DeactivateInWorld();
             return this.storedItem;
         }
         else
@@ -78,7 +77,7 @@ public class EquipmentSlot : ItemSlot
         Storable prevStoredItem = UnequipFromBone();
         if (prevStoredItem != null)
         {
-            prevStoredItem.DeactivateInWorld();
+            prevStoredItem = UnequipFromBone();
             storedItem = null;
         }
         return prevStoredItem;

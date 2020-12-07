@@ -17,7 +17,7 @@ public enum DamageType
     Wear
 }
 
-public class DamageDealer : MonoBehaviour
+public class DamageDealer : MonoBehaviour, IInitializer
 {
     [SerializeField] private DamageType _damageType;
     public DamageType damageType

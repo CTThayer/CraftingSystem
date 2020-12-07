@@ -39,6 +39,7 @@ public class ItemCraftingApparatus : CraftingApparatus
 
     // Temporary field for design requirements to be set manually for testing purposes. 
     // TODO: This should be changed/removed when menu UI for selecting design from database is added.
+    // TODO: Add DesignRequirements / PartRequirements database reference(s) for retrieving requirements
     private DesignRequirements _selectedDesignReqs;
     public DesignRequirements selectedDesignReqs
     {
@@ -47,21 +48,14 @@ public class ItemCraftingApparatus : CraftingApparatus
     }
     [SerializeField] private GameObject tempDesignReqsObject;
 
-    [SerializeField] private bool addToInventoryOnComplete;
+    [SerializeField] private bool autoAddToInventory;
 
-    // TODO: Add DesignRequirements / PartRequirements database reference(s) for retrieving requirements
+    [SerializeField] private ItemFactory factory; // = new ItemFactory();       // TODO: Consider making ItemFactory a singleton
 
     /*********************** END User Configured Fields ***********************/
 
-    // For use by the Crafting Apparatus UI Manager
-    //[HideInInspector]
-    //public string itemName;         // Variable containing the name of the item
-    //[HideInInspector]
-    //public string itemDescription;  // Variable containing the description of the item
-
     private bool itemIsComplete = false;
 
-    [SerializeField] private ItemFactory factory; // = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
 
     // Start is called before the first frame update
     void Start()
@@ -174,6 +168,7 @@ public class ItemCraftingApparatus : CraftingApparatus
             _characterUsingApp.DeactivateCharacterInput();
             _characterUsingApp.DeactivateCharacterCamera();
             _characterUsingApp.DeactivateCharacterHUD();
+            _characterUsingApp.DeactivateEquipmentMenu();
 
             // Enable crafting camera.
             craftingCamera.SetActive(true);
@@ -228,6 +223,7 @@ public class ItemCraftingApparatus : CraftingApparatus
         _characterUsingApp.ReactivateCharacterCamera();
         _characterUsingApp.ReactivateCharacterHUD();
         _characterUsingApp.ReactivateCharacterInput();
+        _characterUsingApp.ReactivateEquipmentMenu();
         _characterUsingApp = null;
     }
 
@@ -245,7 +241,7 @@ public class ItemCraftingApparatus : CraftingApparatus
     {
         string designType = DR.itemType;
         string designSubType = DR.itemSubType;
-        string concat = designType + designSubType;
+        string concat = designType + " " + designSubType;
         for (int i = 0; i < _supportedItemTypes.Length; i++)
         {
             if (_supportedItemTypes[i] == designType
@@ -274,7 +270,7 @@ public class ItemCraftingApparatus : CraftingApparatus
 
     private void OnItemCompletion()
     {
-        if (addToInventoryOnComplete)
+        if (autoAddToInventory)
         {
             Storable resultStorable = resultObject.GetComponent<Storable>();
             bool b = _characterUsingApp.inventory.AddItem(resultStorable);

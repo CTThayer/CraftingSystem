@@ -6,6 +6,7 @@ public class ItemFactory : MonoBehaviour
 {
     MeshUtility meshUtil;
 
+
     public ItemFactory()
     {
         meshUtil = new MeshUtility();                                           // TODO: Consider making MeshUtility static
@@ -127,9 +128,18 @@ public class ItemFactory : MonoBehaviour
         for (int i = 0; i < reqComponents.Length; i++)
         {
             System.Type componentType = System.Type.GetType(reqComponents[i]);
+            Component comp = null;
             if (componentType != null)
-                itemObj.AddComponent(componentType);
-            // TODO: Handle functionality script initialization here
+            {
+                comp = itemObj.AddComponent(componentType);
+                if (comp != null)
+                {
+                    IInitializer initializer = comp as IInitializer;
+                    if (initializer != null)
+                        initializer.Initialize();
+                }
+            }
+
             if (reqComponents[i] == "Rigidbody")
             {
                 Rigidbody r = itemObj.AddComponent<Rigidbody>();
@@ -162,17 +172,12 @@ public class ItemFactory : MonoBehaviour
             return;
         for (int i = 0; i < compsToDeactivate.Length; i++)
         {
-            //System.Type componentType = System.Type.GetType(compsToDeactivate[i]);
-            //if (componentType != null)
-            //{
-            //    Component component = part.GetComponent(componentType);
             Component component = part.GetComponent(compsToDeactivate[i]);
             if (component != null)
             { 
                 Behaviour behaviour = component as Behaviour;
                 if (behaviour != null)
                 {
-                    //behaviour.enabled = false;
                     Destroy(behaviour);
                     Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
@@ -181,14 +186,6 @@ public class ItemFactory : MonoBehaviour
                     Destroy(component);
                     Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
-                //else if (compsToDeactivate[i] == "Rigidbody")
-                //{
-                //    if (component != null)
-                //        Destroy(component);
-                //    // NOTE: It might be important to cache rigidbody data in
-                //    // the ItemPart before doing this in case the rigidbody has
-                //    // to be recreated later (most data should already be there)
-                //}
             }
         }
     }

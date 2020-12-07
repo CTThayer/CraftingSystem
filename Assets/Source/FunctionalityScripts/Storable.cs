@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Storable : MonoBehaviour, IActionable
+public class Storable : MonoBehaviour, IActionable, IInitializer
 {
     public Sprite icon;
 
@@ -37,18 +37,12 @@ public class Storable : MonoBehaviour, IActionable
         Debug.Assert(_objectPhysicalStats != null);
         Debug.Assert(_objectPhysicalStats.mass > 0);
         Debug.Assert(_objectPhysicalStats.volume > 0);
-
-        //if (!_isStored)
-        //{
-        //    Rigidbody r = GetComponent<Rigidbody>();
-        //    if (r != null)
-        //        r.isKinematic = false;
-        //}
     }
 
     public void Initialize()
     {
-        // TODO: Generalize the initializer so that it doesn't take parameters
+        SetStoredObjStats();
+        // TODO: Get or create an icon for the object
     }
 
     public void Initialize(bool createdInStorage)
@@ -65,28 +59,8 @@ public class Storable : MonoBehaviour, IActionable
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
         this.gameObject.SetActive(false);
-
-        //// Disable colliders
-        //Collider[] colliders = gameObject.GetComponents<Collider>();
-        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        //int i = 0;
-        //for (; i < colliders.Length; i++)
-        //{
-        //    colliders[i].enabled = false;
-        //}
-        //for (i = 0; i < childColliders.Length; i++)
-        //{
-        //    childColliders[i].enabled = false;
-        //}
-
-        //// Set rigidbody to Kinematic to avoid simulating it while hidden.
-        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
-        //if (r != null)
-        //    gameObject.GetComponent<Rigidbody>().isKinematic = true;
-
-        //// Disable the MeshRenderer
-        //gameObject.GetComponent<MeshRenderer>().enabled = false;
 
         isStored = true;
     }
@@ -107,27 +81,6 @@ public class Storable : MonoBehaviour, IActionable
 
         this.gameObject.SetActive(true);
 
-        //// Reenable colliders
-        //Collider[] colliders = gameObject.GetComponents<Collider>();
-        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        //int i = 0;
-        //for (; i < colliders.Length; i++)
-        //{
-        //    colliders[i].enabled = true;
-        //}
-        //for (i = 0; i < childColliders.Length; i++)
-        //{
-        //    childColliders[i].enabled = true;
-        //}
-
-        //// Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
-        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
-        //if (r != null)
-        //    r.isKinematic = isKinematicRigidbody;
-
-        // Reenable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
-
         isStored = false;
     }
 
@@ -145,30 +98,9 @@ public class Storable : MonoBehaviour, IActionable
 
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            gameObject.GetComponent<Rigidbody>().isKinematic = false;
+            gameObject.GetComponent<Rigidbody>().isKinematic = isKinematicRigidbody;
 
         this.gameObject.SetActive(true);
-
-        //// Reenable colliders
-        //Collider[] colliders = gameObject.GetComponents<Collider>();
-        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        //int i = 0;
-        //for (; i < colliders.Length; i++)
-        //{
-        //    colliders[i].enabled = true;
-        //}
-        //for (i = 0; i < childColliders.Length; i++)
-        //{
-        //    childColliders[i].enabled = true;
-        //}
-
-        //// Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
-        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
-        //if (r != null)
-        //    r.isKinematic = isKinematicRigidbody;
-
-        //// Reenable the MeshRenderer
-        //gameObject.GetComponent<MeshRenderer>().enabled = true;
 
         isStored = false;
     }
