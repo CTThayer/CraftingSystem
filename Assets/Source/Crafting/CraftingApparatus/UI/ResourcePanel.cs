@@ -170,22 +170,6 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         }
     }
 
-    public bool SetDelegateActions(Action<ItemSlot>[] delegates)
-    {
-        if (delegates != null && delegates.Length == 7)
-        {
-            OnPointerEnterEvent += delegates[0];
-            OnPointerExitEvent += delegates[1];
-            OnRightClickEvent += delegates[2];
-            OnBeginDragEvent += delegates[3];
-            OnEndDragEvent += delegates[4];
-            OnDragEvent += delegates[5];
-            OnDropEvent += delegates[6];
-            return true;
-        }
-        return false;
-    }
-
     public ItemSlot CanAdd(ItemSlot input)
     {
         if (input != null)
@@ -215,6 +199,22 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         return null;
     }
 
+    public bool SetDelegateActions(Action<ItemSlot>[] delegates)
+    {
+        if (delegates != null && delegates.Length == 7)
+        {
+            OnPointerEnterEvent += delegates[0];
+            OnPointerExitEvent += delegates[1];
+            OnRightClickEvent += delegates[2];
+            OnBeginDragEvent += delegates[3];
+            OnEndDragEvent += delegates[4];
+            OnDragEvent += delegates[5];
+            OnDropEvent += delegates[6];
+            return true;
+        }
+        return false;
+    }
+
     public void ConfigurSlotDelegates()
     {
         for (int i = 0; i < _slots.Length; i++)
@@ -226,6 +226,16 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
             _slots[i].OnEndDragEvent += OnEndDragEvent;
             _slots[i].OnDragEvent += OnDragEvent;
             _slots[i].OnDropEvent += OnDropEvent;
+        }
+    }
+
+    public void SetResourceMaterialCallbacks(MaterialDelegate onAddResource,
+                                             MaterialDelegate onRemoveResource)
+    {
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            slots[i].OnResourceAddedCallback = onAddResource;
+            slots[i].OnResourceRemovedCallback = onRemoveResource;
         }
     }
 }

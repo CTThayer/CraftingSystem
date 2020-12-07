@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public delegate void MaterialDelegate(CraftingMaterial resourceMaterial, int index);
+
 public class ResourceSlot : ItemSlot
 {
     [SerializeField] private string[] _allowedResourceTypes;
@@ -9,6 +11,9 @@ public class ResourceSlot : ItemSlot
 
     [SerializeField] private CraftingMaterial _resourceMaterial;
     public CraftingMaterial resourceMaterial { get => _resourceMaterial; }
+
+    public MaterialDelegate OnResourceAddedCallback;
+    public MaterialDelegate OnResourceRemovedCallback;
 
     private Material originalMaterial;
 
@@ -46,6 +51,7 @@ public class ResourceSlot : ItemSlot
                 {
                     storedItem = storableObject;
                     _resourceMaterial = resource.craftingMaterial;
+                    OnResourceAddedCallback(_resourceMaterial, index);
                 }
                 resources.Add(storableObject);
             }
@@ -72,6 +78,7 @@ public class ResourceSlot : ItemSlot
         else if (resources.Count == 1)
         {
             s = resources[0];
+            OnResourceRemovedCallback(resourceMaterial, index);
             resources.RemoveAt(0);
             storedItem = null;
         }

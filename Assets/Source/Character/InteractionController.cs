@@ -69,19 +69,15 @@ public class InteractionController : MonoBehaviour
         {
             RaycastHit hitInfo;
 
-
             Vector3 rPosWorld = _characterCamera.ScreenToWorldPoint(reticlePosition);
             Vector3 direction = (raycastOrigin.transform.position - rPosWorld).normalized;
 
-            //Ray ray = new Ray(_raycastOrigin.transform.position, _characterCamera.transform.forward);
-            //Ray ray = _characterCamera.ScreenPointToRay(reticlePosition);
             Ray ray = new Ray(_raycastOrigin.transform.position, direction);
 
             Debug.DrawRay(_raycastOrigin.transform.position, direction * castDistance, debugRayColor);
 
             if (Physics.Raycast(ray, out hitInfo, castDistance, layerMask, QueryTriggerInteraction.UseGlobal))
             {
-                //currentHitInteractable = hitInfo.transform.gameObject.GetComponent<Interactable>();
                 SetInFocusInteractable(hitInfo);
                 if (currentHitInteractable != lastHitInteractable)
                     UpdateFocus();
@@ -146,7 +142,17 @@ public class InteractionController : MonoBehaviour
         }
         else
         {
+            /* Use this line if you want to check every single object starting
+             * at the root transform of the object that was hit.
+             * WARNING: This is potentially VERY expensive if the raycast hits
+             * an object with a deep hierarchy. */
             Interactable[] hitCluster = hitInfo.transform.root.gameObject.GetComponentsInChildren<Interactable>();
+
+            ///* Use this line to just check the immediate parent object for 
+            // * interactables. This is still potentially expensive if the parent
+            // * has lots of children. */
+            //Interactable[] hitCluster = hitInfo.transform.parent.gameObject.GetComponentsInChildren<Interactable>();
+
             if (hitCluster == null)
                 return;
             else

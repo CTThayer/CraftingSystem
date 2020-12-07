@@ -6,12 +6,14 @@ using UnityEngine.UI;
 public class PartCreatorUIController : MonoBehaviour
 {
     [SerializeField] private PartCraftingApparatus _craftingApparatus;
+
     [SerializeField] private PartCreator _partCreator;
     public PartCreator partCreator { get => _partCreator; }
+
     [SerializeField] private ResourcePanel _resourcePanel;
     public ResourcePanel resourcePanel { get => _resourcePanel; }
-    [SerializeField] private StorageUI _storageUI;
 
+    [SerializeField] private StorageUI _storageUI;
     [SerializeField] private PartDesignSelectorMenu _partDesignSelectorMenu;
     [SerializeField] private CraftingTextIOPanel _textIOPanel;
     [SerializeField] private Button _craftPartButton;
@@ -105,11 +107,21 @@ public class PartCreatorUIController : MonoBehaviour
         _craftPartButton.interactable = true;
 
         _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
+
+        // TODO: Load resource slots here??
+        _resourcePanel.Initialize();
+        SetResourcePanelSlotCallbacks();
     }
 
     public void DisplayOutput(string s)
     {
         _textIOPanel.DisplayOutputMessage(s);
+    }
+
+    public void SetResourcePanelSlotCallbacks()
+    {
+        _resourcePanel.SetResourceMaterialCallbacks(_partCreator.ApplyMaterial,
+                                                    _partCreator.RemoveMaterial);
     }
 
 }

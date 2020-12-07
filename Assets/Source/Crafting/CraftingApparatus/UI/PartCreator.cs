@@ -65,6 +65,7 @@ public class PartCreator : MonoBehaviour
         _materialsAreSet = false;
     }
 
+    // TODO: Maybe we don't need this method??
     public void ApplyMaterialToPart(GameObject part)
     {
         CraftingMaterial cMat = _partCreatorUI.resourcePanel.GetResourceMaterialFromSlot(0);
@@ -92,5 +93,27 @@ public class PartCreator : MonoBehaviour
             return true;
         }
         return false;
+    }
+
+    public void ApplyMaterial(CraftingMaterial craftingMat, int index)
+    {
+        if (craftingMat == null || index < 0)
+            return;
+
+        SubstanceGraph sgo =  craftingMat.materialSubstanceGraph;
+
+        GameObject obj = _craftingApparatus.GetLoadedDesign();
+        //textureFactory.GetVariationAndApplyToObject(sgo, obj, index);
+        textureFactory.GetVariationAndApplyToObject(sgo, obj);
+    }
+
+    public void RemoveMaterial(CraftingMaterial craftingMat, int index)
+    {
+        if (index < 0)
+            return;
+
+        GameObject obj = _craftingApparatus.GetLoadedDesign();
+        //textureFactory.GetVariationAndApplyToObject(sgo, obj, index);
+        textureFactory.ResetObjectToDefaultMaterial(obj);
     }
 }

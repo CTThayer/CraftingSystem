@@ -16,17 +16,18 @@ public class CraftingCameraController : MonoBehaviour
             {
                 _originalLookAtObj = value;
                 originalLookAtPosition = _originalLookAtObj.transform.position;
-                originalRotation = _originalLookAtObj.transform.rotation;
+                originalCamRotation = _originalLookAtObj.transform.rotation;
             }
         }
     }
     private Vector3 lookAtPosition;
     private Vector3 originalLookAtPosition;
+    private Vector3 originalCamPosition;
 
     [SerializeField] private float RotationSpeed;
     [SerializeField] private float PolarDeadzone_TOP;
     [SerializeField] private float PolarDeadzone_BOT;
-    private Quaternion originalRotation;
+    private Quaternion originalCamRotation;
 
     [SerializeField] private float ZoomSpeed;
     [SerializeField] private float ZoomDistance_MIN;
@@ -51,9 +52,12 @@ public class CraftingCameraController : MonoBehaviour
         if (_originalLookAtObj != null)
         {
             originalLookAtPosition = _originalLookAtObj.transform.position;
-            originalRotation = _originalLookAtObj.transform.rotation;
+            //originalRotation = _originalLookAtObj.transform.rotation;
             lookAtPosition = originalLookAtPosition;
         }
+
+        originalCamRotation = craftingCam.transform.rotation;
+        originalCamPosition = craftingCam.transform.position;
 
         Debug.Assert(lookAtPosition != null);
         Debug.Assert(RotationSpeed > 0f);
@@ -108,7 +112,7 @@ public class CraftingCameraController : MonoBehaviour
     {
         Vector3 lookVector = lookAtPosition - transform.position;
         float distance = lookVector.magnitude;
-        float change = (delta * ZoomSpeed * -1.0f * Time.deltaTime);
+        float change = (delta * ZoomSpeed * 1.0f * Time.deltaTime);
         float newDistance = distance + change;
         if (newDistance >= ZoomDistance_MIN && newDistance <= ZoomDistance_MAX)
         {
@@ -148,35 +152,11 @@ public class CraftingCameraController : MonoBehaviour
         yield break;
     }
 
-
-    //const float TrackModifier = 1f / 100f;  // about 10-degress per second
-    //public void ProcessTrack(Vector3 delta)
-    //{
-    //    Vector3 newCameraPos;
-    //    newCameraPos.x = transform.localPosition.x + (delta.x * TrackModifier);
-    //    newCameraPos.y = transform.localPosition.y + (delta.y * TrackModifier);
-    //    newCameraPos.z = transform.localPosition.z;
-    //    Vector3 newLookAtPos;
-    //    newLookAtPos.x = LookAtPosition.x + (delta.x * TrackModifier);
-    //    newLookAtPos.y = LookAtPosition.y + (delta.y * TrackModifier);
-    //    newLookAtPos.z = LookAtPosition.z;
-    //    transform.localPosition = newCameraPos;
-    //    LookAtPosition = newLookAtPos;
-    //}
-
-    //public void SetLookAtPosition(Vector3 target)
-    //{
-    //    if (target != null)
-    //        LookAtPosition = target;
-    //}
-
-    //public void SetZoom(float distance)
-    //{
-    //    if (distance > ZoomDistance_MIN && distance < ZoomDistance_MAX)
-    //    {
-    //        Vector3 v = transform.localPosition - LookAtPosition;
-    //        transform.position = LookAtPosition + (v.normalized * distance);
-    //    }
-    //}
+    public void ResetCameraTransform()
+    {
+        craftingCam.transform.position = originalCamPosition;
+        craftingCam.transform.rotation = originalCamRotation;
+        //craftingCam.transform.LookAt(originalLookAtPosition);
+    }
 
 }

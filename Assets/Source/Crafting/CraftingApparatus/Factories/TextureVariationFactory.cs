@@ -5,6 +5,8 @@ using Substance.Game;
 
 public class TextureVariationFactory : MonoBehaviour
 {
+    [SerializeField] private Material defaultMaterial;
+
     private Substance.Game.SubstanceGraph substanceGraph;
 
     public void GetVariationAndApplyToObject(SubstanceGraph sgo, 
@@ -17,10 +19,41 @@ public class TextureVariationFactory : MonoBehaviour
         CopyMaterialToObject(obj);
     }
 
+    public void GetVariationAndApplyToObject(SubstanceGraph sgo,
+                                             GameObject obj,
+                                             int matIndex)
+    {
+        //substanceGraph = sgo.Duplicate();
+        substanceGraph = sgo;
+        int randomValue = Random.Range(0, 2000000);
+        GenerateTextureVariation_Simple(randomValue);
+        CopyMaterialToObject(obj);
+    }
+
+    public void ResetObjectToDefaultMaterial(GameObject obj)
+    {
+        MeshRenderer r = obj.GetComponent<MeshRenderer>();
+        if (r != null)
+        {
+            r.material = defaultMaterial;
+        }
+    }
+
+    public void ResetObjectToDefaultMaterial(GameObject obj,
+                                             int index)
+    {
+        MeshRenderer r = obj.GetComponent<MeshRenderer>();
+        if (r != null)
+        {
+            if (index < r.materials.Length)
+                r.materials[index] = defaultMaterial;
+        }
+    }
 
     private void GenerateTextureVariation_Simple(int randomValue)
     {
-        substanceGraph.SetInputInt("$randomSeed", randomValue);
+        if (substanceGraph.IsInputVisible("$randomseed"))
+            substanceGraph.SetInputInt("$randomseed", randomValue);
         substanceGraph.QueueForRender();
         substanceGraph.RenderSync();
         Substance.Game.Substance.RenderSubstancesSync();
@@ -45,7 +78,10 @@ public class TextureVariationFactory : MonoBehaviour
         if (obj == null)
             return;
 
+        Material origMat = substanceGraph.material;
+
         Material mat = new Material(substanceGraph.material);
+        mat.shader = substanceGraph.material.shader;
         mat.CopyPropertiesFromMaterial(substanceGraph.material);
         mat.name = substanceGraph.name;                                         // TODO: Improve this later
 
@@ -59,6 +95,39 @@ public class TextureVariationFactory : MonoBehaviour
         obj.GetComponent<Renderer>().material = mat;
     }
 
+    private void CopyMaterialToObject(GameObject obj, int matIndex)
+    {
+        if (obj == null || matIndex < 0)
+            return;
+
+        Material origMat = substanceGraph.material;
+
+        Material mat = new Material(substanceGraph.material);
+        mat.shader = substanceGraph.material.shader;
+        mat.CopyPropertiesFromMaterial(substanceGraph.material);
+        mat.name = substanceGraph.name;                                         // TODO: Improve this later
+
+        List<Texture2D> textures = substanceGraph.GetGeneratedTextures();
+        for (int i = 0; i < textures.Count; i++)
+        {
+            Texture2D copiedTexture = CopyTexture(textures[i]);
+            string channel = GetChannelNameFromTextureName(textures[i].name);
+            SetMaterialTexture_Helper(mat, copiedTexture, channel);
+        }
+
+        
+        Material[] mats = obj.GetComponent<MeshRenderer>().materials;
+        if (matIndex > mats.Length - 1)
+        {
+            Material[] newMats = new Material[mats.Length + 1];
+            newMats[newMats.Length - 1] = mat;
+        }
+        else
+        {
+            mats[matIndex] = mat;
+        }
+
+    }
 
     private Texture2D CopyTexture(Texture2D original)
     {
@@ -107,18 +176,23 @@ public class TextureVariationFactory : MonoBehaviour
         {
             case "ambientOcclusion":
                 m.SetTexture("_OcclusionMap", t);
+                Debug.Log(" Set channel: _OcclusionMap to " + channelName);
                 break;
             case "baseColor":
                 m.SetTexture("_MainTex", t);
+                Debug.Log(" Set channel: _MainTex to " + channelName);
                 break;
             case "height":
                 m.SetTexture("_ParallaxMap", t);
+                Debug.Log(" Set channel: _ParallaxMap to " + channelName);
                 break;
             case "metallic":
                 m.SetTexture("_Metallic", t);
+                Debug.Log(" Set channel: _Metallic to " + channelName);
                 break;
             case "normal":
                 m.SetTexture("_BumpMap", t);
+                Debug.Log(" Set channel: _BumpMap to " + channelName);
                 break;
         }
     }

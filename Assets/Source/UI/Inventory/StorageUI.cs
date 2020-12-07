@@ -122,9 +122,12 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
             {
                 if (count < storageSlots.Length)
                 {
-                    storageSlots[i].OnAddSpecific += loadedStorage.AddItem;
-                    storageSlots[i].OnRemoveSpecific += loadedStorage.RemoveItem;
+                    // Set delegates
+                    storageSlots[i].OnAddSpecific = loadedStorage.AddItem;
+                    storageSlots[i].OnRemoveSpecific = loadedStorage.RemoveItem;
+                    // set slot index
                     storageSlots[i].index = i;
+                    // add item
                     storageSlots[i].AddToSlot(items[i]);
                     count++;
                 }
@@ -149,8 +152,8 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
     {
         for (int i = 0; i < storageSlots.Length; i++)
         {
-            storageSlots[i].OnAddSpecific += loadedStorage.AddItem;
-            storageSlots[i].OnRemoveSpecific += loadedStorage.RemoveItem;
+            storageSlots[i].OnAddSpecific = loadedStorage.AddItem;
+            storageSlots[i].OnRemoveSpecific = loadedStorage.RemoveItem;
         }
     }
 

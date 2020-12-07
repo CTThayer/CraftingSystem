@@ -112,8 +112,8 @@ public class ItemSlot : MonoBehaviour,
 
     public virtual void AddToSlot(Storable storableObject)
     {
-        if (storableObject != null)
-            storableObject.DeactivateInWorld();                                 // Do we actually do this here?
+        //if (storableObject != null)
+        //    storableObject.DeactivateInWorld();                                 // Do we actually do this here?
         //if (xIndex >= 0 && yIndex >= 0)
         //{
         //    OnAddSpecific(storableObject, xIndex, yIndex);

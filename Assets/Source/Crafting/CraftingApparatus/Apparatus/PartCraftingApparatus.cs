@@ -189,6 +189,7 @@ public class PartCraftingApparatus : CraftingApparatus
         //_partDesignerObj.GetComponent<PartDesignerUIController>().enabled = false;
         _partDesignerObj.GetComponent<PartDesignViewInputController>().enabled = false;
         //_partDesignerObj.GetComponent<ItemPartAssembler>().enabled = false;
+        _camController.ResetCameraTransform();
     }
 
     public void ActivatePartCreator()
@@ -202,6 +203,7 @@ public class PartCraftingApparatus : CraftingApparatus
     {
         _partCreatorObj.SetActive(false);
         _partCreatorObj.GetComponent<CraftingViewInputController>().enabled = false;
+        _camController.ResetCameraTransform();
     }
 
     public void SwitchToCraftingCamera()
@@ -248,5 +250,10 @@ public class PartCraftingApparatus : CraftingApparatus
             return true;
         }
         return false;
+    }
+
+    public GameObject GetLoadedDesign()
+    {
+        return resultObject;
     }
 }

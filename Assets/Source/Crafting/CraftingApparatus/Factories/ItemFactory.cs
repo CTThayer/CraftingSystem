@@ -97,6 +97,9 @@ public class ItemFactory : MonoBehaviour
                                            partReqs[i].componentsToDeactivate);
             }
 
+            // Ensure all child colliders are active
+            ReactivateColliders(itemParent);
+
             // Return results
             resultItem = itemParent;
             outputString = validationResult;
@@ -119,14 +122,26 @@ public class ItemFactory : MonoBehaviour
      * NOTE: All failures of component additions are silent. Any strings that 
      * are invalid names types will simply be skipped.
      */
-    public void AddComponentsToItem(ref GameObject item, string[] reqComponents)
+    public void AddComponentsToItem(ref GameObject itemObj, string[] reqComponents)
     {
         for (int i = 0; i < reqComponents.Length; i++)
         {
             System.Type componentType = System.Type.GetType(reqComponents[i]);
             if (componentType != null)
-                item.AddComponent(componentType);
+                itemObj.AddComponent(componentType);
             // TODO: Handle functionality script initialization here
+            if (reqComponents[i] == "Rigidbody")
+            {
+                Rigidbody r = itemObj.AddComponent<Rigidbody>();
+                if (r != null)
+                {
+                    Item item = itemObj.GetComponent<Item>();
+                    if (item != null)
+                    {
+                        r.mass = item.physicalStats.mass;
+                    }
+                }
+            }
         }
     }
 
@@ -175,6 +190,15 @@ public class ItemFactory : MonoBehaviour
                 //    // to be recreated later (most data should already be there)
                 //}
             }
+        }
+    }
+
+    public void ReactivateColliders(GameObject parent)
+    {
+        Collider[] colliders = parent.GetComponentsInChildren<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
         }
     }
 

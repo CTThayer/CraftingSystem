@@ -37,6 +37,13 @@ public class Storable : MonoBehaviour, IActionable
         Debug.Assert(_objectPhysicalStats != null);
         Debug.Assert(_objectPhysicalStats.mass > 0);
         Debug.Assert(_objectPhysicalStats.volume > 0);
+
+        //if (!_isStored)
+        //{
+        //    Rigidbody r = GetComponent<Rigidbody>();
+        //    if (r != null)
+        //        r.isKinematic = false;
+        //}
     }
 
     public void Initialize()
@@ -54,27 +61,32 @@ public class Storable : MonoBehaviour, IActionable
     {
         if (isStored) // If item is already in storage, don't try to deactivate.
             return;
-        
-        // Disable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = false;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = false;
-        }
 
-        // Set rigidbody to Kinematic to avoid simulating it while hidden.
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        this.gameObject.SetActive(false);
 
-        // Disable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        //// Disable colliders
+        //Collider[] colliders = gameObject.GetComponents<Collider>();
+        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
+        //int i = 0;
+        //for (; i < colliders.Length; i++)
+        //{
+        //    colliders[i].enabled = false;
+        //}
+        //for (i = 0; i < childColliders.Length; i++)
+        //{
+        //    childColliders[i].enabled = false;
+        //}
+
+        //// Set rigidbody to Kinematic to avoid simulating it while hidden.
+        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
+        //if (r != null)
+        //    gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+        //// Disable the MeshRenderer
+        //gameObject.GetComponent<MeshRenderer>().enabled = false;
 
         isStored = true;
     }
@@ -89,23 +101,29 @@ public class Storable : MonoBehaviour, IActionable
         gameObject.transform.rotation = xform.rotation;
         // Do NOT set scale to match!
 
-        // Reenable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = true;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = true;
-        }
-
-        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            r.isKinematic = isKinematicRigidbody;
+            gameObject.GetComponent<Rigidbody>().isKinematic = isKinematicRigidbody;
+
+        this.gameObject.SetActive(true);
+
+        //// Reenable colliders
+        //Collider[] colliders = gameObject.GetComponents<Collider>();
+        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
+        //int i = 0;
+        //for (; i < colliders.Length; i++)
+        //{
+        //    colliders[i].enabled = true;
+        //}
+        //for (i = 0; i < childColliders.Length; i++)
+        //{
+        //    childColliders[i].enabled = true;
+        //}
+
+        //// Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
+        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
+        //if (r != null)
+        //    r.isKinematic = isKinematicRigidbody;
 
         // Reenable the MeshRenderer
         gameObject.GetComponent<MeshRenderer>().enabled = true;
@@ -125,26 +143,32 @@ public class Storable : MonoBehaviour, IActionable
         gameObject.transform.rotation = rotation;
         // Do NOT set scale to match!
 
-        // Reenable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = true;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = true;
-        }
-
-        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            r.isKinematic = isKinematicRigidbody;
+            gameObject.GetComponent<Rigidbody>().isKinematic = false;
 
-        // Reenable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        this.gameObject.SetActive(true);
+
+        //// Reenable colliders
+        //Collider[] colliders = gameObject.GetComponents<Collider>();
+        //Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
+        //int i = 0;
+        //for (; i < colliders.Length; i++)
+        //{
+        //    colliders[i].enabled = true;
+        //}
+        //for (i = 0; i < childColliders.Length; i++)
+        //{
+        //    childColliders[i].enabled = true;
+        //}
+
+        //// Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
+        //Rigidbody r = gameObject.GetComponent<Rigidbody>();
+        //if (r != null)
+        //    r.isKinematic = isKinematicRigidbody;
+
+        //// Reenable the MeshRenderer
+        //gameObject.GetComponent<MeshRenderer>().enabled = true;
 
         isStored = false;
     }

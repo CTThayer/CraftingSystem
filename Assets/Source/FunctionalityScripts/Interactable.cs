@@ -14,13 +14,15 @@ public class Interactable : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Assert(actionIndex >= 0 && actionIndex < actions.Length);
+        Initialize();
+
         if (actionIndex < 0 || actionIndex > actions.Length)
             actionIndex = 0;
+        Debug.Assert(actionIndex >= 0 && actionIndex < actions.Length);
 
-        Debug.Assert(defaultIndex >= 0 && defaultIndex < actions.Length);
         if (defaultIndex < 0 || defaultIndex > actions.Length)
             defaultIndex = 0;
+        Debug.Assert(defaultIndex >= 0 && defaultIndex < actions.Length);
     }
 
     public void Initialize()
