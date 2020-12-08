@@ -937,8 +937,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DefaultAddLocation: {fileID: 25211938}
   MaxLength: 150
-  FinishedComponentMat: {fileID: 2100000, guid: 9c3fc565e1d5c4f4095e952957052912,
-    type: 2}
+  defaultMat: {fileID: 0}
   CompAssembler: {fileID: 1440817105}
   CamControl: {fileID: 1455987532}
   OutputText: {fileID: 1222383964}
@@ -948,6 +947,8 @@ MonoBehaviour:
   UIPanel: {fileID: 480055528}
   SegmentLengthSlider: {fileID: 1270603030}
   ComponentToAdd: {fileID: 0}
+  CurrentSelection: {fileID: 0}
+  SelectedConnectionPoint: {fileID: 0}
 --- !u!1 &187897273
 GameObject:
   m_ObjectHideFlags: 0
@@ -1609,7 +1610,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 624, y: 0}
+  m_AnchoredPosition: {x: 1515, y: 0}
   m_SizeDelta: {x: 400, y: 768}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &480055529

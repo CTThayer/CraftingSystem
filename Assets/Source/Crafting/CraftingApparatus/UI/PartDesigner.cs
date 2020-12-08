@@ -54,11 +54,11 @@ public class PartDesigner : MonoBehaviour
         }
     }
 
-    /* SetComponentToAdd()
+    /* Set Component To Add
      * Public facing method for setting the ComponentToAdd GameObject reference
      * to point to whatever prefab the user selected from the UI menu(s).
      */
-    public void SetComponentToAdd(GameObject go)
+    public void SetSegmentToAdd(GameObject go)
     {
         if (go != null)
         {
@@ -86,8 +86,6 @@ public class PartDesigner : MonoBehaviour
     /* AddPartSegment()
      * Public facing method for adding a part at the currently selected 
      * connection point.
-     * TODO: Consider combining with AddSegment() since there really isn't any
-     * reason to hid the method like this. Also consider making it return string
      */
     public void AddPartSegment()
     {
@@ -117,6 +115,7 @@ public class PartDesigner : MonoBehaviour
             isFirstSegment = false;
             segments.Add(firstSeg.GetComponent<ItemPartSegment>());
             count++;
+            return "";
         }
         else
         {
@@ -140,13 +139,20 @@ public class PartDesigner : MonoBehaviour
                 AddIndexInSelected = SelectedConnectionPoint.indexInConnections;
             else                                                                // TODO: Should we error out here instead?
             {
-                // if no connection point is selected and selected segment has 
-                // more than 1 connection point, select the first non-parent
-                // facing connection point (index 1), else select index 0
-                int numConnections = CurrentSelection.GetConnectedSegments().Length;
-                AddIndexInSelected = numConnections > 1 ? 1 : 0;
+                //// if no connection point is selected and selected segment has 
+                //// more than 1 connection point, select the first non-parent
+                //// facing connection point (index 1), else select index 0
+                //int numConnections = CurrentSelection.GetConnectedSegments().Length;
+                //AddIndexInSelected = numConnections > 1 ? 1 : 0;
+                int nextOpen = CurrentSelection.GetIndexOfNextOpenConnection();
+                if (nextOpen >= 0)
+                    AddIndexInSelected = nextOpen;
+                else
+                    return "ERROR: Cannot add segment to current selection " +
+                            "because there are no open connection points.";
             }
-            int AddIndexInNewSeg = AddIndexInSelected > 0 ? 0 : 1;
+            //int AddIndexInNewSeg = AddIndexInSelected > 0 ? 0 : 1;
+            int AddIndexInNewSeg = segToAdd.GetIndexOfNextOpenConnection();
 
             // Verify that the new segment can actually connect at this point
             if (!CurrentSelection.HasConnectionAt(AddIndexInSelected))
@@ -266,7 +272,7 @@ public class PartDesigner : MonoBehaviour
             mf.mesh = m;
 
             // Set the part material to the default material
-            Renderer r = result.AddComponent<Renderer>();
+            MeshRenderer r = result.AddComponent<MeshRenderer>();
             r.material = defaultMat;
             
             // Set up a compound collider for this part

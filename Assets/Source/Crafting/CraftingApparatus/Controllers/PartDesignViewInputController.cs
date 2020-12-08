@@ -6,16 +6,15 @@ public class PartDesignViewInputController : CraftingViewInputController
 {
     //[SerializeField] private ItemPartDesignerController partDesigner;
     [SerializeField] private PartDesigner partDesigner;
-
-    private Camera cam;
+    [SerializeField] private Camera cam;
     private Rect viewportRect;
 
     void Start()
     {
         base.Start();
-        Camera camera = craftingApparatus.craftingCamera.GetComponent<Camera>();
-        viewportRect = camera.rect;
-        cam = craftingApparatus.craftingCamera.GetComponent<Camera>();
+        //Camera camera = craftingApparatus.craftingCamera.GetComponent<Camera>();
+        viewportRect = cam.rect;
+        //cam = craftingApparatus.craftingCamera.GetComponent<Camera>();
     }
 
     void Update()
@@ -83,15 +82,22 @@ public class PartDesignViewInputController : CraftingViewInputController
         if (!CursorIsOverViewport())
             return retVal;
         RaycastHit hit;
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
             GameObject hitObj = hit.transform.gameObject;
 
             Debug.Log("Selected: " + hitObj.name);
 
-            // If a SegmentConnectionPoint was hit, update selection
             SegmentConnectionPoint SCP = hitObj.GetComponent<SegmentConnectionPoint>();
+            ItemPartSegment NewSelection = hitObj.GetComponent<ItemPartSegment>();
+            if (SCP == null && NewSelection == null)
+            {
+                SCP = hitObj.GetComponentInParent<SegmentConnectionPoint>();
+                NewSelection = hitObj.GetComponentInParent<ItemPartSegment>();
+            }
+
+            // If a SegmentConnectionPoint was hit, update selection
             if (SCP != null)
             {
                 if (SCP != partDesigner.SelectedConnectionPoint)
@@ -113,7 +119,7 @@ public class PartDesignViewInputController : CraftingViewInputController
             }
 
             // If a ComponentSegment was hit, update selection
-            ItemPartSegment NewSelection = hitObj.GetComponent<ItemPartSegment>();
+            
             if (NewSelection != partDesigner.CurrentSelection)
             {
                 if (partDesigner.CurrentSelection != null)

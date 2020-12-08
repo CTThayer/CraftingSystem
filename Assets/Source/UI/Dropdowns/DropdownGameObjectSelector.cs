@@ -57,7 +57,15 @@ public class DropdownGameObjectSelector : MonoBehaviour
 
     public GameObject GetObjectFromDropdown(int index)
     {
-        return Objects[index];
+        if (index >= 0 && index < Objects.Length)
+            return Objects[index];
+        else
+            return null;
+    }
+
+    public GameObject GetCurrentSelection()
+    {
+        return Objects[DropdownMenu.value];
     }
 
     private void UpdateDropdownList()

@@ -15,6 +15,7 @@ public class PartDesignerUIController : MonoBehaviour
     [SerializeField] private Text outputText;
     [SerializeField] private Text selectedPartTypeText;
     [SerializeField] private Dropdown designFamilyDropdown;
+    [SerializeField] private Button addSegmentButton;
     [SerializeField] private Button finishDesignButton;
 
     // Menus, Dropdown Managers, and Prompts
@@ -169,6 +170,7 @@ public class PartDesignerUIController : MonoBehaviour
     {
         GameObject[] segments = segmentDatabase.GetSegmentsByPartTypeAndFamily(_partType, designFamily);
         _segmentSelector.SetDropdownObjects(segments);
+        OnSegmentSelection(0);
     }
 
     /*************************** END Public Methods ***************************/
@@ -234,15 +236,24 @@ public class PartDesignerUIController : MonoBehaviour
 
         SetDesignFamilyDropdownOptions();
     }
+
+    public void OnSegmentSelection(int index)
+    {
+        //GameObject obj = _segmentSelector.GetObjectFromDropdown(index);
+        partDesigner.SetSegmentToAdd(_segmentSelector.GetCurrentSelection());
+    }
+
     /********************** END Functions for Callbacks ***********************/
 
 
     /*************************** Callback Config ******************************/
+
     public void SetupCallbacks()
     {
         SetupPartTypeSelector();
         SetupContinueMenu();
         SetupDropDownCallbacks();
+        //SetupAddSegmentButtonCallbacks();
         SetupFinishButtonCallbacks();
     }
 
@@ -269,7 +280,12 @@ public class PartDesignerUIController : MonoBehaviour
     public void SetupDropDownCallbacks()
     {
         designFamilyDropdown.onValueChanged.AddListener(this.OnDesignFamilySelection);
-        _segmentSelector.SetDropdownDelegate(partDesigner.SetComponentToAdd);
+        //_segmentSelector.SetDropdownDelegate(partDesigner.SetComponentToAdd);
+    }
+
+    public void SetupAddSegmentButtonCallbacks()
+    {
+        addSegmentButton.onClick.AddListener(partDesigner.AddPartSegment);
     }
 
     public void SetupFinishButtonCallbacks()
