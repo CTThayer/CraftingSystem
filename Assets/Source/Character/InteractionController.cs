@@ -74,9 +74,9 @@ public class InteractionController : MonoBehaviour
 
             Ray ray = new Ray(_raycastOrigin.transform.position, direction);
 
-            Debug.DrawRay(_raycastOrigin.transform.position, direction * castDistance, debugRayColor);
+            //Debug.DrawRay(_raycastOrigin.transform.position, direction * castDistance, debugRayColor);
 
-            if (Physics.Raycast(ray, out hitInfo, castDistance, layerMask, QueryTriggerInteraction.UseGlobal))
+            if (Physics.Raycast(ray, out hitInfo, castDistance)) //, layerMask, QueryTriggerInteraction.UseGlobal))
             {
                 SetInFocusInteractable(hitInfo);
                 if (currentHitInteractable != lastHitInteractable)

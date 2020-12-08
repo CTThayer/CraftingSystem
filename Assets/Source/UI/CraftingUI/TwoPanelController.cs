@@ -21,12 +21,14 @@ public class TwoPanelController : MonoBehaviour
 
     private void OnValidate()
     {
-        panelAScript = panelA.GetComponent<ISlotPanelIO>();
-        panelBScript = panelB.GetComponent<ISlotPanelIO>();
+        //panelAScript = panelA.GetComponent<ISlotPanelIO>();
+        //panelBScript = panelB.GetComponent<ISlotPanelIO>();
     }
 
     void Awake()
     {
+        panelAScript = panelA.GetComponent<ISlotPanelIO>();
+        panelBScript = panelB.GetComponent<ISlotPanelIO>();
         Debug.Assert(draggableSlot != null);
         Debug.Assert(panelAScript != null);
         Debug.Assert(panelBScript != null);

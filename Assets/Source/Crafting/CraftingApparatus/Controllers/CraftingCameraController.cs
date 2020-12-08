@@ -139,7 +139,7 @@ public class CraftingCameraController : MonoBehaviour
     {
         Vector3 posDelta = newLookAt - lookAtPosition;
         Vector3 resultCamPos = transform.position + posDelta;
-        StartCoroutine("slerpToNewPosition", resultCamPos);
+        StartCoroutine("lerpToNewPosition", resultCamPos);
     }
 
     private IEnumerator lerpToNewPosition(Vector3 destination)
