@@ -133,6 +133,14 @@ public class ResourceSlot : ItemSlot
         return false;
     }
 
+    public void SetAllowedResourceTypes(string[] allowedTypes)
+    {
+        if (allowedTypes != null && allowedTypes.Length > 0)
+        {
+            _allowedResourceTypes = allowedTypes;
+        }
+    }
+
     /**************************** EDITOR FUNCTIONS ****************************/
     protected override void OnValidate()
     {

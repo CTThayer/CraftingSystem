@@ -21,6 +21,11 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
     public event Action<ItemSlot> OnDragEvent;
     public event Action<ItemSlot> OnDropEvent;
 
+    //void OnValidate()
+    //{
+    //    Initialize();
+    //}
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,11 +37,15 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
     {
         if (panelController == null)
             panelController = transform.parent.gameObject.GetComponent<TwoPanelController>();
+        
         Debug.Assert(panelController != null);
 
-        if (_slots == null)
-            _slots = GetComponentsInChildren<ResourceSlot>();
-        if (_slots != null)
+        if (_slots == null || _slots.Length == 0)
+        {
+            int childCount = transform.childCount;
+            _slots = transform.gameObject.GetComponentsInChildren<ResourceSlot>(true);
+        }
+        if (_slots != null && _slots.Length > 0)
         {
             ConfigurSlotDelegates();
         }
@@ -44,8 +53,12 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         _isInitialized = true;
     }
 
-    public void LoadResourceSlots(GameObject resourceSlotsPrefab)
+    public void LoadResourceSlots(GameObject resourceSlotsPrefab, PartRequirements partReqs)
     {
+        ResourceSlot[] prefabSlots = resourceSlotsPrefab.GetComponentsInChildren<ResourceSlot>();
+        if (prefabSlots == null || prefabSlots.Length == 0)
+            return;
+
         // Clear any old ui objects
         ClearSlotLayout();
 
@@ -53,7 +66,12 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         GameObject slotsPrefab = Instantiate(resourceSlotsPrefab);
         slotsPrefab.transform.position = transform.position;
         slotsPrefab.transform.parent = transform;
-        _slots = resourceSlotsPrefab.GetComponentsInChildren<ResourceSlot>();
+        _slots = prefabSlots;
+
+        for (int i = 0; i < _slots.Length; i++)
+        {
+            _slots[i].SetAllowedResourceTypes(partReqs.allowedMaterials);
+        }
     }
 
     public CraftingMaterial GetResourceMaterialFromSlot(int index)
@@ -154,7 +172,8 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
 
     private void DestroySlotLayout()
     {
-        foreach (Transform t in this.transform)
+        //foreach (Transform t in this.transform)
+        foreach (RectTransform t in this.transform)
         {
             Destroy(t.gameObject);                                          // TODO: Is this how we want to handle this?
         }

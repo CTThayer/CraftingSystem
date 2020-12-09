@@ -55,6 +55,10 @@ public class PartCraftingApparatus : CraftingApparatus
 
     private bool _partIsComplete;
 
+    // Loaded design data
+    private PartRequirements reqs;
+    private GameObject slotPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -197,6 +201,7 @@ public class PartCraftingApparatus : CraftingApparatus
         _partCreatorObj.SetActive(true);
         _partCreatorObj.GetComponent<CraftingViewInputController>().enabled = true;
         _uiManager.partCreatorUIController.ActivateBackgroundUI();
+        _uiManager.partCreatorUIController.LoadResourceSlots(slotPrefab, reqs);
     }
 
     public void DeactivatePartCreator()
@@ -236,7 +241,7 @@ public class PartCraftingApparatus : CraftingApparatus
 
     public bool LoadDesign(string type, string subtype, string name)
     {
-        GameObject design = _partDesignDB.GetPartDesign(type, subtype, name);
+        GameObject design = _partDesignDB.GetPartDesign(type, subtype, name, out reqs, out slotPrefab);
         if (design != null)
         {
             resultObject = Instantiate(design);

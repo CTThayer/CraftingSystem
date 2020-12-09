@@ -108,8 +108,12 @@ public class PartCreatorUIController : MonoBehaviour
 
         _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
 
-        // TODO: Load resource slots here??
+    }
+
+    public void LoadResourceSlots(GameObject resourceSlotPrefab, PartRequirements reqs)
+    {
         _resourcePanel.Initialize();
+        _resourcePanel.LoadResourceSlots(resourceSlotPrefab, reqs);
         SetResourcePanelSlotCallbacks();
     }
 

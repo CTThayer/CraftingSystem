@@ -9,4 +9,6 @@ public class PartDesignCollection
     public string partType;
     public string partSubType;
     public List<GameObject> partDesignPrefabs;
+    public PartRequirements partReqs;
+    public GameObject resourceSlotLayout;
 }

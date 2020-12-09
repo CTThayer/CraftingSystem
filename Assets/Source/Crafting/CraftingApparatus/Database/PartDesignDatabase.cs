@@ -13,7 +13,9 @@ public class PartDesignDatabase : MonoBehaviour
 
     }
 
-    public GameObject GetPartDesign(string partType, string partSubtype, string partName)
+    public GameObject GetPartDesign(string partType, 
+                                    string partSubtype, 
+                                    string partName)
     {
         for (int i = 0; i < partDesignCollections.Length; i++)
         {
@@ -30,6 +32,35 @@ public class PartDesignDatabase : MonoBehaviour
         }
         return null;
     }
+
+    public GameObject GetPartDesign(string partType,
+                                    string partSubtype,
+                                    string partName,
+                                    out PartRequirements partReqs,
+                                    out GameObject resourceSlotPrefab)
+    {
+        for (int i = 0; i < partDesignCollections.Length; i++)
+        {
+            if (partDesignCollections[i].partType == partType
+                && partDesignCollections[i].partSubType == partSubtype)
+            {
+                List<GameObject> designs = partDesignCollections[i].partDesignPrefabs;
+                for (int j = 0; j < designs.Count; j++)
+                {
+                    if (designs[j].name == partName)
+                    {
+                        partReqs = partDesignCollections[i].partReqs;
+                        resourceSlotPrefab = partDesignCollections[i].resourceSlotLayout;
+                        return designs[j];
+                    }
+                }
+            }
+        }
+        partReqs = null;
+        resourceSlotPrefab = null;
+        return null;
+    }
+
 
     public GameObject[] GetDesignsByType(string partType)
     {
