@@ -59,14 +59,14 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         if (prefabSlots == null || prefabSlots.Length == 0)
             return;
 
-        // Clear any old ui objects
-        ClearSlotLayout();
+        //// Clear any old ui objects
+        //ClearSlotLayout();
 
-        // Copy the slots prefab and set
-        GameObject slotsPrefab = Instantiate(resourceSlotsPrefab);
-        slotsPrefab.transform.position = transform.position;
-        slotsPrefab.transform.parent = transform;
-        _slots = prefabSlots;
+        //// Copy the slots prefab and set
+        //GameObject slotsPrefab = Instantiate(resourceSlotsPrefab);
+        //slotsPrefab.transform.position = transform.position;
+        //slotsPrefab.transform.parent = transform;
+        //_slots = prefabSlots;
 
         for (int i = 0; i < _slots.Length; i++)
         {
@@ -253,8 +253,8 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
     {
         for (int i = 0; i < _slots.Length; i++)
         {
-            slots[i].OnResourceAddedCallback = onAddResource;
-            slots[i].OnResourceRemovedCallback = onRemoveResource;
+            _slots[i].OnResourceAddedCallback = onAddResource;
+            _slots[i].OnResourceRemovedCallback = onRemoveResource;
         }
     }
 }

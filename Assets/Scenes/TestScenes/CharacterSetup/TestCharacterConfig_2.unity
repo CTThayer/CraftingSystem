@@ -2371,7 +2371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.12
@@ -2800,7 +2800,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -3307,7 +3307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -3630,7 +3630,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.12
@@ -4208,7 +4208,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -6839,7 +6839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -7906,7 +7906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 1.68
@@ -8846,7 +8846,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 1.68
@@ -9651,7 +9651,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 1.68
@@ -9806,7 +9806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 1.68
@@ -15910,7 +15910,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -20001,7 +20001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.12
@@ -24920,7 +24920,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.12
@@ -27832,7 +27832,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -29399,7 +29399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -30542,7 +30542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -31413,7 +31413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -34125,7 +34125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 1.68
@@ -37484,7 +37484,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.12
@@ -38979,7 +38979,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76a57150f6aba384f9ee6ec262026093, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: f5bd301641964bc4682d085fc5c0f6e5, type: 3}
   _isStored: 0
   _objectPhysicalStats:
     _mass: 2.8
@@ -41384,6 +41384,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 915237632}
     m_Modifications:
+    - target: {fileID: 5852377864760286169, guid: c43b4ab36a754de46bda600c3a1499e4,
+        type: 3}
+      propertyPath: _allowedResourceTypes.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5852377864760286169, guid: c43b4ab36a754de46bda600c3a1499e4,
+        type: 3}
+      propertyPath: _storedItem
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5852377864760286169, guid: c43b4ab36a754de46bda600c3a1499e4,
+        type: 3}
+      propertyPath: _resourceMaterial
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5852377864760286170, guid: c43b4ab36a754de46bda600c3a1499e4,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 5852377866001801957, guid: c43b4ab36a754de46bda600c3a1499e4,
         type: 3}
       propertyPath: m_Name
@@ -41497,17 +41517,17 @@ PrefabInstance:
     - target: {fileID: 5852377866001801958, guid: c43b4ab36a754de46bda600c3a1499e4,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5852377866001801958, guid: c43b4ab36a754de46bda600c3a1499e4,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5852377866001801958, guid: c43b4ab36a754de46bda600c3a1499e4,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c43b4ab36a754de46bda600c3a1499e4, type: 3}

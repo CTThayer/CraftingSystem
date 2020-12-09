@@ -142,9 +142,9 @@ public class ResourceSlot : ItemSlot
     }
 
     /**************************** EDITOR FUNCTIONS ****************************/
-    protected override void OnValidate()
-    {
-        base.OnValidate();
-    }
+    //protected override void OnValidate()
+    //{
+    //    base.OnValidate();
+    //}
     /************************** END EDITOR FUNCTIONS **************************/
 }
