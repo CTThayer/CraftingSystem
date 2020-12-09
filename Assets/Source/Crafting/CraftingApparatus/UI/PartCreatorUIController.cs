@@ -96,7 +96,7 @@ public class PartCreatorUIController : MonoBehaviour
 
     public void LaunchPartCreatorUI()
     {
-        _partDesignSelectorMenu.gameObject.SetActive(true);
+        _partDesignSelectorMenu.transform.parent.gameObject.SetActive(true);
         _textIOPanel.SetInteractivity(false);
         _craftPartButton.interactable = false;
     }
@@ -126,6 +126,11 @@ public class PartCreatorUIController : MonoBehaviour
     {
         _resourcePanel.SetResourceMaterialCallbacks(_partCreator.ApplyMaterial,
                                                     _partCreator.RemoveMaterial);
+    }
+
+    public void OnExit()
+    {
+        //_partDesignSelectorMenu.gameObject.SetActive(true);
     }
 
 }

@@ -77,9 +77,9 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
         _partCreatorUICanvas.gameObject.SetActive(false);
 
         // Deactivate all associated UI scripts
-        _initialPartCraftingMenu.enabled = false;
-        _partDesignerUIController.enabled = false;
-        _partCreatorUIController.enabled = false;
+        //_initialPartCraftingMenu.enabled = false;
+        //_partDesignerUIController.enabled = false;
+        //_partCreatorUIController.enabled = false;
     }
 
     /************************** Input Field Actions ***************************/

@@ -163,13 +163,15 @@ public class PartCraftingApparatus : CraftingApparatus
     // Exits the apparatus
     public override void Exit()
     {
-        // If ther is an active part that has not been finished, destroy it
+        // If there is an active part that has not been finished, destroy it
         if (resultObject != null && !_partIsComplete)
             Destroy(resultObject);
 
         uiManager.DeactivateUI();
         DeactivatePartDesigner();
         DeactivatePartCreator();
+
+
         characterUsingApp.ReactivateCharacterInput();
         characterUsingApp.ReactivateCharacterHUD();
         SwitchToPlayerCamera();
