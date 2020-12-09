@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7013090638038785727}
   - component: {fileID: 5246714942897815629}
   - component: {fileID: 4900033043190110862}
+  - component: {fileID: 3353109560948974578}
   m_Layer: 0
   m_Name: AxeHandle_Simple
   m_TagString: Untagged
@@ -113,7 +114,7 @@ CapsuleCollider:
   m_Radius: 0.021826172
   m_Height: 0.63
   m_Direction: 1
-  m_Center: {x: 0, y: 0.000000014901161, z: 0}
+  m_Center: {x: 0, y: 0.315, z: 0}
 --- !u!114 &5246714942897815629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +131,7 @@ MonoBehaviour:
   _isStored: 1
   _objectPhysicalStats:
     _mass: 0.21168
-    _volume: 0.000504
+    _volume: 0.0009864
 --- !u!114 &4900033043190110862
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,6 +148,28 @@ MonoBehaviour:
   defaultIndex: 0
   actionNames:
   - Add to Inventory
+--- !u!114 &3353109560948974578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410767320881816214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d84c76f32707bb64385c70ac0e8e2410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _partType: 
+  physicalStats:
+    _mass: 0.21168
+    _volume: 0.0009864
+  _maxDurability: 0
+  _currentDurability: 0
+  _partQuality: 0
+  _craftingMaterial: {fileID: 0}
+  _connectionPoints: []
+  _connectedParts: []
 --- !u!1 &1659015180963660225
 GameObject:
   m_ObjectHideFlags: 0

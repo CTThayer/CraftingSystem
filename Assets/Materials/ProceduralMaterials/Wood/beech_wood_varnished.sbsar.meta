@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 4555517faab09ad428a73a8ce23c0ff5
+guid: 76ddc7ef2f884e54ab633487c6b57936
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,14 +11,33 @@ ScriptedImporter:
   version: 29
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Antique Bronze Shagreen
-    prototypeName: Antique Bronze Shagreen
+  - graphLabel: Beech Wood Varnished
+    prototypeName: Beech Wood Varnished
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://antique_bronze_shagreen\" label=\"\" >\n 
-      <presetinput identifier=\"$outputsize\" uid=\"3740566081\" type=\"8\" value=\"10,10\"
-      />\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://beech_wood_varnished\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"2517475724\" type=\"8\" value=\"11,11\" />\n 
+      <presetinput identifier=\"$randomseed\" uid=\"3246372830\" type=\"4\" value=\"7642\"
+      />\n  <presetinput identifier=\"wood_color\" uid=\"4265209855\" type=\"2\"
+      value=\"0.754717,0.563904,0.316839\" />\n  <presetinput identifier=\"wood_color_variation\"
+      uid=\"4265209849\" type=\"0\" value=\"0.045\" />\n  <presetinput identifier=\"veins_contrast\"
+      uid=\"4265209851\" type=\"0\" value=\"0.612\" />\n  <presetinput identifier=\"cut\"
+      uid=\"4265209847\" type=\"4\" value=\"3\" />\n  <presetinput identifier=\"knots_amount\"
+      uid=\"4265209841\" type=\"0\" value=\"0.602\" />\n  <presetinput identifier=\"fibers\"
+      uid=\"4265209843\" type=\"0\" value=\"0.501\" />\n  <presetinput identifier=\"rotate_90\"
+      uid=\"4265209741\" type=\"4\" value=\"1\" />\n  <presetinput identifier=\"varnish_uniformity\"
+      uid=\"4265209735\" type=\"0\" value=\"0.726\" />\n  <presetinput identifier=\"varnish_color_intensity\"
+      uid=\"4265209729\" type=\"0\" value=\"0\" />\n  <presetinput identifier=\"varnish_roughness\"
+      uid=\"4265209757\" type=\"0\" value=\"0.451\" />\n  <presetinput identifier=\"normal_fibers_orientation_variations\"
+      uid=\"4265209749\" type=\"0\" value=\"0.771\" />\n  <presetinput identifier=\"scratches_intensity\"
+      uid=\"4265209745\" type=\"0\" value=\"0.891\" />\n  <presetinput identifier=\"scratches_color\"
+      uid=\"4265209747\" type=\"2\" value=\"0.820755,0.68018,0.507164\" />\n  <presetinput
+      identifier=\"scratches_color_opacity\" uid=\"4265209773\" type=\"0\" value=\"0.087\"
+      />\n  <presetinput identifier=\"scratches_roughness\" uid=\"4265209775\" type=\"0\"
+      value=\"0.794\" />\n  <presetinput identifier=\"scratches_scale\" uid=\"4265209769\"
+      type=\"0\" value=\"0.637\" />\n  <presetinput identifier=\"scratches_density\"
+      uid=\"4265209771\" type=\"0\" value=\"0.473\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
@@ -29,7 +48,7 @@ ScriptedImporter:
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 616382598929281241, guid: 4555517faab09ad428a73a8ce23c0ff5,
+        texture: {fileID: -6150540488520488347, guid: 76ddc7ef2f884e54ab633487c6b57936,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -50,22 +69,22 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: -1211405393191431556, guid: 4555517faab09ad428a73a8ce23c0ff5,
+        texture: {fileID: 516946951880866371, guid: 76ddc7ef2f884e54ab633487c6b57936,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: -5279060674379607881, guid: 4555517faab09ad428a73a8ce23c0ff5,
+        texture: {fileID: 4524006064023929844, guid: 76ddc7ef2f884e54ab633487c6b57936,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {fileID: 3944168520705649035, guid: 4555517faab09ad428a73a8ce23c0ff5,
+        texture: {fileID: -4313929447380518017, guid: 76ddc7ef2f884e54ab633487c6b57936,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: -84037556824971382, guid: 4555517faab09ad428a73a8ce23c0ff5,
+        texture: {fileID: 5366670760416139076, guid: 76ddc7ef2f884e54ab633487c6b57936,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -236,39 +255,39 @@ ScriptedImporter:
         from: 0
         to: 3
     textureParameters:
-    - textureName: Antique Bronze Shagreen - diffuse
+    - textureName: Beech Wood Varnished - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - baseColor
+    - textureName: Beech Wood Varnished - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - normal
+    - textureName: Beech Wood Varnished - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - specular
+    - textureName: Beech Wood Varnished - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - glossiness
+    - textureName: Beech Wood Varnished - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - roughness
+    - textureName: Beech Wood Varnished - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - metallic
+    - textureName: Beech Wood Varnished - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - height
+    - textureName: Beech Wood Varnished - height
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Antique Bronze Shagreen - ambientOcclusion
+    - textureName: Beech Wood Varnished - ambientOcclusion
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -278,16 +297,16 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 2048
+      textureHeight: 2048
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: 5655380310462222835, guid: 4555517faab09ad428a73a8ce23c0ff5,
+    material: {fileID: -858600097934727085, guid: 76ddc7ef2f884e54ab633487c6b57936,
       type: 3}
     generatedTextures:
-    - {fileID: -1211405393191431556, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
-    - {fileID: 616382598929281241, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
-    - {fileID: -5279060674379607881, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
-    - {fileID: -84037556824971382, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
-    - {fileID: 3944168520705649035, guid: 4555517faab09ad428a73a8ce23c0ff5, type: 3}
+    - {fileID: 516946951880866371, guid: 76ddc7ef2f884e54ab633487c6b57936, type: 3}
+    - {fileID: -6150540488520488347, guid: 76ddc7ef2f884e54ab633487c6b57936, type: 3}
+    - {fileID: 4524006064023929844, guid: 76ddc7ef2f884e54ab633487c6b57936, type: 3}
+    - {fileID: 5366670760416139076, guid: 76ddc7ef2f884e54ab633487c6b57936, type: 3}
+    - {fileID: -4313929447380518017, guid: 76ddc7ef2f884e54ab633487c6b57936, type: 3}

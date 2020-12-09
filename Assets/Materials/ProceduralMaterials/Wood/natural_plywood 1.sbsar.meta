@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: a3918de938da6e44a9704dfb27c56459
+guid: 02999730b9e3a4d44b7b7d98bdf3c5fe
 ScriptedImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -11,30 +11,45 @@ ScriptedImporter:
   version: 29
   projectContext: 0
   mGraphInstanceData:
-  - graphLabel: Metal Grinded
-    prototypeName: Metal Grinded
+  - graphLabel: Natural Plywood
+    prototypeName: Natural Plywood
     graphDescIndex: 0
     generateAllOutputs: 0
     generateMipMaps: 1
-    preset: " <sbspreset pkgurl=\"pkg://metal_grinded\" label=\"\" >\n  <presetinput
-      identifier=\"$outputsize\" uid=\"1986453806\" type=\"8\" value=\"10,10\" />\n 
-      <presetinput identifier=\"$randomseed\" uid=\"555022204\" type=\"4\" value=\"7490\"
-      />\n  <presetinput identifier=\"color\" uid=\"42076609\" type=\"2\" value=\"0.5,0.5,0.5\"
-      />\n  <presetinput identifier=\"grinding\" uid=\"42099902\" type=\"0\" value=\"0.768\"
-      />\n  <presetinput identifier=\"slashes\" uid=\"42955659\" type=\"0\" value=\"0.4\"
-      />\n  <presetinput identifier=\"roughness\" uid=\"42080047\" type=\"0\" value=\"0.622\"
-      />\n </sbspreset>\n"
+    preset: " <sbspreset pkgurl=\"pkg://natural_plywood\" label=\"\" >\n  <presetinput
+      identifier=\"$outputsize\" uid=\"3540705134\" type=\"8\" value=\"11,11\" />\n 
+      <presetinput identifier=\"$randomseed\" uid=\"2222508348\" type=\"4\" value=\"6012\"
+      />\n  <presetinput identifier=\"wood_color\" uid=\"3141131470\" type=\"2\"
+      value=\"0.603774,0.373634,0.224991\" />\n  <presetinput identifier=\"veins_color\"
+      uid=\"3141131468\" type=\"2\" value=\"0.433962,0.231966,0.116679\" />\n  <presetinput
+      identifier=\"wood_roughness\" uid=\"3141131466\" type=\"0\" value=\"0.463\"
+      />\n  <presetinput identifier=\"veins_warping\" uid=\"3141131464\" type=\"0\"
+      value=\"1\" />\n  <presetinput identifier=\"dark_veins_spread\" uid=\"3141131462\"
+      type=\"0\" value=\"0.468\" />\n  <presetinput identifier=\"dark_edges_intensity\"
+      uid=\"3141131460\" type=\"0\" value=\"0.85\" />\n  <presetinput identifier=\"rotate_90\"
+      uid=\"3141131458\" type=\"4\" value=\"1\" />\n  <presetinput identifier=\"scratches_intensity\"
+      uid=\"3141131480\" type=\"0\" value=\"0.699\" />\n  <presetinput identifier=\"scratches_color\"
+      uid=\"3141131478\" type=\"2\" value=\"0.698113,0.53233,0.424795\" />\n  <presetinput
+      identifier=\"scratches_scale\" uid=\"3141131476\" type=\"0\" value=\"0.838\"
+      />\n  <presetinput identifier=\"scratches_density\" uid=\"3141131474\" type=\"0\"
+      value=\"0.855\" />\n  <presetinput identifier=\"roughness_uniformity\" uid=\"3141131308\"
+      type=\"0\" value=\"0.418\" />\n  <presetinput identifier=\"relief_intensity\"
+      uid=\"3141131306\" type=\"0\" value=\"0.056\" />\n  <presetinput identifier=\"relief_angle\"
+      uid=\"3141131304\" type=\"0\" value=\"0.276\" />\n  <presetinput identifier=\"relief_damages_variations\"
+      uid=\"3141131302\" type=\"0\" value=\"0.923\" />\n  <presetinput identifier=\"height_range\"
+      uid=\"2927072661\" type=\"0\" value=\"0.845\" />\n  <presetinput identifier=\"height_position\"
+      uid=\"2927072740\" type=\"0\" value=\"1\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-      shaderKeywords: _MAINTEX _METALLICGLOSSMAP _NORMALMAP _PARALLAXMAP
+      shaderKeywords: _MAINTEX _METALLICGLOSSMAP _NORMALMAP _OCCLUSIONMAP _PARALLAXMAP
       lightmapFlags: 4
       enableInstancingVariants: 0
       doubleSidedGI: 0
       customRenderQueue: -1
       texEnvs:
       - name: _BumpMap
-        texture: {fileID: 6275118376171300557, guid: a3918de938da6e44a9704dfb27c56459,
+        texture: {fileID: -6275212722914487667, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -55,21 +70,22 @@ ScriptedImporter:
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MainTex
-        texture: {fileID: 7055666772098914877, guid: a3918de938da6e44a9704dfb27c56459,
+        texture: {fileID: 2787838188943532108, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _MetallicGlossMap
-        texture: {fileID: 7107561213847055023, guid: a3918de938da6e44a9704dfb27c56459,
+        texture: {fileID: 991684135725886789, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _OcclusionMap
-        texture: {instanceID: 0}
+        texture: {fileID: -7683128724920732640, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
+          type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
       - name: _ParallaxMap
-        texture: {fileID: 2309880954771716325, guid: a3918de938da6e44a9704dfb27c56459,
+        texture: {fileID: 6945328894098042822, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
           type: 3}
         scale: {x: 1, y: 1}
         offset: {x: 0, y: 0}
@@ -184,6 +200,15 @@ ScriptedImporter:
       bImage: 1
       bNumerical: 0
       bLinear: 1
+    - outputName: ambientOcclusion
+      identifier: ambientocclusion
+      usageName: ambientOcclusion
+      channelStr: ambientOcclusion
+      label: Ambient Occlusion
+      usage: 5
+      bImage: 1
+      bNumerical: 0
+      bLinear: 1
     texturePackingList:
     - targetName: diffuse
       components:
@@ -225,36 +250,45 @@ ScriptedImporter:
       - sourceName: height
         from: 0
         to: 3
+    - targetName: ambientOcclusion
+      components:
+      - sourceName: ambientOcclusion
+        from: 0
+        to: 3
     textureParameters:
-    - textureName: Metal Grinded - diffuse
+    - textureName: Natural Plywood - diffuse
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - baseColor
+    - textureName: Natural Plywood - baseColor
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - normal
+    - textureName: Natural Plywood - normal
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - specular
+    - textureName: Natural Plywood - specular
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - glossiness
+    - textureName: Natural Plywood - glossiness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - roughness
+    - textureName: Natural Plywood - roughness
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - metallic
+    - textureName: Natural Plywood - metallic
       wrapMode: 0
       filterMode: 1
       aniso: 1
-    - textureName: Metal Grinded - height
+    - textureName: Natural Plywood - height
+      wrapMode: 0
+      filterMode: 1
+      aniso: 1
+    - textureName: Natural Plywood - ambientOcclusion
       wrapMode: 0
       filterMode: 1
       aniso: 1
@@ -264,15 +298,16 @@ ScriptedImporter:
     - label: Default
       bOverride: 0
       bLockRatio: 1
-      textureWidth: 1024
-      textureHeight: 1024
+      textureWidth: 2048
+      textureHeight: 2048
       textureFormatMode: 0
       normalCompressed: 0
       bGenerateOnLoad: 1
-    material: {fileID: 2714208726103106065, guid: a3918de938da6e44a9704dfb27c56459,
+    material: {fileID: -7539826263585049050, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe,
       type: 3}
     generatedTextures:
-    - {fileID: 7055666772098914877, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
-    - {fileID: 6275118376171300557, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
-    - {fileID: 7107561213847055023, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
-    - {fileID: 2309880954771716325, guid: a3918de938da6e44a9704dfb27c56459, type: 3}
+    - {fileID: 2787838188943532108, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe, type: 3}
+    - {fileID: -6275212722914487667, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe, type: 3}
+    - {fileID: 991684135725886789, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe, type: 3}
+    - {fileID: 6945328894098042822, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe, type: 3}
+    - {fileID: -7683128724920732640, guid: 02999730b9e3a4d44b7b7d98bdf3c5fe, type: 3}
