@@ -15,7 +15,6 @@ public class PlayerCharacter : MonoBehaviour
     public GameObject playerCamObj { get => _playerCamObj; }
 
     // Character Panel (Inventory & Equipment)
-    //[SerializeField] private TwoPanelController characterPanelController;
     [SerializeField] private Storage _inventory;
     public Storage inventory { get => _inventory; }
 
@@ -72,6 +71,7 @@ public class PlayerCharacter : MonoBehaviour
     public void DeactivateCharacterCamera()
     {
         _playerCamObj.GetComponentInChildren<Camera>().enabled = false;
+        _playerCamObj.SetActive(false);
     }
 
     public void ReactivateCharacterCamera()
@@ -106,13 +106,11 @@ public class PlayerCharacter : MonoBehaviour
 
     public void DeactivateEquipmentMenu()
     {
-        //_equipmentMenu.enabled = false;
         _equipmentMenu.ignoreInput = true;
     }
 
     public void ReactivateEquipmentMenu()
     {
-        //_equipmentMenu.enabled = true;
         _equipmentMenu.ignoreInput = false;
     }
 }
