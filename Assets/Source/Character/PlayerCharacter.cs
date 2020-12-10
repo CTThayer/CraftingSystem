@@ -60,7 +60,6 @@ public class PlayerCharacter : MonoBehaviour
         characterMotionController.InputSource.IsEnabled = false;
         _interactionController.isInteractionActive = false;
         _isInputActive = false;
-        _equipmentMenu.enabled = false;
     }
 
     public void ReactivateCharacterInput()
@@ -68,13 +67,11 @@ public class PlayerCharacter : MonoBehaviour
         characterMotionController.InputSource.IsEnabled = true;
         _interactionController.isInteractionActive = true;
         _isInputActive = true;
-        _equipmentMenu.enabled = true;
     }
 
     public void DeactivateCharacterCamera()
     {
         _playerCamObj.GetComponentInChildren<Camera>().enabled = false;
-        _playerCamObj.SetActive(false);
     }
 
     public void ReactivateCharacterCamera()
@@ -109,11 +106,13 @@ public class PlayerCharacter : MonoBehaviour
 
     public void DeactivateEquipmentMenu()
     {
-        _equipmentMenu.enabled = false;
+        //_equipmentMenu.enabled = false;
+        _equipmentMenu.ignoreInput = true;
     }
 
     public void ReactivateEquipmentMenu()
     {
-        _equipmentMenu.enabled = true;
+        //_equipmentMenu.enabled = true;
+        _equipmentMenu.ignoreInput = false;
     }
 }

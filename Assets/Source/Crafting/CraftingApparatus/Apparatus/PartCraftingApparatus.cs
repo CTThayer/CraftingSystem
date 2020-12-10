@@ -144,6 +144,7 @@ public class PartCraftingApparatus : CraftingApparatus
             _characterUsingApp = pc;
             _characterUsingApp.DeactivateCharacterInput();
             _characterUsingApp.DeactivateCharacterHUD();
+            _characterUsingApp.DeactivateEquipmentMenu();
 
             // Enable crafting camera.
             //craftingCamera.SetActive(true);
@@ -171,8 +172,9 @@ public class PartCraftingApparatus : CraftingApparatus
         DeactivatePartDesigner();
         DeactivatePartCreator();
 
-        characterUsingApp.ReactivateCharacterInput();
-        characterUsingApp.ReactivateCharacterHUD();
+        _characterUsingApp.ReactivateCharacterInput();
+        _characterUsingApp.ReactivateCharacterHUD();
+        _characterUsingApp.ReactivateEquipmentMenu();
         SwitchToPlayerCamera();
         _characterUsingApp = null;
     }
@@ -204,8 +206,9 @@ public class PartCraftingApparatus : CraftingApparatus
         _uiManager.partCreatorUIController.ActivateBackgroundUI();
         //_uiManager.partCreatorUIController.LoadResourceSlots(slotPrefab, reqs);
         _uiManager.partCreatorUIController.LoadResourceSlots(reqs);
-        characterUsingApp.DeactivateCharacterInput();
-        characterUsingApp.DeactivateCharacterHUD();
+        _characterUsingApp.DeactivateCharacterInput();
+        _characterUsingApp.DeactivateCharacterHUD();
+        _characterUsingApp.DeactivateEquipmentMenu();
     }
 
     public void DeactivatePartCreator()
@@ -219,12 +222,12 @@ public class PartCraftingApparatus : CraftingApparatus
     {
         _characterUsingApp.DeactivateCharacterCamera();
         craftingCamera.SetActive(true);
-        camController.enabled = true;
+        _camController.enabled = true;
     }
 
     public void SwitchToPlayerCamera()
     {
-        camController.enabled = false;
+        _camController.enabled = false;
         craftingCamera.SetActive(false);
         _characterUsingApp.ReactivateCharacterCamera();
     }

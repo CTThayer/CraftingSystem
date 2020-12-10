@@ -15,29 +15,35 @@ public class EquipmentMenuController : MonoBehaviour
 
     private bool _isEquipmentMenuOpen;
 
+    public bool ignoreInput;
+
     // Start is called before the first frame update
     void Start()
     {
         Debug.Assert(playerCharacter != null);
         Debug.Assert(playerEquipmentCanvas != null);
+        ignoreInput = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.I))
+        if (ignoreInput == false)
         {
-            if (!_isEquipmentMenuOpen)
-                ActivateEquipmentMenu();
-            else
-                DeactivateEquipmentMenu();
-            return;
-        }
+            if (Input.GetKeyUp(KeyCode.I))
+            {
+                if (!_isEquipmentMenuOpen)
+                    ActivateEquipmentMenu();
+                else
+                    DeactivateEquipmentMenu();
+                return;
+            }
 
-        else if (Input.GetKeyUp(KeyCode.Escape) && _isEquipmentMenuOpen)
-        {
-            DeactivateEquipmentMenu();
-            return;
+            else if (Input.GetKeyUp(KeyCode.Escape) && _isEquipmentMenuOpen)
+            {
+                DeactivateEquipmentMenu();
+                return;
+            }
         }
     }
 
