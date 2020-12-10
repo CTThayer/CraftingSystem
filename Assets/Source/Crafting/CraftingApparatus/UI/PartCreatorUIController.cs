@@ -105,15 +105,15 @@ public class PartCreatorUIController : MonoBehaviour
     {
         _textIOPanel.SetInteractivity(true);
         _craftPartButton.interactable = true;
-
         _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
-
     }
 
-    public void LoadResourceSlots(GameObject resourceSlotPrefab, PartRequirements reqs)
+    //public void LoadResourceSlots(GameObject resourceSlotPrefab, PartRequirements reqs)
+    public void LoadResourceSlots(PartRequirements reqs)
     {
         _resourcePanel.Initialize();
-        _resourcePanel.LoadResourceSlots(resourceSlotPrefab, reqs);
+        //_resourcePanel.LoadResourceSlots(resourceSlotPrefab, reqs);
+        _resourcePanel.LoadResourceSlots(reqs);
         SetResourcePanelSlotCallbacks();
     }
 

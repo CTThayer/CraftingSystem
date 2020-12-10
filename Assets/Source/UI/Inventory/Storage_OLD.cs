@@ -65,8 +65,8 @@ public class Storage_OLD : MonoBehaviour, ISlotPanelIO
     // Attempts to add the specified storable to the storage.
     public bool AddItem(Storable storableObject)
     {
-        float m = storableObject.objectPhysicalStats.mass;
-        float v = storableObject.objectPhysicalStats.volume;
+        float m = storableObject.physicalStats.mass;
+        float v = storableObject.physicalStats.volume;
         if (massCurrentlyUsed + m < massCapacity
             && volumeCurrentlyUsed + v < volumeCapacity)
         {
@@ -92,8 +92,8 @@ public class Storage_OLD : MonoBehaviour, ISlotPanelIO
             if (storageSlots[i].storedItem == storableObject)
             {
                 storageSlots[i].storedItem = null;
-                massCurrentlyUsed -= storableObject.objectPhysicalStats.mass;
-                volumeCurrentlyUsed -= storableObject.objectPhysicalStats.volume;
+                massCurrentlyUsed -= storableObject.physicalStats.mass;
+                volumeCurrentlyUsed -= storableObject.physicalStats.volume;
 
                 // TODO: Where should we reactivate the object in the world?
 
@@ -134,8 +134,8 @@ public class Storage_OLD : MonoBehaviour, ISlotPanelIO
     public ItemSlot CanAdd(ItemSlot input)
     {
         Storable storableObject = input.storedItem;
-        float m = storableObject.objectPhysicalStats.mass;
-        float v = storableObject.objectPhysicalStats.volume;
+        float m = storableObject.physicalStats.mass;
+        float v = storableObject.physicalStats.volume;
         if (massCurrentlyUsed + m < massCapacity
             && volumeCurrentlyUsed + v < volumeCapacity)
         {

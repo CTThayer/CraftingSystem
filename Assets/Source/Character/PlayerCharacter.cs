@@ -60,6 +60,7 @@ public class PlayerCharacter : MonoBehaviour
         characterMotionController.InputSource.IsEnabled = false;
         _interactionController.isInteractionActive = false;
         _isInputActive = false;
+        _equipmentMenu.enabled = false;
     }
 
     public void ReactivateCharacterInput()
@@ -67,6 +68,7 @@ public class PlayerCharacter : MonoBehaviour
         characterMotionController.InputSource.IsEnabled = true;
         _interactionController.isInteractionActive = true;
         _isInputActive = true;
+        _equipmentMenu.enabled = true;
     }
 
     public void DeactivateCharacterCamera()

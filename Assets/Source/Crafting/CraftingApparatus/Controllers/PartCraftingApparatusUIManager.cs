@@ -213,8 +213,8 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
 
         // Launch the part creator and activate it's canvas
         _partCreatorUICanvas.gameObject.SetActive(true);
-        //_craftingApparatus.ActivatePartCreator();
         _partCreatorUIController.LaunchPartCreatorUI();
+
     }
 
     /* On Continue To Part Crafting

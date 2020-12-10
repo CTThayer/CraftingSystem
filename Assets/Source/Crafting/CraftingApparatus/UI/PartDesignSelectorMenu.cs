@@ -156,8 +156,8 @@ public class PartDesignSelectorMenu : MonoBehaviour
             _craftingApparatus.LoadDesign(selectedType,
                                           selectedSubtype,
                                           selectedPartName);
-            _craftingApparatus.ActivatePartCreator();
             transform.parent.gameObject.SetActive(false);
+            _craftingApparatus.ActivatePartCreator();
         }
         // TODO: Handle case where options aren't set
     }

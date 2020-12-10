@@ -367,6 +367,7 @@ GameObject:
   - component: {fileID: 8523236503588147911}
   - component: {fileID: 6605863378382302539}
   - component: {fileID: 8481554404981913872}
+  - component: {fileID: 6496769653174422279}
   m_Layer: 0
   m_Name: AxeHead_DoubleSided_Simple
   m_TagString: Untagged
@@ -489,9 +490,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ffb88af074004f04c95649436ccff4b6, type: 3}
   _isStored: 0
-  _objectPhysicalStats:
+  _physicalStats:
     _mass: 0
-    _volume: 0.0004
+    _volume: 0.0002
 --- !u!114 &8481554404981913872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -508,6 +509,29 @@ MonoBehaviour:
   defaultIndex: 0
   actionNames:
   - Add to Inventory
+--- !u!114 &6496769653174422279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6608579763268904895}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d84c76f32707bb64385c70ac0e8e2410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _partType: AxeHead
+  physicalStats:
+    _mass: 0
+    _volume: 0.0002
+  _maxDurability: 0
+  _currentDurability: 0
+  _partQuality: 0
+  _craftingMaterial: {fileID: 0}
+  _connectionPoints:
+  - {fileID: 8279793561992331266}
+  _connectedParts: []
 --- !u!1 &7176210880872113302
 GameObject:
   m_ObjectHideFlags: 0

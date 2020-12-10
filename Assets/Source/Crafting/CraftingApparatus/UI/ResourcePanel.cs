@@ -53,11 +53,11 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         _isInitialized = true;
     }
 
-    public void LoadResourceSlots(GameObject resourceSlotsPrefab, PartRequirements partReqs)
+    public void LoadResourceSlots(PartRequirements partReqs)
     {
-        ResourceSlot[] prefabSlots = resourceSlotsPrefab.GetComponentsInChildren<ResourceSlot>();
-        if (prefabSlots == null || prefabSlots.Length == 0)
-            return;
+        //ResourceSlot[] prefabSlots = resourceSlotsPrefab.GetComponentsInChildren<ResourceSlot>();
+        //if (prefabSlots == null || prefabSlots.Length == 0)
+        //    return;
 
         //// Clear any old ui objects
         //ClearSlotLayout();
@@ -85,7 +85,7 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
     public float GetResourceVolumeFromSlot(int index)
     {
         if (index < _slots.Length && _slots[index] != null)
-            return _slots[index].storedItem.objectPhysicalStats.volume;
+            return _slots[index].storedItem.physicalStats.volume;
         else
             return -1f;
     }
@@ -105,7 +105,7 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         List<float> volumes = new List<float>();
         for (int i = 0; i < _slots.Length; i++)
         {
-            volumes.Add(_slots[i].storedItem.objectPhysicalStats.volume);
+            volumes.Add(_slots[i].storedItem.physicalStats.volume);
         }
         return volumes;
     }
@@ -118,7 +118,7 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         for (int i = 0; i < _slots.Length; i++)
         {
             materials.Add(_slots[i].resourceMaterial);
-            volumes.Add(_slots[i].storedItem.objectPhysicalStats.volume);
+            volumes.Add(_slots[i].storedItem.physicalStats.volume);
         }
     }
 
@@ -127,8 +127,8 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
         int rCount = _slots[slotIndex].GetResourceCountInSlot();
         if (rCount == 0)
             return -1;
-        float rVolume = _slots[slotIndex].storedItem.objectPhysicalStats.volume;
-        if (rVolume > targetVolume)
+        float rVolume = _slots[slotIndex].storedItem.physicalStats.volume;
+        if (rVolume <= targetVolume)
             return 1;
         else
             return (int)Mathf.Ceil(targetVolume / rVolume);

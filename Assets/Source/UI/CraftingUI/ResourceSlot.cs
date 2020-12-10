@@ -98,10 +98,23 @@ public class ResourceSlot : ItemSlot
             return false;
         for (int i = 0; i < quantity; i++)
         {
-            Storable s = resources[resources.Count - 1 - i];
-            resources.RemoveAt(resources.Count - 1 - i);
-            if (s = storedItem)
+            //Storable s = resources[resources.Count - 1 - i];
+            //resources.RemoveAt(resources.Count - 1 - i);
+            //if (s = storedItem)
+            //    storedItem = null;
+            //Destroy(s.gameObject);
+
+            Storable s = storedItem;
+            if (resources.Count > 1)
+            {
+                resources.RemoveAt(0);
+                storedItem = resources[0];
+            }
+            else
+            {
+                resources.RemoveAt(0);
                 storedItem = null;
+            }
             Destroy(s.gameObject);
         }
         return true;

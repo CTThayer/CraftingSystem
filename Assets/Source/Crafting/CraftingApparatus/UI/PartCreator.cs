@@ -85,11 +85,30 @@ public class PartCreator : MonoBehaviour
         Storable storable = part.GetComponent<Storable>();
         if (storable == null)
             return false;
-        float v = storable.objectPhysicalStats.volume;
+        float v = storable.physicalStats.volume;
+        if (v <= 0)
+        {
+            // TODO: Add mesh volume calculation here when Mesh Utility is fixed
+            Debug.Log("PartCreator: FinishPart: Volume of storable was zero.");
+        }
+        CraftingMaterial craftingMaterial = _partCreatorUI.resourcePanel.GetResourceMaterialFromSlot(0);
         int numResources = _partCreatorUI.resourcePanel.GetQuantityRequiredForVolume(0, v);
         if (_partCreatorUI.resourcePanel.UseResourcesFromSlot(0, numResources))
         {
+            ItemPart partScript = part.GetComponent<ItemPart>();
+            if (partScript == null)
+                partScript = part.AddComponent<ItemPart>();
+
+            storable.physicalStats.mass = craftingMaterial.density * v;
+            partScript.physicalStats.mass = craftingMaterial.density * v;
+            partScript.physicalStats.volume = v;
+            partScript.craftingMaterial = craftingMaterial;
+            partScript.maxDurability = craftingMaterial.baseDurability * v * 1000000f;
+            partScript.currentDurability = partScript.maxDurability;
+            partScript.partQuality = craftingMaterial.rarity;                   // TODO: Implement actual checks against skills, tools used, etc. once these are in the system.
+            
             // TODO: What else need to be done to complete this part?
+
             return true;
         }
         return false;
@@ -103,8 +122,10 @@ public class PartCreator : MonoBehaviour
         SubstanceGraph sgo =  craftingMat.materialSubstanceGraph;
 
         GameObject obj = _craftingApparatus.GetLoadedDesign();
-        //textureFactory.GetVariationAndApplyToObject(sgo, obj, index);
+
         textureFactory.GetVariationAndApplyToObject(sgo, obj);
+
+        _materialsAreSet = true;
     }
 
     public void RemoveMaterial(CraftingMaterial craftingMat, int index)
@@ -113,7 +134,9 @@ public class PartCreator : MonoBehaviour
             return;
 
         GameObject obj = _craftingApparatus.GetLoadedDesign();
-        //textureFactory.GetVariationAndApplyToObject(sgo, obj, index);
+
         textureFactory.ResetObjectToDefaultMaterial(obj);
+
+        _materialsAreSet = false;
     }
 }

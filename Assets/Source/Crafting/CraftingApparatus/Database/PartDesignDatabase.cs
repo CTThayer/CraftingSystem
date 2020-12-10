@@ -36,8 +36,7 @@ public class PartDesignDatabase : MonoBehaviour
     public GameObject GetPartDesign(string partType,
                                     string partSubtype,
                                     string partName,
-                                    out PartRequirements partReqs,
-                                    out GameObject resourceSlotPrefab)
+                                    out PartRequirements partReqs)
     {
         for (int i = 0; i < partDesignCollections.Length; i++)
         {
@@ -50,14 +49,12 @@ public class PartDesignDatabase : MonoBehaviour
                     if (designs[j].name == partName)
                     {
                         partReqs = partDesignCollections[i].partReqs;
-                        resourceSlotPrefab = partDesignCollections[i].resourceSlotLayout;
                         return designs[j];
                     }
                 }
             }
         }
         partReqs = null;
-        resourceSlotPrefab = null;
         return null;
     }
 

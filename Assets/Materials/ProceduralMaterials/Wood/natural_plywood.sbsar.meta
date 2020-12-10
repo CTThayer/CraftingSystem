@@ -24,8 +24,7 @@ ScriptedImporter:
       uid=\"3141131466\" type=\"0\" value=\"0.623\" />\n  <presetinput identifier=\"veins_warping\"
       uid=\"3141131464\" type=\"0\" value=\"0.739\" />\n  <presetinput identifier=\"dark_veins_spread\"
       uid=\"3141131462\" type=\"0\" value=\"0.429\" />\n  <presetinput identifier=\"dark_edges_intensity\"
-      uid=\"3141131460\" type=\"0\" value=\"0.908\" />\n  <presetinput identifier=\"rotate_90\"
-      uid=\"3141131458\" type=\"4\" value=\"1\" />\n  <presetinput identifier=\"scratches_intensity\"
+      uid=\"3141131460\" type=\"0\" value=\"0.908\" />\n  <presetinput identifier=\"scratches_intensity\"
       uid=\"3141131480\" type=\"0\" value=\"0.636\" />\n  <presetinput identifier=\"scratches_color\"
       uid=\"3141131478\" type=\"2\" value=\"0.698113,0.571815,0.418209\" />\n  <presetinput
       identifier=\"scratches_scale\" uid=\"3141131476\" type=\"0\" value=\"0.804\"

@@ -64,8 +64,8 @@ public class Storage : MonoBehaviour
             _storedItems[index] = s;
             s.DeactivateInWorld();
             //count++;
-            massCurrent += s.objectPhysicalStats.mass;
-            volumeCurrent += s.objectPhysicalStats.volume;
+            massCurrent += s.physicalStats.mass;
+            volumeCurrent += s.physicalStats.volume;
             return true;
         }
         return false;
@@ -98,8 +98,8 @@ public class Storage : MonoBehaviour
                 if (s != null)
                 {
                     s.DeactivateInWorld();
-                    massCurrent += s.objectPhysicalStats.mass;
-                    volumeCurrent += s.objectPhysicalStats.volume;
+                    massCurrent += s.physicalStats.mass;
+                    volumeCurrent += s.physicalStats.volume;
                 }
                 //count++;
                 return true;
@@ -128,8 +128,8 @@ public class Storage : MonoBehaviour
             _storedItems[index] = null;
             if (s != null)
             {
-                massCurrent -= s.objectPhysicalStats.mass;
-                volumeCurrent -= s.objectPhysicalStats.volume;
+                massCurrent -= s.physicalStats.mass;
+                volumeCurrent -= s.physicalStats.volume;
             }
             return s;
         }
@@ -177,8 +177,8 @@ public class Storage : MonoBehaviour
     {
         if (storable == null)
             return true;                                                        // Is this correct? Do we want false instead?
-        float m = storable.objectPhysicalStats.mass;
-        float v = storable.objectPhysicalStats.volume;
+        float m = storable.physicalStats.mass;
+        float v = storable.physicalStats.volume;
         if (massCurrent + m <= massMAX && volumeCurrent + v < volumeMAX)
             return true;
         else

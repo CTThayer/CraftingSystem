@@ -15,14 +15,14 @@ public class Storable : MonoBehaviour, IActionable, IInitializer
         private set => _isStored = value;
     }
 
-    [SerializeField] private PhysicalStats _objectPhysicalStats;
-    public PhysicalStats objectPhysicalStats
+    [SerializeField] private PhysicalStats _physicalStats;
+    public PhysicalStats physicalStats
     {
-        get => _objectPhysicalStats;
+        get => _physicalStats;
         private set
         {
             if (value != null)
-                _objectPhysicalStats = value;
+                _physicalStats = value;
         }
     }
 
@@ -34,9 +34,9 @@ public class Storable : MonoBehaviour, IActionable, IInitializer
     // Start is called before the first frame update
     protected void Start()
     {
-        Debug.Assert(_objectPhysicalStats != null);
-        Debug.Assert(_objectPhysicalStats.mass > 0);
-        Debug.Assert(_objectPhysicalStats.volume > 0);
+        Debug.Assert(_physicalStats != null);
+        Debug.Assert(_physicalStats.mass > 0);
+        Debug.Assert(_physicalStats.volume > 0);
     }
 
     public void Initialize()
@@ -111,7 +111,7 @@ public class Storable : MonoBehaviour, IActionable, IInitializer
         Item item = gameObject.GetComponent<Item>();
         if (item != null)
         {
-            objectPhysicalStats = item.physicalStats;
+            physicalStats = item.physicalStats;
             return true;
         }
         else
@@ -119,7 +119,7 @@ public class Storable : MonoBehaviour, IActionable, IInitializer
             ItemPart itemPart = gameObject.GetComponent<ItemPart>();
             if (itemPart != null)
             {
-                objectPhysicalStats = itemPart.physicalStats;
+                physicalStats = itemPart.physicalStats;
                 return true;
             }
         }

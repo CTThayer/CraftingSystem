@@ -57,7 +57,7 @@ public class PartCraftingApparatus : CraftingApparatus
 
     // Loaded design data
     private PartRequirements reqs;
-    private GameObject slotPrefab;
+    //private GameObject slotPrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -171,7 +171,6 @@ public class PartCraftingApparatus : CraftingApparatus
         DeactivatePartDesigner();
         DeactivatePartCreator();
 
-
         characterUsingApp.ReactivateCharacterInput();
         characterUsingApp.ReactivateCharacterHUD();
         SwitchToPlayerCamera();
@@ -203,7 +202,10 @@ public class PartCraftingApparatus : CraftingApparatus
         _partCreatorObj.SetActive(true);
         _partCreatorObj.GetComponent<CraftingViewInputController>().enabled = true;
         _uiManager.partCreatorUIController.ActivateBackgroundUI();
-        _uiManager.partCreatorUIController.LoadResourceSlots(slotPrefab, reqs);
+        //_uiManager.partCreatorUIController.LoadResourceSlots(slotPrefab, reqs);
+        _uiManager.partCreatorUIController.LoadResourceSlots(reqs);
+        characterUsingApp.DeactivateCharacterInput();
+        characterUsingApp.DeactivateCharacterHUD();
     }
 
     public void DeactivatePartCreator()
@@ -243,7 +245,8 @@ public class PartCraftingApparatus : CraftingApparatus
 
     public bool LoadDesign(string type, string subtype, string name)
     {
-        GameObject design = _partDesignDB.GetPartDesign(type, subtype, name, out reqs, out slotPrefab);
+        //GameObject design = _partDesignDB.GetPartDesign(type, subtype, name, out reqs, out slotPrefab);
+        GameObject design = _partDesignDB.GetPartDesign(type, subtype, name, out reqs);
         if (design != null)
         {
             resultObject = Instantiate(design);
@@ -252,6 +255,9 @@ public class PartCraftingApparatus : CraftingApparatus
             Vector3 size = resultObject.GetComponent<Renderer>().bounds.extents;
             Vector3 posOffset = Vector3.up * size.y;
             resultObject.transform.position += posOffset;
+            Rigidbody r = resultObject.GetComponent<Rigidbody>();
+            if (r != null)
+                r.isKinematic = true;
             _partIsComplete = false;
 
             return true;

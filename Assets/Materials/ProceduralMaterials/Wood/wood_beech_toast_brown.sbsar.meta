@@ -19,11 +19,11 @@ ScriptedImporter:
     preset: " <sbspreset pkgurl=\"pkg://wood_beech_toast_brown\" label=\"\" >\n 
       <presetinput identifier=\"$outputsize\" uid=\"536365206\" type=\"8\" value=\"11,11\"
       />\n  <presetinput identifier=\"$randomseed\" uid=\"1217027780\" type=\"4\"
-      value=\"4099\" />\n  <presetinput identifier=\"knots\" uid=\"437167941\" type=\"0\"
+      value=\"2636\" />\n  <presetinput identifier=\"knots\" uid=\"437167941\" type=\"0\"
       value=\"1\" />\n  <presetinput identifier=\"fibers\" uid=\"436565699\" type=\"0\"
-      value=\"0.38\" />\n  <presetinput identifier=\"wood_color\" uid=\"1676415083\"
-      type=\"2\" value=\"0.528302,0.368854,0.181915\" />\n  <presetinput identifier=\"wood_roughness\"
-      uid=\"1649245702\" type=\"0\" value=\"0.536\" />\n </sbspreset>\n"
+      value=\"0.443\" />\n  <presetinput identifier=\"wood_color\" uid=\"1676415083\"
+      type=\"2\" value=\"0.358491,0.181619,0.0287469\" />\n  <presetinput identifier=\"wood_roughness\"
+      uid=\"1649245702\" type=\"0\" value=\"0.555\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}

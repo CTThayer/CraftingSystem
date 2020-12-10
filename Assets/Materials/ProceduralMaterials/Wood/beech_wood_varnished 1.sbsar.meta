@@ -25,8 +25,7 @@ ScriptedImporter:
       uid=\"4265209851\" type=\"0\" value=\"0.903\" />\n  <presetinput identifier=\"cut\"
       uid=\"4265209847\" type=\"4\" value=\"3\" />\n  <presetinput identifier=\"knots_amount\"
       uid=\"4265209841\" type=\"0\" value=\"1\" />\n  <presetinput identifier=\"fibers\"
-      uid=\"4265209843\" type=\"0\" value=\"0.835\" />\n  <presetinput identifier=\"rotate_90\"
-      uid=\"4265209741\" type=\"4\" value=\"1\" />\n  <presetinput identifier=\"varnish_uniformity\"
+      uid=\"4265209843\" type=\"0\" value=\"0.835\" />\n  <presetinput identifier=\"varnish_uniformity\"
       uid=\"4265209735\" type=\"0\" value=\"0.86\" />\n  <presetinput identifier=\"varnish_color_intensity\"
       uid=\"4265209729\" type=\"0\" value=\"0.068\" />\n  <presetinput identifier=\"varnish_color\"
       uid=\"4265209731\" type=\"2\" value=\"0.301887,0.162883,0.101104\" />\n  <presetinput
