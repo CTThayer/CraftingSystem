@@ -531,7 +531,8 @@ MonoBehaviour:
   _craftingMaterial: {fileID: 0}
   _connectionPoints:
   - {fileID: 8279793561992331266}
-  _connectedParts: []
+  _connectedParts:
+  - {fileID: 0}
 --- !u!1 &7176210880872113302
 GameObject:
   m_ObjectHideFlags: 0

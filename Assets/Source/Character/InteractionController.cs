@@ -68,15 +68,10 @@ public class InteractionController : MonoBehaviour
         if (_isInteractionActive)
         {
             RaycastHit hitInfo;
-
             Vector3 rPosWorld = _characterCamera.ScreenToWorldPoint(reticlePosition);
-            Vector3 direction = (raycastOrigin.transform.position - rPosWorld).normalized;
-
+            Vector3 direction = (_raycastOrigin.transform.position - rPosWorld).normalized;
             Ray ray = new Ray(_raycastOrigin.transform.position, direction);
-
-            //Debug.DrawRay(_raycastOrigin.transform.position, direction * castDistance, debugRayColor);
-
-            if (Physics.Raycast(ray, out hitInfo, castDistance)) //, layerMask, QueryTriggerInteraction.UseGlobal))
+            if (Physics.Raycast(ray, out hitInfo, castDistance))
             {
                 SetInFocusInteractable(hitInfo);
                 if (currentHitInteractable != lastHitInteractable)

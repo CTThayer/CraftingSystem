@@ -155,7 +155,8 @@ MonoBehaviour:
   _craftingMaterial: {fileID: 0}
   _connectionPoints:
   - {fileID: 5827906702237825847}
-  _connectedParts: []
+  _connectedParts:
+  - {fileID: 0}
 --- !u!114 &6123524008337429100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ffb88af074004f04c95649436ccff4b6, type: 3}
   _isStored: 0
-  _objectPhysicalStats:
+  _physicalStats:
     _mass: 0
     _volume: 0.000163
 --- !u!114 &1960366763021821008

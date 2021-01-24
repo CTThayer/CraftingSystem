@@ -16,7 +16,7 @@ public class CraftingCameraController : MonoBehaviour
             {
                 _originalLookAtObj = value;
                 originalLookAtPosition = _originalLookAtObj.transform.position;
-                originalCamRotation = _originalLookAtObj.transform.rotation;
+                //originalCamRotation = _originalLookAtObj.transform.rotation;
             }
         }
     }
@@ -36,6 +36,17 @@ public class CraftingCameraController : MonoBehaviour
     [SerializeField] private float PanSpeed;
     [SerializeField] private float PanDistance_MAX;
 
+    [SerializeField] private GameObject cameraBoundsObj;
+    [SerializeField] private Bounds cameraBounds;
+
+    void OnValidate()
+    {
+        if (cameraBoundsObj != null)
+            cameraBounds = cameraBoundsObj.GetComponent<MeshRenderer>().bounds;
+        else
+            Debug.LogError("ERROR: Bounds object was not set for crafting apparatus.");
+    }
+
     // Use this for initialization
     void Start()
     {
@@ -52,7 +63,6 @@ public class CraftingCameraController : MonoBehaviour
         if (_originalLookAtObj != null)
         {
             originalLookAtPosition = _originalLookAtObj.transform.position;
-            //originalRotation = _originalLookAtObj.transform.rotation;
             lookAtPosition = originalLookAtPosition;
         }
 
@@ -69,72 +79,77 @@ public class CraftingCameraController : MonoBehaviour
     }
 
     /* Process Pan
-     * Moves the camera AND lookAt point based on mouse movement delta and
-     * current camera positioning. Also ensures it stays within the maximum
-     * panning distance from it's original location.
-     * TODO: Test this method
-     * TODO: Consider using sqrMagnitude instead of magnitude to speed up calcs
+     * Moves the camera AND lookAtPosition based on mouse movement delta and
+     * current camera positioning. Also ensures the lookAtPosition stays within 
+     * the specified Bounds (cameraBounds).
      */
     public void ProcessPan(Vector2 mouseDelta)
     {
-        if ((originalLookAtPosition - lookAtPosition).magnitude.Equals(PanDistance_MAX))
-            return;
-
         Vector3 horizontal = transform.right * -mouseDelta.x;
         Vector3 vertical = transform.up * -mouseDelta.y;
-        Vector3 panDirection = horizontal + vertical;
-        panDirection = panDirection.normalized;
+        Vector3 panDirection = (horizontal + vertical).normalized;
         Vector3 move = panDirection * PanSpeed * Time.deltaTime;
-        if ((originalLookAtPosition - (lookAtPosition + move)).magnitude < PanDistance_MAX)
+        Vector3 nextLookPos = lookAtPosition + move;
+        if (cameraBounds.Contains(nextLookPos))
         {
-            lookAtPosition += move;
-            transform.localPosition += move;
-        }
-        else
-        {
-            move = panDirection * (PanDistance_MAX - (originalLookAtPosition - lookAtPosition).magnitude);
             lookAtPosition += move;
             transform.localPosition += move;
         }
     }
 
+    /* Process Rotation
+     * Rotates the camera around the lookAtPosition based on mouse delta.
+     * Rotation is clamped via the CanTilt() method.
+     */
     public void ProcessRotation(Vector2 delta)
     {
         float pivotAngleDelta = RotationSpeed * Time.deltaTime * delta.x;
         float tiltAngleDelta = RotationSpeed * Time.deltaTime * -delta.y;
         transform.RotateAround(lookAtPosition, Vector3.up, pivotAngleDelta);
-        if (CanRotate(transform.forward, tiltAngleDelta))
-            return;
-        transform.RotateAround(lookAtPosition, transform.right, tiltAngleDelta);
+        if (CanTilt(transform.forward, tiltAngleDelta))
+            transform.RotateAround(lookAtPosition, transform.right, tiltAngleDelta);
+        return;
     }
 
+    /* Process Zoom
+     * Moves the camera closer to the lookAtPosition (or further from it) based
+     * on the delta parameter (which usually corresponds to the scroll wheel but
+     * could be any other float value that made sense).
+     */
     public void ProcessZoom(float delta)
     {
-        Vector3 lookVector = lookAtPosition - transform.position;
-        float distance = lookVector.magnitude;
-        float change = (delta * ZoomSpeed * 1.0f * Time.deltaTime);
-        float newDistance = distance + change;
-        if (newDistance >= ZoomDistance_MIN && newDistance <= ZoomDistance_MAX)
-        {
-            transform.position += lookVector.normalized * change;
-        }
+        float change = delta * ZoomSpeed * Time.deltaTime;
+        Vector3 newPos = transform.position + (transform.forward * change);
+        float newDistance = (lookAtPosition - newPos).magnitude;
+        if (newDistance > ZoomDistance_MIN && newDistance < ZoomDistance_MAX)
+            transform.position = newPos;
     }
 
-    private bool CanRotate(Vector3 currentForward, float delta)
+    /* Can Tilt
+     * Validation method for checking whether the camera can be rotated up or 
+     * down around the lookAtPosition (rotated around the current 
+     * horizontal axis of the transform, i.e. transform.right). This method 
+     * checks to see if changing the rotation around this axis by the supplied 
+     * delta parameter will move the camera into either of the Polar Deadzones.
+     * If it does not, the method returns true; otherwise it returns false.
+     */
+    private bool CanTilt(Vector3 currentForward, float delta)
     {
         float theta;
         if (delta > 0)
         {
             theta = Vector3.Angle(currentForward, Vector3.down) - delta;
-            return theta < PolarDeadzone_TOP;
+            return theta > PolarDeadzone_TOP;
         }
         else
         {
             theta = Vector3.Angle(currentForward, Vector3.up) + delta;
-            return theta < PolarDeadzone_BOT;
+            return theta > PolarDeadzone_BOT;
         }
     }
 
+    // TODO: Add validation to check whether the lookAtPosition/camera can be 
+    // moved to the newLookAt position.
     public void ChangeLookAtPosition(Vector3 newLookAt)
     {
         Vector3 posDelta = newLookAt - lookAtPosition;
@@ -142,6 +157,8 @@ public class CraftingCameraController : MonoBehaviour
         StartCoroutine("lerpToNewPosition", resultCamPos);
     }
 
+    // TODO: Is this the cause of the camera not updateing when a new segment
+    // is selected?
     private IEnumerator lerpToNewPosition(Vector3 destination)
     {
         while (transform.position != destination)
@@ -152,6 +169,8 @@ public class CraftingCameraController : MonoBehaviour
         yield break;
     }
 
+    // TODO: Is this the cause of the bug where the camera is not positioned
+    // totally correctly after exiting the apparatus and re-entering it?
     public void ResetCameraTransform()
     {
         craftingCam.transform.position = originalCamPosition;

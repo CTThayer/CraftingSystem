@@ -123,7 +123,8 @@ public class ItemFactory : MonoBehaviour
      * NOTE: All failures of component additions are silent. Any strings that 
      * are invalid names types will simply be skipped.
      */
-    public void AddComponentsToItem(ref GameObject itemObj, string[] reqComponents)
+    public void AddComponentsToItem(ref GameObject itemObj, 
+                                    string[] reqComponents)
     {
         for (int i = 0; i < reqComponents.Length; i++)
         {
@@ -150,6 +151,7 @@ public class ItemFactory : MonoBehaviour
                     {
                         r.mass = item.physicalStats.mass;
                     }
+                    r.isKinematic = true;
                 }
             }
         }

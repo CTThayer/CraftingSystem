@@ -55,7 +55,8 @@ public class TextureVariationFactory : MonoBehaviour
         if (substanceGraph.IsInputVisible("$randomseed"))
             substanceGraph.SetInputInt("$randomseed", randomValue);
         substanceGraph.QueueForRender();
-        substanceGraph.RenderSync();
+        //substanceGraph.RenderSync();
+        substanceGraph.RenderAsync();
         Substance.Game.Substance.RenderSubstancesSync();
     }
 

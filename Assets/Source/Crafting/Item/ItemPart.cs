@@ -54,8 +54,8 @@ public class ItemPart : MonoBehaviour
         }
     }
 
-
     private Color originalColor; // For selection/deselection purposes
+
 
     private void OnValidate()
     {
