@@ -6,14 +6,14 @@ public class EquipmentSlot : ItemSlot
 {
     public EquipmentType equipmentType;
 
-    [SerializeField] private GameObject _parentBone;
-    public GameObject parentBone
+    [SerializeField] private GameObject _equipLocation;
+    public GameObject equipLocation
     {
-        get => _parentBone;
+        get => _equipLocation;
         private set
         {
             if (value != null)
-                _parentBone = value;
+                _equipLocation = value;
         }
     }
 
@@ -24,15 +24,13 @@ public class EquipmentSlot : ItemSlot
      */
     public void EquipToBone(Equipable equipableItem)
     {
-        Storable s = equipableItem as Storable;
-        s.ReactivateInWorld(parentBone.transform, true);
-        s.transform.parent = parentBone.transform;
-    }
-
-    private void EquipToBone(Storable storableObj)
-    {
-        storableObj.ReactivateInWorld(parentBone.transform, true);
-        storableObj.transform.parent = parentBone.transform;
+        if (_equipLocation != null)
+        {
+            equipableItem.ReactivateInWorld(equipLocation.transform, true);
+            equipableItem.transform.position = equipLocation.transform.position;
+            equipableItem.transform.rotation = equipLocation.transform.rotation;
+            equipableItem.transform.parent = equipLocation.transform;
+        }
     }
 
     /* UnequipFromBone()
@@ -47,6 +45,7 @@ public class EquipmentSlot : ItemSlot
         if (this.storedItem != null)
         {
             this.storedItem.transform.parent = null;
+            storedItem.DeactivateInWorld();
             return this.storedItem;
         }
         else
@@ -67,7 +66,7 @@ public class EquipmentSlot : ItemSlot
     {
         if (storableObject != null && storedItem == null)
         {
-            EquipToBone(storableObject);
+            EquipToBone(storableObject as Equipable);
             //Debug.Log("Added " + storableObject.name + " to EquipmentSlot");
         }
         storedItem = storableObject;
@@ -78,7 +77,7 @@ public class EquipmentSlot : ItemSlot
         Storable prevStoredItem = UnequipFromBone();
         if (prevStoredItem != null)
         {
-            prevStoredItem.DeactivateInWorld();
+            prevStoredItem = UnequipFromBone();
             storedItem = null;
         }
         return prevStoredItem;

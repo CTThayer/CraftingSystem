@@ -21,12 +21,14 @@ public class TwoPanelController : MonoBehaviour
 
     private void OnValidate()
     {
-        panelAScript = panelA.GetComponent<ISlotPanelIO>();
-        panelBScript = panelB.GetComponent<ISlotPanelIO>();
+        //panelAScript = panelA.GetComponent<ISlotPanelIO>();
+        //panelBScript = panelB.GetComponent<ISlotPanelIO>();
     }
 
     void Awake()
     {
+        panelAScript = panelA.GetComponent<ISlotPanelIO>();
+        panelBScript = panelB.GetComponent<ISlotPanelIO>();
         Debug.Assert(draggableSlot != null);
         Debug.Assert(panelAScript != null);
         Debug.Assert(panelBScript != null);
@@ -105,7 +107,6 @@ public class TwoPanelController : MonoBehaviour
 
         bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
         bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
-
         if (canDrop && canSwap)
         {
             swapper.Swap(dropSlot, draggedSlot);
@@ -136,5 +137,10 @@ public class TwoPanelController : MonoBehaviour
             PanelARightClick(slot);
         else
             PanelBRightClick(slot);
+    }
+
+    public bool IsPanelA(GameObject panel)
+    {
+        return panel == panelA;
     }
 }

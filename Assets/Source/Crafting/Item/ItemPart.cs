@@ -47,15 +47,27 @@ public class ItemPart : MonoBehaviour
     public CraftingMaterial craftingMaterial
     {
         get => _craftingMaterial;
-        private set
+        set
         {
             if (value != null)
                 _craftingMaterial = value;
         }
     }
 
-
     private Color originalColor; // For selection/deselection purposes
+
+
+    private void OnValidate()
+    {
+        if (_connectionPoints != null && _connectionPoints.Length > 0)
+        {
+            ItemPart[] connectedPartArray = new ItemPart[connectionPoints.Length];
+            for (int i = 0; i < connectedPartArray.Length && i < _connectedParts.Length; i++)
+            {
+                connectedPartArray[i] = _connectedParts[i];
+            }
+        }
+    }
 
     void Awake()
     {
@@ -96,21 +108,21 @@ public class ItemPart : MonoBehaviour
     }
 
 
-    public void DeactivateScript(string scriptName)
-    {
-        Component script = GetComponent(scriptName);
-        Behaviour behaviorScript  = script as Behaviour;
-        if (behaviorScript != null)
-            behaviorScript.enabled = false;
-    }
+    //public void DeactivateScript(string scriptName)
+    //{
+    //    Component script = GetComponent(scriptName);
+    //    Behaviour behaviorScript  = script as Behaviour;
+    //    if (behaviorScript != null)
+    //        behaviorScript.enabled = false;
+    //}
 
-    public void ActivateScript(string scriptName)
-    {
-        Component script = GetComponent(scriptName);
-        Behaviour behaviorScript = script as Behaviour;
-        if (behaviorScript != null)
-            behaviorScript.enabled = true;
-    }
+    //public void ActivateScript(string scriptName)
+    //{
+    //    Component script = GetComponent(scriptName);
+    //    Behaviour behaviorScript = script as Behaviour;
+    //    if (behaviorScript != null)
+    //        behaviorScript.enabled = true;
+    //}
 
 
                     // TODO: Are these next methods (OnSelect/OnDeselect) actually necessary??

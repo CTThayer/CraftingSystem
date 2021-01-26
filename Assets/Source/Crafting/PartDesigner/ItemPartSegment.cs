@@ -106,6 +106,16 @@ public class ItemPartSegment : MonoBehaviour
     public bool HasConnectionAt(int index) { return ConnectedSegments[index] != null; }
     public ItemPartSegment GetConnectedSegment(int index) { return ConnectedSegments[index]; }
 
+    public int GetIndexOfNextOpenConnection()
+    {
+        for (int i = 0; i < ConnectedSegments.Length; i++)
+        {
+            if (ConnectedSegments[i] == null)
+                return i;
+        }
+        return -1;
+    }
+
     public int GetIndexOfConnectionPoint(GameObject cPoint)
     {
         for (int i = 0; i < ConnectionPoints.Length; i++)

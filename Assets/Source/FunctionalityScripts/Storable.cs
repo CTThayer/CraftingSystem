@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Storable : MonoBehaviour, IActionable
+public class Storable : MonoBehaviour, IActionable, IInitializer
 {
     public Sprite icon;
 
@@ -15,14 +15,14 @@ public class Storable : MonoBehaviour, IActionable
         private set => _isStored = value;
     }
 
-    private PhysicalStats _objectPhysicalStats;
-    public PhysicalStats objectPhysicalStats
+    [SerializeField] private PhysicalStats _physicalStats;
+    public PhysicalStats physicalStats
     {
-        get => _objectPhysicalStats;
+        get => _physicalStats;
         private set
         {
             if (value != null)
-                _objectPhysicalStats = value;
+                _physicalStats = value;
         }
     }
 
@@ -32,16 +32,17 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected void Start()
     {
-        Debug.Assert(_objectPhysicalStats != null);
-        Debug.Assert(_objectPhysicalStats.mass > 0);
-        Debug.Assert(_objectPhysicalStats.volume > 0);
+        Debug.Assert(_physicalStats != null);
+        Debug.Assert(_physicalStats.mass > 0);
+        Debug.Assert(_physicalStats.volume > 0);
     }
 
     public void Initialize()
     {
-        // TODO: Generalize the initializer so that it doesn't take parameters
+        SetStoredObjStats();
+        // TODO: Get or create an icon for the object
     }
 
     public void Initialize(bool createdInStorage)
@@ -54,27 +55,12 @@ public class Storable : MonoBehaviour, IActionable
     {
         if (isStored) // If item is already in storage, don't try to deactivate.
             return;
-        
-        // Disable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = false;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = false;
-        }
 
-        // Set rigidbody to Kinematic to avoid simulating it while hidden.
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
             gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
-        // Disable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        this.gameObject.SetActive(false);
 
         isStored = true;
     }
@@ -89,26 +75,11 @@ public class Storable : MonoBehaviour, IActionable
         gameObject.transform.rotation = xform.rotation;
         // Do NOT set scale to match!
 
-        // Reenable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = true;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = true;
-        }
-
-        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            r.isKinematic = isKinematicRigidbody;
+            gameObject.GetComponent<Rigidbody>().isKinematic = isKinematicRigidbody;
 
-        // Reenable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        this.gameObject.SetActive(true);
 
         isStored = false;
     }
@@ -125,26 +96,11 @@ public class Storable : MonoBehaviour, IActionable
         gameObject.transform.rotation = rotation;
         // Do NOT set scale to match!
 
-        // Reenable colliders
-        Collider[] colliders = gameObject.GetComponents<Collider>();
-        Collider[] childColliders = gameObject.GetComponentsInChildren<Collider>();
-        int i = 0;
-        for (; i < colliders.Length; i++)
-        {
-            colliders[i].enabled = true;
-        }
-        for (i = 0; i < childColliders.Length; i++)
-        {
-            childColliders[i].enabled = true;
-        }
-
-        // Set rigidbody to Kinematic or non-kinematic based on isKinematicRigidbody
         Rigidbody r = gameObject.GetComponent<Rigidbody>();
         if (r != null)
-            r.isKinematic = isKinematicRigidbody;
+            gameObject.GetComponent<Rigidbody>().isKinematic = isKinematicRigidbody;
 
-        // Reenable the MeshRenderer
-        gameObject.GetComponent<MeshRenderer>().enabled = true;
+        this.gameObject.SetActive(true);
 
         isStored = false;
     }
@@ -155,7 +111,7 @@ public class Storable : MonoBehaviour, IActionable
         Item item = gameObject.GetComponent<Item>();
         if (item != null)
         {
-            objectPhysicalStats = item.physicalStats;
+            physicalStats = item.physicalStats;
             return true;
         }
         else
@@ -163,7 +119,7 @@ public class Storable : MonoBehaviour, IActionable
             ItemPart itemPart = gameObject.GetComponent<ItemPart>();
             if (itemPart != null)
             {
-                objectPhysicalStats = itemPart.physicalStats;
+                physicalStats = itemPart.physicalStats;
                 return true;
             }
         }
@@ -176,7 +132,7 @@ public class Storable : MonoBehaviour, IActionable
      * to work correctly.                                                     */
 
     // Returns all the ActionDelegate methods associated with this component
-    public ActionDelegate[] GetActions()
+    public virtual ActionDelegate[] GetActions()
     {
         ActionDelegate[] actions = new ActionDelegate[1];
         actions[0] = AddToInventory;
@@ -184,7 +140,7 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     // Returns all the UI display names for the ActionDelegate methods
-    public string[] GetActionNames()
+    public virtual string[] GetActionNames()
     {
         string[] actionNames = new string[1];
         actionNames[0] = "Add to Inventory";
@@ -192,10 +148,17 @@ public class Storable : MonoBehaviour, IActionable
     }
 
     /*********************** IActionable Event Members ************************/
-    public virtual string AddToInventory(GameObject caller)
+    public virtual string AddToInventory(PlayerCharacter pc)
     {
         string result = "";
-
+        if (pc != null)
+        {
+            bool r = pc.inventory.AddItem(this);
+            if (r)
+                result = "Added " + this.name + " to inventory.";
+            else
+                result = "Cannot add " + this.name + " to inventory.";
+        }
         return result;
     }
 }

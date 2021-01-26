@@ -2,34 +2,43 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour, IInitializer
 {
-    [SerializeField] private string ObjectName;
-    [SerializeField] private int ActionIndex;
-    [SerializeField] private int DefaultIndex;
-    ActionDelegate[] Actions;
-    string[] ActionNames;
+    [SerializeField] private int actionIndex;
+    [SerializeField] private int defaultIndex;
+
+    // For Debug purposes, setting these to be serialized. They can be non-serialized in build
+    private ActionDelegate[] actions;
+    [SerializeField] private string[] actionNames;
+
+    private bool _isInitialized;
 
     // Start is called before the first frame update
     void Start()
     {
-        if (ObjectName == null || ObjectName.Length < 1 || ObjectName == " ")
-            ObjectName = this.gameObject.name;
+        if (!_isInitialized)
+            Initialize();
 
-        Debug.Assert(ActionIndex >= 0 && ActionIndex < Actions.Length);
-        if (ActionIndex < 0 || ActionIndex > Actions.Length)
-            ActionIndex = 0;
+        if (actionIndex < 0 || actionIndex > actions.Length)
+            actionIndex = 0;
+        Debug.Assert(actionIndex >= 0 && actionIndex < actions.Length);
 
-        Debug.Assert(DefaultIndex >= 0 && DefaultIndex < Actions.Length);
-        if (DefaultIndex < 0 || DefaultIndex > Actions.Length)
-            DefaultIndex = 0;
+        if (defaultIndex < 0 || defaultIndex > actions.Length)
+            defaultIndex = 0;
+        Debug.Assert(defaultIndex >= 0 && defaultIndex < actions.Length);
     }
 
     public void Initialize()
     {
         ConfigureActions();
+        _isInitialized = true;
     }
- 
+
+    void OnValidate()
+    {
+        ConfigureActions();
+    }
+
     /* Change Action Selection
      * Used to update the ActionIndex based on user input.
      * @Param i = an int for how many indices to increase the ActionIndex by.
@@ -37,29 +46,39 @@ public class Interactable : MonoBehaviour
      * from whatever format (likely float) that the input comes in as.
      * Returns: a string to be displayed in the UI for the name of the action.
      */
-    public string ChangeActionSelection(int i)
+    public string ChangeActionSelectionBy(int i)
     {
-        ActionIndex = (ActionIndex + i < Actions.Length) ? ActionIndex + i : 0;
-        return ActionNames[ActionIndex];
+        actionIndex = (actionIndex + i < actions.Length) ? actionIndex + i : 0;
+        return actionNames[actionIndex];
     }
 
-    public string Interact()
+    public string GetCurrentActionName()
     {
-        return Actions[ActionIndex](this.gameObject);
+        return actionNames[actionIndex];
     }
 
-    public string OnHover()
+    public string[] GetAllActionNames()
+    {
+        return actionNames;
+    }
+
+    public string Interact(PlayerCharacter character)
+    {
+        return actions[actionIndex](character);
+    }
+
+    public string OnHoverEnter()
     {
         // TODO: Apply hover highlighting or other indication
 
-        return ObjectName;
+        return this.name;
     }
 
     public void OnHoverExit()
     {
         // TODO: Remove hover highlighting or other indication
 
-        ActionIndex = DefaultIndex;     // Reset to default action index
+        actionIndex = defaultIndex;     // Reset to default action index
 
     }
 
@@ -79,7 +98,7 @@ public class Interactable : MonoBehaviour
                 actionNamesList.AddRange(actionNames);
             }
         }
-        Actions = actionsList.ToArray();
-        ActionNames = actionNamesList.ToArray();
+        actions = actionsList.ToArray();
+        actionNames = actionNamesList.ToArray();
     }
 }

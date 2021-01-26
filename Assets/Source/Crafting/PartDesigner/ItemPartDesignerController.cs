@@ -8,7 +8,7 @@ public class ItemPartDesignerController : MonoBehaviour
     // Manually Configured Fields
     [SerializeField] private Transform DefaultAddLocation;
     [SerializeField] private float MaxLength;
-    [SerializeField] private Material FinishedComponentMat;
+    [SerializeField] private Material defaultMat;
 
     // Manually Assigned Dependencies
     [SerializeField] private ItemPartAssembler CompAssembler;
@@ -28,8 +28,10 @@ public class ItemPartDesignerController : MonoBehaviour
     // Private Variables
     private bool isFirstSegment;
     private List<ItemPartSegment> Segments = new List<ItemPartSegment>();
-    private ItemPartSegment CurrentSelection;
-    private SegmentConnectionPoint SelectedConnectionPoint;
+
+    // Public Variables
+    public ItemPartSegment CurrentSelection;
+    public SegmentConnectionPoint SelectedConnectionPoint;
     
     
     // Start is called before the first frame update
@@ -41,8 +43,8 @@ public class ItemPartDesignerController : MonoBehaviour
         Debug.Assert(OutputText != null);
         Debug.Assert(SelectedSegmentText != null);
         Debug.Assert(GameObjectSelector != null);
-        Debug.Assert(FinishedComponentMat != null);
-        Debug.Assert(CamControl != null);
+        Debug.Assert(defaultMat != null);
+        //Debug.Assert(CamControl != null);
 
         // isFirstSegment should always start out as true
         isFirstSegment = true;
@@ -57,11 +59,11 @@ public class ItemPartDesignerController : MonoBehaviour
         //SelectedAddLocIndex = 1;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        HandleInput();
-    }
+    //// Update is called once per frame
+    //void Update()
+    //{
+    //    HandleInput();
+    //}
 
     /*************************** Public Methods *******************************/
 
@@ -279,7 +281,7 @@ public class ItemPartDesignerController : MonoBehaviour
             GameObject finishedComponent = new GameObject();
             finishedComponent.AddComponent<MeshFilter>();
             MeshRenderer MR = finishedComponent.AddComponent<MeshRenderer>();
-            MR.material = FinishedComponentMat;
+            MR.material = defaultMat;
             finishedComponent.GetComponent<MeshFilter>().mesh = m;
             Vector3 componentDisplayPos = DefaultAddLocation.position;
             componentDisplayPos.x += 1.5f;
@@ -307,7 +309,7 @@ public class ItemPartDesignerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
             {
-                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"), 
+                Vector2 mouseDelta = new Vector2(Input.GetAxis("Mouse X"),
                                                  Input.GetAxis("Mouse Y"));
                 CamControl.ProcessTumble(mouseDelta);
             }
@@ -375,7 +377,7 @@ public class ItemPartDesignerController : MonoBehaviour
                     CurrentSelection.OnDeselect();
                 }
                 if (NewSelection != null)
-                { 
+                {
                     NewSelection.OnSelect();
                     retVal = NewSelection.gameObject.name;
 
@@ -455,7 +457,7 @@ public class ItemPartDesignerController : MonoBehaviour
     {
         Vector3 pos = Input.mousePosition;
         Rect panelCorners = RectTransformUtility.PixelAdjustRect(UIPanel, canvas);
-        if (   pos.x > panelCorners.xMin + UIPanel.anchoredPosition.x
+        if (pos.x > panelCorners.xMin + UIPanel.anchoredPosition.x
             && pos.x < panelCorners.xMax + UIPanel.anchoredPosition.x
             && pos.y > panelCorners.yMin + UIPanel.anchoredPosition.y
             && pos.y < panelCorners.yMax + UIPanel.anchoredPosition.y)

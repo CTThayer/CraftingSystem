@@ -16,6 +16,7 @@ public class ItemSlot : MonoBehaviour,
 {
     [SerializeField] private Image image;
 
+    // Event callbacks for UI actions
     public event Action<ItemSlot> OnPointerEnterEvent;
     public event Action<ItemSlot> OnPointerExitEvent;
     public event Action<ItemSlot> OnRightClickEvent;
@@ -23,6 +24,15 @@ public class ItemSlot : MonoBehaviour,
     public event Action<ItemSlot> OnEndDragEvent;
     public event Action<ItemSlot> OnDragEvent;
     public event Action<ItemSlot> OnDropEvent;
+
+    // Delegate to add/remove from the array in the Storage class
+    public delegate bool AddSpecific(Storable s, int index);
+    public AddSpecific OnAddSpecific;
+    public delegate Storable RemoveSpecific(int index);
+    public RemoveSpecific OnRemoveSpecific;
+
+    // Index in storage array that this slot corresponds to
+    public int index;
 
     private Color normalColor = Color.white;
     private Color disabledColor = new Color(1, 1, 1, 0);
@@ -36,6 +46,7 @@ public class ItemSlot : MonoBehaviour,
             _storedItem = value;
             if (_storedItem == null)
             {
+                image.sprite = null;
                 image.color = disabledColor;
             }
             else
@@ -98,16 +109,20 @@ public class ItemSlot : MonoBehaviour,
 
     public virtual void AddToSlot(Storable storableObject)
     {
-        if (storableObject != null)
-            storableObject.DeactivateInWorld();
+        if (index >= 0)
+            OnAddSpecific(storableObject, index);
         storedItem = storableObject;
     }
 
     public virtual Storable RemoveFromSlot()
     {
-        Storable prevItem = storedItem;
+        Storable s = null;
+        if (index >= 0)
+        {
+            s = OnRemoveSpecific(index);
+        }
         storedItem = null;
-        return prevItem;
+        return s;
     }
 
     /**************************** EDITOR FUNCTIONS ****************************/

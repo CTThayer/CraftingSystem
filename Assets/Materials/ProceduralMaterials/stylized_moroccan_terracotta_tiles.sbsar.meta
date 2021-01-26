@@ -17,8 +17,9 @@ ScriptedImporter:
     generateAllOutputs: 0
     generateMipMaps: 1
     preset: " <sbspreset pkgurl=\"pkg://stylized_moroccan_terracotta_tiles\" label=\"\"
-      >\n  <presetinput identifier=\"cuts_density\" uid=\"3774751731\" type=\"0\"
-      value=\"0\" />\n </sbspreset>\n"
+      >\n  <presetinput identifier=\"$randomseed\" uid=\"3699752678\" type=\"4\"
+      value=\"6569\" />\n  <presetinput identifier=\"cuts_density\" uid=\"3774751731\"
+      type=\"0\" value=\"0\" />\n </sbspreset>\n"
     shaderName: Standard
     materialProperties:
       shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}

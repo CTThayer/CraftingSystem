@@ -169,14 +169,21 @@ public class PartRequirements : Requirements
         List<Collider> colliders = new List<Collider>();
         Collider[] thisObjColliders = part.gameObject.GetComponents<Collider>();
         Collider[] childObjColliders = part.gameObject.GetComponentsInChildren<Collider>();
-        colliders.AddRange(thisObjColliders);
-        for (int i = 0; i < childObjColliders.Length; i++)
+        if (thisObjColliders.Length > 0)
         {
-            for (int j = 0; j < thisObjColliders.Length; j++)
+            colliders.AddRange(thisObjColliders);
+            for (int i = 0; i < childObjColliders.Length; i++)
             {
-                if (childObjColliders[i] != colliders[j])
-                    colliders.Add(childObjColliders[i]);
+                for (int j = 0; j < thisObjColliders.Length; j++)
+                {
+                    if (childObjColliders[i] != colliders[j])
+                        colliders.Add(childObjColliders[i]);
+                }
             }
+        }
+        else
+        {
+            colliders.AddRange(childObjColliders);
         }
 
         if (c == null && colliders.Count == 0)

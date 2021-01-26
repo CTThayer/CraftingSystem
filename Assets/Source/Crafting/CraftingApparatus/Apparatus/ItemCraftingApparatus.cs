@@ -28,9 +28,19 @@ public class ItemCraftingApparatus : CraftingApparatus
         }
     }
 
+    [SerializeField] protected ItemCraftingApparatusUIManager _uiManager;
+    public ItemCraftingApparatusUIManager uiManager { get => _uiManager; }
+
+    //[SerializeField] protected CraftingViewInputController _inputController;
+    //public CraftingViewInputController inputController { get => _inputController; }
+
+    //[SerializeField] protected CraftingCameraController _camController;
+    //public CraftingCameraController camController { get => _camController; }
+
     // Temporary field for design requirements to be set manually for testing purposes. 
     // TODO: This should be changed/removed when menu UI for selecting design from database is added.
-    [SerializeField] private DesignRequirements _selectedDesignReqs;
+    // TODO: Add DesignRequirements / PartRequirements database reference(s) for retrieving requirements
+    private DesignRequirements _selectedDesignReqs;
     public DesignRequirements selectedDesignReqs
     {
         get => _selectedDesignReqs;
@@ -38,21 +48,14 @@ public class ItemCraftingApparatus : CraftingApparatus
     }
     [SerializeField] private GameObject tempDesignReqsObject;
 
-    // TODO: Add DesignRequirements / PartRequirements database reference(s) for retrieving requirements
+    [SerializeField] private bool autoAddToInventory;
+
+    [SerializeField] private ItemFactory factory; // = new ItemFactory();       // TODO: Consider making ItemFactory a singleton
 
     /*********************** END User Configured Fields ***********************/
 
-    // For use by the Crafting Apparatus UI Manager
-    [HideInInspector]
-    public string itemName;         // Variable containing the name of the item
-    [HideInInspector]
-    public string itemDescription;  // Variable containing the description of the item
-
     private bool itemIsComplete = false;
-    private GameObject prevCamera;
-    private PlayerCharacterController characterUsingApp;
 
-    [SerializeField] private ItemFactory factory; // = new ItemFactory();                                    // TODO: Consider making ItemFactory a singleton
 
     // Start is called before the first frame update
     void Start()
@@ -69,16 +72,15 @@ public class ItemCraftingApparatus : CraftingApparatus
         Debug.Assert(factory != null);
 
         if (_uiManager == null)
-            _uiManager = GetComponent<CraftingApparatusUIManager>();
+            _uiManager = GetComponent<ItemCraftingApparatusUIManager>();
         if (_uiManager == null)
             _inputController = GetComponent<CraftingViewInputController>();
         if (_camController == null)
             _camController = GetComponentInChildren<CraftingCameraController>();
 
-        // Temp code for setting designreqs object position. This will go inside
+        // Temp code for setting designReqs object position. This will go inside
         // the method that sets the design reqs when selected from the menu
-        tempDesignReqsObject.transform.position = buildLocation.transform.position;
-        selectedDesignReqs = tempDesignReqsObject.GetComponent<DesignRequirements>();
+        LoadRequirements(tempDesignReqsObject);
     }
 
     // Loads the requirements
@@ -92,6 +94,8 @@ public class ItemCraftingApparatus : CraftingApparatus
                 uiManager.partsPanel.LoadPartLayout(designReqs.partLayout.prefabPartLayoutUI);
                 reqsObject.transform.position = buildLocation.transform.position;
                 reqsObject.transform.rotation = buildLocation.transform.rotation;
+                tempDesignReqsObject.GetComponent<PartLayout>().buildLocation = buildLocation.position;
+                selectedDesignReqs = designReqs;
             }
             else
             {
@@ -127,9 +131,10 @@ public class ItemCraftingApparatus : CraftingApparatus
                                                                itemDescription,
                                                                out resultObject,
                                                                out output);
-                    resultObject.transform.position = new Vector3(0f, 1f, 1f);
                     itemIsComplete = success;
                     uiManager.DisplayOutputMessage(output);
+                    uiManager.DestroyUsedPartIcons();
+
                     return;
                 }
             }
@@ -145,47 +150,66 @@ public class ItemCraftingApparatus : CraftingApparatus
     }
 
     // For use by Interactable
-    public override void Use(PlayerCharacterController PCC)
+    public override string Use(PlayerCharacter pc)
     {
-        // Disable player camera
-        prevCamera = PCC.playerCameraObj;
-        prevCamera.SetActive(false);
+        if (pc == null)
+        {
+            Debug.LogError("ItemCraftingApparatus: Use(): PlayerCharacter ref was null");
+            return "PlayerCharacter was null";
+        }
+        if (_characterUsingApp == null)
+        {
+            //if (!selectedDesignReqs.gameObject.activeSelf)
+                selectedDesignReqs.gameObject.SetActive(true);
+            LoadRequirements(selectedDesignReqs.gameObject);
 
-        //Disable player input controller
-        characterUsingApp = PCC;
-        PCC.enabled = false;
+            // Deactivate character input/movement/camera
+            _characterUsingApp = pc;
+            _characterUsingApp.DeactivateCharacterInput();
+            _characterUsingApp.DeactivateCharacterCamera();
+            _characterUsingApp.DeactivateCharacterHUD();
+            _characterUsingApp.DeactivateEquipmentMenu();
 
-        // Enable crafting camera.
-        craftingCamera.SetActive(true);
-        camController.enabled = true;
-        inputController.enabled = true;
+            // Enable crafting camera.
+            craftingCamera.SetActive(true);
+            camController.enabled = true;
+            inputController.enabled = true;
 
-        // Activate the UI
-        uiManager.ActivateUI();
+            // Activate the UI
+            uiManager.ActivateUI();
+            return "";
+        }
+        else
+        {
+            return "Another player is using this apparatus.";
+        }
     }
 
     // Exits the apparatus
     public override void Exit()
     {
+        if (_characterUsingApp == null)
+        {
+            Debug.LogError("ItemCraftingApparatus: Exit(): PlayerCharacter ref was null while trying to exit. How did this happen?");
+            return;
+        }
+
         // Move any parts still in sockets back to inventory
-        uiManager.ClearPartsPanel();
+        uiManager.RemovePartsFromPartsPanel();
 
         // Destroy the instantiated design reqs game object
-        Destroy(selectedDesignReqs.gameObject);
+        //Destroy(selectedDesignReqs.gameObject);
+        selectedDesignReqs.gameObject.SetActive(false);
 
         // Disable crafting camera
         craftingCamera.SetActive(false);
         camController.enabled = false;
         inputController.enabled = false;
 
-        // Enable previous camera
-        prevCamera.SetActive(true);
-        characterUsingApp.enabled = true;
-
         // Handle the item that was created or in progress.
         if (itemIsComplete)
         {
-            resultObject.GetComponent<Rigidbody>().isKinematic = false;
+            //OnItemCompletion();
         }
         else
         {
@@ -194,6 +218,13 @@ public class ItemCraftingApparatus : CraftingApparatus
         }
 
         uiManager.DeactivateUI();
+
+        // Reenable character input and character camera
+        _characterUsingApp.ReactivateCharacterCamera();
+        _characterUsingApp.ReactivateCharacterHUD();
+        _characterUsingApp.ReactivateCharacterInput();
+        _characterUsingApp.ReactivateEquipmentMenu();
+        _characterUsingApp = null;
     }
 
     /**************************** Private Methods *****************************/
@@ -210,7 +241,7 @@ public class ItemCraftingApparatus : CraftingApparatus
     {
         string designType = DR.itemType;
         string designSubType = DR.itemSubType;
-        string concat = designType + designSubType;
+        string concat = designType + " " + designSubType;
         for (int i = 0; i < _supportedItemTypes.Length; i++)
         {
             if (_supportedItemTypes[i] == designType
@@ -221,6 +252,51 @@ public class ItemCraftingApparatus : CraftingApparatus
             }
         }
         return false;
+    }
+
+    private Vector3 GetItemBaseOffset()
+    {
+        Vector3 offset = Vector3.zero;
+        Vector3 currentPos = resultObject.transform.position;
+        Bounds objBounds = resultObject.GetComponent<Renderer>().bounds;
+        Ray ray = new Ray(currentPos, Vector3.down);
+        float offsetDist;
+        if (objBounds.IntersectRay(ray, out offsetDist))
+        {
+            offset = (Vector3.down * offsetDist);
+        }
+        return offset;
+    }
+
+    private void OnItemCompletion()
+    {
+        if (autoAddToInventory)
+        {
+            Storable resultStorable = resultObject.GetComponent<Storable>();
+            bool b = _characterUsingApp.inventory.AddItem(resultStorable);
+            if (b)
+                return;
+        }
+        ActivateItemInWorld();
+    }
+
+    private void ActivateItemInWorld()
+    {
+        // Get and configure rigidbody
+        Rigidbody rigidbody = resultObject.GetComponent<Rigidbody>();
+        if (rigidbody == null)
+            rigidbody = resultObject.GetComponentInChildren<Rigidbody>();
+        if (rigidbody != null)
+            rigidbody.isKinematic = false;
+
+        // Set position in world
+        if (spawnLocation == buildLocation)
+            return;
+        else
+        {
+            Vector3 loc = spawnLocation.position + GetItemBaseOffset();
+            resultObject.transform.position = loc;
+        }
     }
 
     /************************** END Private Methods ***************************/

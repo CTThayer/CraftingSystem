@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Substance.Game;
 
 public class CraftingMaterial : MonoBehaviour
 {
@@ -43,6 +44,7 @@ public class CraftingMaterial : MonoBehaviour
         set => _craftingDifficulty = value > 0 ? value : 0;
     }
 
+    [Tooltip("Density in Kg/m^3")]
     [SerializeField] private float _density;
     public float density
     {
@@ -63,6 +65,8 @@ public class CraftingMaterial : MonoBehaviour
     /****************************** Conductivity ******************************/
     public ConductivityProperties conductivity;
 
+    public Substance.Game.Substance materialSubstance;
+    public Substance.Game.SubstanceGraph materialSubstanceGraph;
 
     // Start is called before the first frame update
     void Start()

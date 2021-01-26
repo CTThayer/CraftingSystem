@@ -17,7 +17,7 @@ public enum DamageType
     Wear
 }
 
-public class DamageDealer : MonoBehaviour
+public class DamageDealer : MonoBehaviour, IInitializer
 {
     [SerializeField] private DamageType _damageType;
     public DamageType damageType
@@ -58,7 +58,7 @@ public class DamageDealer : MonoBehaviour
     // Private variables for tracking the current state
     private bool isDamageDealingAction;
     private bool isInitialHit;
-    private Damageable thisDamagable;
+    private Damagable thisDamagable;
 
     // Start is called before the first frame update
     void Start()
@@ -99,7 +99,7 @@ public class DamageDealer : MonoBehaviour
                 ContactPoint contact = collision.GetContact(i);
                 if(ColliderIsDamageDealer(contact.thisCollider))
                 {
-                    Damageable hitDamagable = collision.collider.GetComponent<Damageable>();
+                    Damagable hitDamagable = collision.collider.GetComponent<Damagable>();
                     if (hitDamagable != null)
                     {
                         DealDamage(hitDamagable);
@@ -126,7 +126,7 @@ public class DamageDealer : MonoBehaviour
         damageModifier = dModifier;
         isDamageDealingAction = false;
         isInitialHit = true;
-        thisDamagable = GetComponent<Damageable>();
+        thisDamagable = GetComponent<Damagable>();
     }
 
     public void Initialize(DamageType dType, float dBase, float dModifier, Collider[] colliders)
@@ -145,13 +145,13 @@ public class DamageDealer : MonoBehaviour
     }
 
     // TODO: Fill in these stub methods
-    private void DealDamage(Damageable otherObject)
+    private void DealDamage(Damagable otherObject)
     {
         float damageAmount = baseDamage * damageModifier;
         otherObject.OnDamageDealerHit(damageType, damageAmount);
     }
 
-    private void ApplySelfDamage(Damageable thisObject, Damageable otherObject)
+    private void ApplySelfDamage(Damagable thisObject, Damagable otherObject)
     {
         // TODO: How do we want to handle this?
 

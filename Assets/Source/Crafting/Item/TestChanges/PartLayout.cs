@@ -26,8 +26,6 @@ public class PartLayout : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        buildLocation = transform.position;
-
         Debug.Assert(_defaultParts != null && _defaultParts.Length > 0);
         for (int i = 0; i < _defaultParts.Length; i++)
         {
@@ -62,6 +60,8 @@ public class PartLayout : MonoBehaviour
 
     public bool Add(int index, ItemPart newPart)
     {
+        //buildLocation = transform.position;
+
         if (index >= 0 && index < parts.Length)
         {
             if (parts[index] != _defaultParts[index]                            // If there is a part in this spot, exit and remove it first
@@ -156,6 +156,18 @@ public class PartLayout : MonoBehaviour
         }
     }
 
+    /* Update Dependents
+     * Updates the positions/rotations of all dependent parts for a specified 
+     * starting parent part. This function runs recursively for all parts 
+     * that are dependents of the first part passed to the fuction. This 
+     * function is used to update all of the parts in a part layout whenever a
+     * part is added to or removed from the layout.
+     * @Param parentPart - reference to part object that has dependent parts to 
+     * update. 
+     * @Param index - starting index of the dependents to begin updating from.
+     *      TODO: Consider changing index to a simple boolean since it really 
+     *      just boils down to whether to start at 0 or 1.
+     */
     private void UpdateDependents(ItemPart parentPart, int index)
     {
         ItemPart[] dependentParts = parentPart.connectedParts;
@@ -172,35 +184,42 @@ public class PartLayout : MonoBehaviour
             return;
     }
 
-    private bool UpdateDependentPartTransform(ItemPart newParent, 
-                                              ItemPart dependentPart)
+    /* Update Dependent Part Transform
+     * Updates the position and rotation of a dependent part based on the 
+     * provided parent part.
+     * @Param parent - the parent part of the part being updated.
+     * @Param dependent - the part that needs to be updated.
+     * @Return boolean represented success/failure of updating the dependent.
+     */
+    private bool UpdateDependentPartTransform(ItemPart parent, 
+                                              ItemPart dependent)
     {
-        if (newParent != null 
-            && dependentPart != null 
-            && newParent != dependentPart)
+        if (parent != null 
+            && dependent != null 
+            && parent != dependent)
         {
-            ItemPart parentPart = dependentPart.GetConnectedPart(0);
-            if (parentPart != newParent)
+            ItemPart parentPart = dependent.GetConnectedPart(0);
+            if (parentPart != parent)
             {
                 Debug.LogError("PartLayout: GetTranslation(): Connections " +
                                "were not transferred correctly, parents do " +
                                "not match expected results.");
             }
-            int indexInParent = parentPart.GetIndexOfConnection(dependentPart);
+            int indexInParent = parentPart.GetIndexOfConnection(dependent);
 
             // Get connection points
             GameObject parentCP = parentPart.GetConnectionPoint(indexInParent);
-            GameObject childCP = dependentPart.GetConnectionPoint(0);
+            GameObject childCP = dependent.GetConnectionPoint(0);
 
-            // Calculate rotation for new part
+            // Calculate rotation for part
             Quaternion rotateByAmount = GetCPRotationChange(childCP, parentCP);
-            dependentPart.transform.rotation *= rotateByAmount;
+            dependent.transform.rotation *= rotateByAmount;
 
-            // Calculate position for new part
-            dependentPart.transform.position = parentCP.transform.position;
-            Vector3 posOffset = dependentPart.transform.position - 
-                         dependentPart.GetConnectionPoint(0).transform.position;
-            dependentPart.transform.position += posOffset;
+            // Calculate position for part
+            dependent.transform.position = parentCP.transform.position;
+            Vector3 posOffset = dependent.transform.position - 
+                         dependent.GetConnectionPoint(0).transform.position;
+            dependent.transform.position += posOffset;
 
             return true;
         }

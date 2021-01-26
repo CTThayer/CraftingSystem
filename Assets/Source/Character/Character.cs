@@ -38,11 +38,11 @@ public class Character : MonoBehaviour
         _inventory.OnBeginDragEvent += BeginDrag;
         _inventory.OnEndDragEvent += EndDrag;
         _inventory.OnDragEvent += Drag;
-        _inventory.OnDropEvent += Drop;
+        //_inventory.OnDropEvent += Drop;
         _equipmentPanel.OnBeginDragEvent += BeginDrag;
         _equipmentPanel.OnEndDragEvent += EndDrag;
         _equipmentPanel.OnDragEvent += Drag;
-        _equipmentPanel.OnDropEvent += Drop;
+        //_equipmentPanel.OnDropEvent += Drop;
 
     }
     
@@ -103,39 +103,39 @@ public class Character : MonoBehaviour
             draggableSlot.transform.position = Input.mousePosition;
     }
 
-    private void Drop(ItemSlot dropSlot)
-    {
-        if (draggedSlot == null)
-            return;
+    //private void Drop(ItemSlot dropSlot)
+    //{
+    //    if (draggedSlot == null)
+    //        return;
 
-        bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
-        bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
+    //    bool canDrop = dropSlot.CanReceiveItem(draggedSlot.storedItem);
+    //    bool canSwap = draggedSlot.CanReceiveItem(dropSlot.storedItem);
 
-        //if (dropSlot.CanReceiveItem(draggedSlot.storedItem)
-        //    && draggedSlot.CanReceiveItem(dropSlot.storedItem))
-        if (canDrop && canSwap)
-        {
-            Equipable dragItemEQ = draggedSlot.storedItem as Equipable;
-            Equipable dropItemEQ = dropSlot.storedItem as Equipable;
-            if (draggedSlot is EquipmentSlot)
-            {
-                if (dragItemEQ != null)
-                    dragItemEQ.Unequip(this);
-                if (dropItemEQ != null)
-                    dragItemEQ.Equip(this);
-            }
-            if (dropSlot is EquipmentSlot)
-            {
-                if (dragItemEQ != null)
-                    dragItemEQ.Equip(this);
-                if (dropItemEQ != null)
-                    dragItemEQ.Unequip(this);
-            }
-            Storable draggedItem = draggedSlot.storedItem;
-            draggedSlot.storedItem = dropSlot.storedItem;
-            dropSlot.storedItem = draggedItem;
-        }
-    }
+    //    //if (dropSlot.CanReceiveItem(draggedSlot.storedItem)
+    //    //    && draggedSlot.CanReceiveItem(dropSlot.storedItem))
+    //    if (canDrop && canSwap)
+    //    {
+    //        Equipable dragItemEQ = draggedSlot.storedItem as Equipable;
+    //        Equipable dropItemEQ = dropSlot.storedItem as Equipable;
+    //        if (draggedSlot is EquipmentSlot)
+    //        {
+    //            if (dragItemEQ != null)
+    //                dragItemEQ.Unequip(this);
+    //            if (dropItemEQ != null)
+    //                dragItemEQ.Equip(this);
+    //        }
+    //        if (dropSlot is EquipmentSlot)
+    //        {
+    //            if (dragItemEQ != null)
+    //                dragItemEQ.Equip(this);
+    //            if (dropItemEQ != null)
+    //                dragItemEQ.Unequip(this);
+    //        }
+    //        Storable draggedItem = draggedSlot.storedItem;
+    //        draggedSlot.storedItem = dropSlot.storedItem;
+    //        dropSlot.storedItem = draggedItem;
+    //    }
+    //}
 
     private void Equip(Equipable equipableItem)
     {

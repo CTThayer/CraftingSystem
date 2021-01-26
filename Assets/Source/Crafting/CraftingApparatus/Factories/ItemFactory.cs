@@ -6,6 +6,7 @@ public class ItemFactory : MonoBehaviour
 {
     MeshUtility meshUtil;
 
+
     public ItemFactory()
     {
         meshUtil = new MeshUtility();                                           // TODO: Consider making MeshUtility static
@@ -70,7 +71,6 @@ public class ItemFactory : MonoBehaviour
             // Add the Item.cs script to the primaryManipulator gameObject so 
             // that it is attached to the top level of the item's hierarchy
             Item item = itemParent.AddComponent<Item>();
-            //Item item = itemParent.GetComponent<Item>();
 
             // Initialize item's attributes
             string id = GenerateItemID(itemParent);
@@ -83,6 +83,9 @@ public class ItemFactory : MonoBehaviour
                             reqs.manipulators,
                             parts);
 
+            // Set name of primary manipulator to match item name since it now *is* the item
+            itemParent.name = name;
+
             // Add required component scripts to the item
             AddComponentsToItem(ref itemParent, reqs.requiredScripts);
 
@@ -94,6 +97,9 @@ public class ItemFactory : MonoBehaviour
                 DeactivateComponentsOfPart(parts[i].gameObject, 
                                            partReqs[i].componentsToDeactivate);
             }
+
+            // Ensure all child colliders are active
+            ReactivateColliders(itemParent);
 
             // Return results
             resultItem = itemParent;
@@ -117,14 +123,37 @@ public class ItemFactory : MonoBehaviour
      * NOTE: All failures of component additions are silent. Any strings that 
      * are invalid names types will simply be skipped.
      */
-    public void AddComponentsToItem(ref GameObject item, string[] reqComponents)
+    public void AddComponentsToItem(ref GameObject itemObj, 
+                                    string[] reqComponents)
     {
         for (int i = 0; i < reqComponents.Length; i++)
         {
             System.Type componentType = System.Type.GetType(reqComponents[i]);
+            Component comp = null;
             if (componentType != null)
-                item.AddComponent(componentType);
-            // TODO: Handle functionality script initialization here
+            {
+                comp = itemObj.AddComponent(componentType);
+                if (comp != null)
+                {
+                    IInitializer initializer = comp as IInitializer;
+                    if (initializer != null)
+                        initializer.Initialize();
+                }
+            }
+
+            if (reqComponents[i] == "Rigidbody")
+            {
+                Rigidbody r = itemObj.AddComponent<Rigidbody>();
+                if (r != null)
+                {
+                    Item item = itemObj.GetComponent<Item>();
+                    if (item != null)
+                    {
+                        r.mass = item.physicalStats.mass;
+                    }
+                    r.isKinematic = true;
+                }
+            }
         }
     }
 
@@ -145,24 +174,30 @@ public class ItemFactory : MonoBehaviour
             return;
         for (int i = 0; i < compsToDeactivate.Length; i++)
         {
-            System.Type componentType = System.Type.GetType(compsToDeactivate[i]);
-            if (componentType != null)
-            {
-                Component component = part.GetComponent(componentType);
+            Component component = part.GetComponent(compsToDeactivate[i]);
+            if (component != null)
+            { 
                 Behaviour behaviour = component as Behaviour;
                 if (behaviour != null)
                 {
-                    behaviour.enabled = false;
+                    Destroy(behaviour);
+                    Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
-                else if (compsToDeactivate[i] == "Rigidbody")
+                else if (component is Rigidbody)
                 {
-                    if (component != null)
-                        Destroy(component);
-                    // NOTE: It might be important to cache rigidbody data in
-                    // the ItemPart before doing this in case the rigidbody has
-                    // to be recreated later (most data should already be there)
+                    Destroy(component);
+                    Debug.Log("Destroyed " + compsToDeactivate[i] + " on " + part.name);
                 }
             }
+        }
+    }
+
+    public void ReactivateColliders(GameObject parent)
+    {
+        Collider[] colliders = parent.GetComponentsInChildren<Collider>();
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            colliders[i].enabled = true;
         }
     }
 
