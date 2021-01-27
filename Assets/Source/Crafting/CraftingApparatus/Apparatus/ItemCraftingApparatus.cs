@@ -171,7 +171,9 @@ public class ItemCraftingApparatus : CraftingApparatus
             _characterUsingApp.DeactivateEquipmentMenu();
 
             // Enable crafting camera.
+            backgroudCamera.SetActive(true);
             craftingCamera.SetActive(true);
+            Invoke("DeactivateBackgroundCamera", 0.2f);
             camController.enabled = true;
             inputController.enabled = true;
 
@@ -202,6 +204,7 @@ public class ItemCraftingApparatus : CraftingApparatus
         selectedDesignReqs.gameObject.SetActive(false);
 
         // Disable crafting camera
+        backgroudCamera.SetActive(false);
         craftingCamera.SetActive(false);
         camController.enabled = false;
         inputController.enabled = false;
@@ -298,6 +301,12 @@ public class ItemCraftingApparatus : CraftingApparatus
             resultObject.transform.position = loc;
         }
     }
+
+    //private void DeactivateBackgroundCamera()
+    //{
+    //    backgroudCamera.SetActive(false);
+    //}
+
 
     /************************** END Private Methods ***************************/
 }

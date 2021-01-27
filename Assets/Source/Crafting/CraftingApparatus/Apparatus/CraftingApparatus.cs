@@ -62,6 +62,7 @@ public abstract class CraftingApparatus : MonoBehaviour, IActionable
     public Transform spawnLocation;     // Location where the item is spawned at creation time
     public Transform buildLocation;     // Location where the item construction starts
     public GameObject craftingCamera;   // GameObject containing the camera to use with this apparatus. Can be set externally with 
+    public GameObject backgroudCamera;  // GameObject containing the camera to use to "clear" the background behind the UI.
 
     /*********************** END User Configured Fields ***********************/
 
@@ -133,4 +134,8 @@ public abstract class CraftingApparatus : MonoBehaviour, IActionable
         return actionNames;
     }
 
+    protected void DeactivateBackgroundCamera()
+    {
+        backgroudCamera.SetActive(false);
+    }
 }

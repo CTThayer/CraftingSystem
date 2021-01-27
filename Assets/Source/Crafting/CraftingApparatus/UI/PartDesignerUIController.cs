@@ -92,12 +92,6 @@ public class PartDesignerUIController : MonoBehaviour
         }
     }
 
-    public void ExitUI()                                                        // Is this right? Seems like it needs to call exit on _crafingApparatus unless this is an endpoint function
-    {
-        // TODO: do we need to deactivate any of the other UI elements?
-        canvas.gameObject.SetActive(false);
-    }
-
     public void LaunchPartDesignerUI()
     {
         if (!_isInitialized)
@@ -193,11 +187,16 @@ public class PartDesignerUIController : MonoBehaviour
         UpdateSegmentSelector(designFamilyDropdown.options[index].text);
     }
 
-    public void OnExitButtonClicked()
+    public void OnExit()
     {
-        // TODO: Clear workspace
+        // Clear text fields on exit
+        outputText.text = "";
+        selectedPartTypeText.text = "";
 
-        partDesigner.craftingApparatus.Exit();
+        // Deactivate canvas
+        canvas.gameObject.SetActive(false);
+
+        // TODO: do we need to deactivate any of the other UI elements?
     }
 
     public void OnFinishButtonClicked()

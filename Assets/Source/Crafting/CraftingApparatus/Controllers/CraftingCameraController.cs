@@ -34,7 +34,7 @@ public class CraftingCameraController : MonoBehaviour
     [SerializeField] private float ZoomDistance_MAX;
 
     [SerializeField] private float PanSpeed;
-    [SerializeField] private float PanDistance_MAX;
+    //[SerializeField] private float PanDistance_MAX;
 
     [SerializeField] private GameObject cameraBoundsObj;
     [SerializeField] private Bounds cameraBounds;
@@ -121,6 +121,8 @@ public class CraftingCameraController : MonoBehaviour
         float change = delta * ZoomSpeed * Time.deltaTime;
         Vector3 newPos = transform.position + (transform.forward * change);
         float newDistance = (lookAtPosition - newPos).magnitude;
+        //float oldDistance = (lookAtPosition - transform.position).magnitude;
+        //Debug.Log("oldDist = " + oldDistance + " newDist  = " + newDistance + " change = " + (newDistance - oldDistance));
         if (newDistance > ZoomDistance_MIN && newDistance < ZoomDistance_MAX)
             transform.position = newPos;
     }

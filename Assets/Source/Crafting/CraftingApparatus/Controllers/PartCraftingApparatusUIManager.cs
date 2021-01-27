@@ -54,7 +54,6 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
         Debug.Assert(_partCreatorUIController != null);
         if (!_partCreatorUIController.isInitialized)
             _partCreatorUIController.Initialize(this);
-            //_partCreatorUIController.Initialize();
     }
 
     public void ActivateUI()
@@ -69,18 +68,18 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
         _initialPartCraftingMenu.gameObject.SetActive(true);
     }
 
-    public void DeactivateUI()
-    {
-        // Deactivate all associated canvases
-        _initialMenusCanvas.gameObject.SetActive(false);
-        _partDesignUICanvas.gameObject.SetActive(false);
-        _partCreatorUICanvas.gameObject.SetActive(false);
+    //public void DeactivateUI()
+    //{
+    //    // Deactivate all associated canvases
+    //    _initialMenusCanvas.gameObject.SetActive(false);
+    //    _partDesignUICanvas.gameObject.SetActive(false);
+    //    _partCreatorUICanvas.gameObject.SetActive(false);
 
-        // Deactivate all associated UI scripts
-        //_initialPartCraftingMenu.enabled = false;
-        //_partDesignerUIController.enabled = false;
-        //_partCreatorUIController.enabled = false;
-    }
+    //    // Deactivate all associated UI scripts
+    //    //_initialPartCraftingMenu.enabled = false;
+    //    //_partDesignerUIController.enabled = false;
+    //    //_partCreatorUIController.enabled = false;
+    //}
 
     /************************** Input Field Actions ***************************/
     //public void OnEndNameEdit(string input)
@@ -213,7 +212,7 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
 
         // Launch the part creator and activate it's canvas
         _partCreatorUICanvas.gameObject.SetActive(true);
-        _partCreatorUIController.LaunchPartCreatorUI();
+        _partCreatorUIController.LaunchInitialUI();
 
     }
 
@@ -244,8 +243,17 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
     public void OnRestart()
     {
         // Deactivate design & crafting canvases, reactivate initial menu canvas
-        _partDesignUICanvas.gameObject.SetActive(false);
-        _partCreatorUICanvas.gameObject.SetActive(false);
+        if (_partCreatorUIController.gameObject.activeSelf)
+        {
+            _partCreatorUIController.OnExit();
+            _partCreatorUICanvas.gameObject.SetActive(false);
+            
+        }
+        if (_partDesignerUIController.gameObject.activeSelf)
+        {
+            _partDesignerUIController.OnExit();
+            _partDesignUICanvas.gameObject.SetActive(false);
+        }
         _initialMenusCanvas.gameObject.SetActive(true);
 
         // Set initial menu active and sub-menus inactive
@@ -266,7 +274,15 @@ public class PartCraftingApparatusUIManager : MonoBehaviour
      */
     public void OnExit()
     {
-        craftingApparatus.Exit();
+        if (_partCreatorUIController.gameObject.activeSelf)
+            _partCreatorUIController.OnExit();
+        if (_partDesignerUIController.gameObject.activeSelf)
+            _partDesignerUIController.OnExit();
+
+        // Deactivate all associated canvases
+        _initialMenusCanvas.gameObject.SetActive(false);
+        _partDesignUICanvas.gameObject.SetActive(false);
+        _partCreatorUICanvas.gameObject.SetActive(false);
     }
 
     /*************************** END Callbacks ********************************/

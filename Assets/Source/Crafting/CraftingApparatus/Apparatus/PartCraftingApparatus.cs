@@ -168,10 +168,15 @@ public class PartCraftingApparatus : CraftingApparatus
         if (resultObject != null && !_partIsComplete)
             Destroy(resultObject);
 
-        uiManager.DeactivateUI();
+        // Exit UI
+        //uiManager.DeactivateUI();
+        uiManager.OnExit();
+
+        // Deactivate Part Designer and Part Creator dependencies
         DeactivatePartDesigner();
         DeactivatePartCreator();
 
+        // Reactivate player scripts and camera
         _characterUsingApp.ReactivateCharacterInput();
         _characterUsingApp.ReactivateCharacterHUD();
         _characterUsingApp.ReactivateEquipmentMenu();
@@ -182,28 +187,31 @@ public class PartCraftingApparatus : CraftingApparatus
 
     public void ActivatePartDesigner()
     {
+        Invoke("DeactivateBackgroundCamera", 0.2f);
+
         _partDesignerObj.SetActive(true);
-        //_partDesignerObj.GetComponent<PartDesigner>().enabled = true;
-        //_partDesignerObj.GetComponent<PartDesignerUIController>().enabled = true;
+        _partDesignerObj.GetComponent<PartDesigner>().enabled = true;
+        _partDesignerObj.GetComponent<ItemPartAssembler>().enabled = true;
         _partDesignerObj.GetComponent<PartDesignViewInputController>().enabled = true;
-        //_partDesignerObj.GetComponent<ItemPartAssembler>().enabled = true;
     }
 
     public void DeactivatePartDesigner()
     {
-        _partDesignerObj.SetActive(false);
-        //_partDesignerObj.GetComponent<PartDesigner>().enabled = false;
-        //_partDesignerObj.GetComponent<PartDesignerUIController>().enabled = false;
+        _partDesignerObj.GetComponent<PartDesigner>().enabled = false;
+        _partDesignerObj.GetComponent<ItemPartAssembler>().enabled = false;
         _partDesignerObj.GetComponent<PartDesignViewInputController>().enabled = false;
-        //_partDesignerObj.GetComponent<ItemPartAssembler>().enabled = false;
+        _partDesignerObj.SetActive(false);
+
         _camController.ResetCameraTransform();
     }
 
     public void ActivatePartCreator()
     {
+        Invoke("DeactivateBackgroundCamera", 0.2f);
+
         _partCreatorObj.SetActive(true);
         _partCreatorObj.GetComponent<CraftingViewInputController>().enabled = true;
-        _uiManager.partCreatorUIController.ActivateBackgroundUI();
+        _uiManager.partCreatorUIController.ActivateMainUI();
         //_uiManager.partCreatorUIController.LoadResourceSlots(slotPrefab, reqs);
         _uiManager.partCreatorUIController.LoadResourceSlots(reqs);
         _characterUsingApp.DeactivateCharacterInput();
@@ -221,7 +229,9 @@ public class PartCraftingApparatus : CraftingApparatus
     public void SwitchToCraftingCamera()
     {
         _characterUsingApp.DeactivateCharacterCamera();
+        backgroudCamera.SetActive(true);
         craftingCamera.SetActive(true);
+        //Invoke("DeactivateBackgroundCamera", 0.2f);
         _camController.enabled = true;
     }
 
@@ -229,6 +239,7 @@ public class PartCraftingApparatus : CraftingApparatus
     {
         _camController.enabled = false;
         craftingCamera.SetActive(false);
+        backgroudCamera.SetActive(false);
         _characterUsingApp.ReactivateCharacterCamera();
     }
 

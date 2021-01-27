@@ -20,7 +20,6 @@ public class CraftingTextIOPanel : MonoBehaviour
     [SerializeField] private Text _outputText;
 
     private bool _isInitialized;
-    public bool isInitialized { get => _isInitialized; }
 
     void Start()
     {
@@ -107,5 +106,12 @@ public class CraftingTextIOPanel : MonoBehaviour
     {
         _partNameInputField.interactable = on;
         _partDescInputField.interactable = on;
+    }
+
+    public void ClearTextFields()
+    {
+        _partNameInputField.text = "";
+        _partDescInputField.text = "";
+        _outputText.text = "";
     }
 }

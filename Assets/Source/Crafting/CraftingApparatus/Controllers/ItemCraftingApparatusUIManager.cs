@@ -80,6 +80,8 @@ public class ItemCraftingApparatusUIManager : MonoBehaviour
             craftingUICanvas.gameObject.SetActive(true);
             craftingUICanvas.enabled = true;
 
+            ClearTextFields();
+
             _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
         }
     }
@@ -157,5 +159,12 @@ public class ItemCraftingApparatusUIManager : MonoBehaviour
     public void OnCraftItemButtonClick()
     {
         craftingApparatus.Craft();
+    }
+
+    private void ClearTextFields()
+    {
+        _nameInputField.text = "";
+        _descInputField.text = "";
+        _outputText.text = "";
     }
 }

@@ -94,25 +94,23 @@ public class PartCreatorUIController : MonoBehaviour
         _isInitialized = true;
     }
 
-    public void LaunchPartCreatorUI()
+    public void LaunchInitialUI()
     {
         _partDesignSelectorMenu.transform.parent.gameObject.SetActive(true);
         _textIOPanel.SetInteractivity(false);
         _craftPartButton.interactable = false;
     }
 
-    public void ActivateBackgroundUI()
+    public void ActivateMainUI()
     {
         _textIOPanel.SetInteractivity(true);
         _craftPartButton.interactable = true;
         _storageUI.SetStorage(_craftingApparatus.characterUsingApp.inventory);
     }
 
-    //public void LoadResourceSlots(GameObject resourceSlotPrefab, PartRequirements reqs)
     public void LoadResourceSlots(PartRequirements reqs)
     {
         _resourcePanel.Initialize();
-        //_resourcePanel.LoadResourceSlots(resourceSlotPrefab, reqs);
         _resourcePanel.LoadResourceSlots(reqs);
         SetResourcePanelSlotCallbacks();
     }
@@ -130,7 +128,7 @@ public class PartCreatorUIController : MonoBehaviour
 
     public void OnExit()
     {
-        //_partDesignSelectorMenu.gameObject.SetActive(true);
+        _textIOPanel.ClearTextFields();
     }
 
 }
