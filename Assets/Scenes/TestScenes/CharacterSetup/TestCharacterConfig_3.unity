@@ -8869,10 +8869,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingCam: {fileID: 323361831}
   _originalLookAtObj: {fileID: 1507518989}
-  RotationSpeed: 10
+  RotationSpeed: 2.5
   PolarDeadzone_TOP: 15
   PolarDeadzone_BOT: 90
-  ZoomSpeed: 10
+  ZoomSpeed: 2.5
   ZoomDistance_MIN: 0.15
   ZoomDistance_MAX: 2
   PanSpeed: 0.25
@@ -16821,10 +16821,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingCam: {fileID: 681784037}
   _originalLookAtObj: {fileID: 1617999670}
-  RotationSpeed: 10
+  RotationSpeed: 2.5
   PolarDeadzone_TOP: 15
   PolarDeadzone_BOT: 90
-  ZoomSpeed: 10
+  ZoomSpeed: 2.5
   ZoomDistance_MIN: 0.15
   ZoomDistance_MAX: 2
   PanSpeed: 0.25
@@ -17098,10 +17098,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   craftingCam: {fileID: 693409787}
   _originalLookAtObj: {fileID: 160540333}
-  RotationSpeed: 10
+  RotationSpeed: 2.5
   PolarDeadzone_TOP: 15
   PolarDeadzone_BOT: 90
-  ZoomSpeed: 10
+  ZoomSpeed: 2.5
   ZoomDistance_MIN: 0.15
   ZoomDistance_MAX: 2
   PanSpeed: 0.25
