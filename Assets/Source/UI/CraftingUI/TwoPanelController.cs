@@ -13,6 +13,7 @@ public class TwoPanelController : MonoBehaviour
 
     // TODO: Create a generic SlotTooltip and make ItemToolTip, PartSlotTooltip, etc. inherit from it.
     [SerializeField] private ItemTooltip itemTooltip;
+
     [SerializeField] private Image draggableSlot;
 
     private ItemSlot draggedSlot;
@@ -80,7 +81,11 @@ public class TwoPanelController : MonoBehaviour
         if (itemSlot != null)
         {
             draggedSlot = itemSlot;
+            
             draggableSlot.sprite = draggedSlot.storedItem.icon;
+
+            draggedSlot.image.color = draggedSlot.disabledColor;
+
             draggableSlot.transform.position = Input.mousePosition;
             draggableSlot.gameObject.SetActive(true);
             draggableSlot.enabled = true;
@@ -110,6 +115,10 @@ public class TwoPanelController : MonoBehaviour
         if (canDrop && canSwap)
         {
             swapper.Swap(dropSlot, draggedSlot);
+        }
+        else
+        {
+            draggedSlot.image.color = draggedSlot.normalColor;
         }
     }
 

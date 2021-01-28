@@ -132,23 +132,23 @@ public class TextureVariationFactory : MonoBehaviour
 
     private Texture2D CopyTexture(Texture2D original)
     {
-        Debug.Log("Texture Mipmap Count: " + original.mipmapCount);
+        //Debug.Log("Texture Mipmap Count: " + original.mipmapCount);
 
-        Debug.Log("Original texture width: " + original.width +
-                  " and original texture height: " + original.height);
+        //Debug.Log("Original texture width: " + original.width +
+        //          " and original texture height: " + original.height);
 
         Texture2D copy = new Texture2D(original.width, original.height);
         Color[] copiedPixels = original.GetPixels();
         copy.SetPixels(copiedPixels);
         copy.Apply();
-        Debug.Log("Texture Copy Complete. copy = " + copy);
+        //Debug.Log("Texture Copy Complete. copy = " + copy);
         return copy;
     }
 
     private void SetMaterialTexture_Helper(Material m, Texture2D t)             // TODO: Add cases for other channels (i.e. specular)
     {
         string channelName = GetChannelNameFromTextureName(t.name);
-        Debug.Log("Channel Name: " + channelName);
+        //Debug.Log("Channel Name: " + channelName);
         switch (channelName)
         {
             case "ambientOcclusion":
@@ -177,23 +177,23 @@ public class TextureVariationFactory : MonoBehaviour
         {
             case "ambientOcclusion":
                 m.SetTexture("_OcclusionMap", t);
-                Debug.Log(" Set channel: _OcclusionMap to " + channelName);
+                //Debug.Log(" Set channel: _OcclusionMap to " + channelName);
                 break;
             case "baseColor":
                 m.SetTexture("_MainTex", t);
-                Debug.Log(" Set channel: _MainTex to " + channelName);
+                //Debug.Log(" Set channel: _MainTex to " + channelName);
                 break;
             case "height":
                 m.SetTexture("_ParallaxMap", t);
-                Debug.Log(" Set channel: _ParallaxMap to " + channelName);
+                //Debug.Log(" Set channel: _ParallaxMap to " + channelName);
                 break;
             case "metallic":
                 m.SetTexture("_Metallic", t);
-                Debug.Log(" Set channel: _Metallic to " + channelName);
+                //Debug.Log(" Set channel: _Metallic to " + channelName);
                 break;
             case "normal":
                 m.SetTexture("_BumpMap", t);
-                Debug.Log(" Set channel: _BumpMap to " + channelName);
+                //Debug.Log(" Set channel: _BumpMap to " + channelName);
                 break;
         }
     }

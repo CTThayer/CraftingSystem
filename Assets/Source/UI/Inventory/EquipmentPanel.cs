@@ -20,6 +20,16 @@ public class EquipmentPanel : MonoBehaviour, ISlotPanelIO
     {
         for (int i = 0; i < equipmentSlots.Length; i++)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            equipmentSlots[i].OnPointerEnterEvent -= OnPointerEnterEvent;
+            equipmentSlots[i].OnPointerExitEvent -= OnPointerExitEvent;
+            equipmentSlots[i].OnRightClickEvent -= OnRightClickEvent;
+            equipmentSlots[i].OnBeginDragEvent -= OnBeginDragEvent;
+            equipmentSlots[i].OnEndDragEvent -= OnEndDragEvent;
+            equipmentSlots[i].OnDragEvent -= OnDragEvent;
+            equipmentSlots[i].OnDropEvent -= OnDropEvent;
+
+            // Add delegates
             equipmentSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
             equipmentSlots[i].OnPointerExitEvent += OnPointerExitEvent;
             equipmentSlots[i].OnRightClickEvent += OnRightClickEvent;
@@ -69,6 +79,16 @@ public class EquipmentPanel : MonoBehaviour, ISlotPanelIO
     {
         if (delegates != null && delegates.Length == 7)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            OnPointerEnterEvent -= delegates[0];
+            OnPointerExitEvent -= delegates[1];
+            OnRightClickEvent -= delegates[2];
+            OnBeginDragEvent -= delegates[3];
+            OnEndDragEvent -= delegates[4];
+            OnDragEvent -= delegates[5];
+            OnDropEvent -= delegates[6];
+
+            // Add delegates
             OnPointerEnterEvent += delegates[0];
             OnPointerExitEvent += delegates[1];
             OnRightClickEvent += delegates[2];

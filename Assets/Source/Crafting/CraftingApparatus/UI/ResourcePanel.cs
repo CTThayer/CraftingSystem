@@ -238,6 +238,16 @@ public class ResourcePanel : MonoBehaviour, ISlotPanelIO
     {
         for (int i = 0; i < _slots.Length; i++)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            _slots[i].OnPointerEnterEvent -= OnPointerEnterEvent;
+            _slots[i].OnPointerExitEvent -= OnPointerExitEvent;
+            _slots[i].OnRightClickEvent -= OnRightClickEvent;
+            _slots[i].OnBeginDragEvent -= OnBeginDragEvent;
+            _slots[i].OnEndDragEvent -= OnEndDragEvent;
+            _slots[i].OnDragEvent -= OnDragEvent;
+            _slots[i].OnDropEvent -= OnDropEvent;
+
+            // Add delegates
             _slots[i].OnPointerEnterEvent += OnPointerEnterEvent;
             _slots[i].OnPointerExitEvent += OnPointerExitEvent;
             _slots[i].OnRightClickEvent += OnRightClickEvent;

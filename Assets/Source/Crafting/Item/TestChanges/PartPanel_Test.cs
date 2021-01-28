@@ -68,6 +68,16 @@ public class PartPanel_Test : MonoBehaviour, ISlotPanelIO
         {
             for (int i = 0; i < _partSlots.Length; i++)
             {
+                // Remove delegate if it was set previously to avoid double calling
+                _partSlots[i].OnPointerEnterEvent -= OnPointerEnterEvent;
+                _partSlots[i].OnPointerExitEvent -= OnPointerExitEvent;
+                _partSlots[i].OnRightClickEvent -= OnRightClickEvent;
+                _partSlots[i].OnBeginDragEvent -= OnBeginDragEvent;
+                _partSlots[i].OnEndDragEvent -= OnEndDragEvent;
+                _partSlots[i].OnDragEvent -= OnDragEvent;
+                _partSlots[i].OnDropEvent -= OnDropEvent;
+
+                // Add delegates
                 _partSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
                 _partSlots[i].OnPointerExitEvent += OnPointerExitEvent;
                 _partSlots[i].OnRightClickEvent += OnRightClickEvent;
@@ -151,6 +161,16 @@ public class PartPanel_Test : MonoBehaviour, ISlotPanelIO
     {
         if (delegates != null && delegates.Length == 7)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            OnPointerEnterEvent -= delegates[0];
+            OnPointerExitEvent -= delegates[1];
+            OnRightClickEvent -= delegates[2];
+            OnBeginDragEvent -= delegates[3];
+            OnEndDragEvent -= delegates[4];
+            OnDragEvent -= delegates[5];
+            OnDropEvent -= delegates[6];
+
+            // Add delegates
             OnPointerEnterEvent += delegates[0];
             OnPointerExitEvent += delegates[1];
             OnRightClickEvent += delegates[2];

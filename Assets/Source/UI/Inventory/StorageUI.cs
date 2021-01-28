@@ -35,6 +35,16 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
     {
         for (int i = 0; i < storageSlots.Length; i++)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            storageSlots[i].OnPointerEnterEvent -= OnPointerEnterEvent;
+            storageSlots[i].OnPointerExitEvent -= OnPointerExitEvent;
+            storageSlots[i].OnRightClickEvent -= OnRightClickEvent;
+            storageSlots[i].OnBeginDragEvent -= OnBeginDragEvent;
+            storageSlots[i].OnEndDragEvent -= OnEndDragEvent;
+            storageSlots[i].OnDragEvent -= OnDragEvent;
+            storageSlots[i].OnDropEvent -= OnDropEvent;
+
+            // Add delegates
             storageSlots[i].OnPointerEnterEvent += OnPointerEnterEvent;
             storageSlots[i].OnPointerExitEvent += OnPointerExitEvent;
             storageSlots[i].OnRightClickEvent += OnRightClickEvent;
@@ -49,6 +59,16 @@ public class StorageUI : MonoBehaviour, ISlotPanelIO
     {
         if (delegates != null && delegates.Length == 7)
         {
+            // Remove delegate if it was set previously to avoid double calling
+            OnPointerEnterEvent -= delegates[0];
+            OnPointerExitEvent -= delegates[1];
+            OnRightClickEvent -= delegates[2];
+            OnBeginDragEvent -= delegates[3];
+            OnEndDragEvent -= delegates[4];
+            OnDragEvent -= delegates[5];
+            OnDropEvent -= delegates[6];
+
+            // Add delegates
             OnPointerEnterEvent += delegates[0];
             OnPointerExitEvent += delegates[1];
             OnRightClickEvent += delegates[2];

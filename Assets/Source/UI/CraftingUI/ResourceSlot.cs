@@ -80,6 +80,7 @@ public class ResourceSlot : ItemSlot
             s = resources[0];
             OnResourceRemovedCallback(resourceMaterial, index);
             resources.RemoveAt(0);
+            _resourceMaterial = null;
             storedItem = null;
         }
         return s;

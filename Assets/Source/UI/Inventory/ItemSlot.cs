@@ -14,7 +14,8 @@ public class ItemSlot : MonoBehaviour,
                         IEndDragHandler,
                         IDropHandler
 {
-    [SerializeField] private Image image;
+    //[SerializeField] private Image image;
+    public Image image;
 
     // Event callbacks for UI actions
     public event Action<ItemSlot> OnPointerEnterEvent;
@@ -34,8 +35,8 @@ public class ItemSlot : MonoBehaviour,
     // Index in storage array that this slot corresponds to
     public int index;
 
-    private Color normalColor = Color.white;
-    private Color disabledColor = new Color(1, 1, 1, 0);
+    public Color normalColor = Color.white;
+    public Color disabledColor = new Color(1, 1, 1, 0);
 
     [SerializeField] private Storable _storedItem;
     public Storable storedItem
@@ -82,6 +83,8 @@ public class ItemSlot : MonoBehaviour,
     {
         if (OnDragEvent != null)
             OnDragEvent(this);
+
+        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
